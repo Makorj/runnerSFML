@@ -2,15 +2,20 @@
 #define CHARACTER_H
 
 #include <array>
+#include <SFML/Graphics.hpp>
 
-/*** DEFINE ***/
+/*** DEFINES ***/
 
-#define LIMBS_NUMBER 5
+#define LIMBS_NUMBER 9
 #define MEMBER_TORSO 0
 #define MEMBER_ARM_LEFT 1
-#define MEMBER_ARM_RIGHT 2
-#define MEMBER_LEG_LEFT 3
-#define MEMBER_LEG_RIGHT 4
+#define MEMBER_FOREARM_LEFT 2
+#define MEMBER_ARM_RIGHT 3
+#define MEMBER_FOREARM_RIGHT 4
+#define MEMBER_LEG_LEFT 5
+#define MEMBER_CALF_LEFT 6
+#define MEMBER_LEG_RIGHT 7
+#define MEMBER_CALF_RIGHT 8
 
 /**************/
 
@@ -43,6 +48,7 @@ private:
     int m_actualHatId;
 
     //std::array<MovableElement*, LIMBS_NUMBER> m_members;
+    std::array<sf::RectangleShape*, LIMBS_NUMBER> m_members;
 
 public:
 

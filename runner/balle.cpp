@@ -45,3 +45,4 @@ void Balle::setDY(int &b)
 {
     m_dy=b;
 }
+

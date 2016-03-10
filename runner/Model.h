@@ -8,6 +8,7 @@ class Model {
  private:
   int _w, _h;
   Balle* m_char;
+  bool m_leftdir, m_rightdir;
 
  public:
 
@@ -16,7 +17,9 @@ class Model {
 
   sf::Vector2f getBallPosition();
   void getBallDim(int&h, int &w);
-  void moveBall(bool left, bool right);
+  void moveBall();
+  void getCharDir(bool &left, bool &right);
+  void setCharDir(bool& left, bool& right);
   void nextStep();
 };
 #endif

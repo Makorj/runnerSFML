@@ -7,7 +7,9 @@ using namespace std;
 // Constructeurs
 //=======================================
 Model::Model(int w, int h)
-  :  _w(w), _h(h){
+  :  _w(w), _h(h),
+    m_leftdir(false), m_rightdir(false)
+{
     m_char=new Balle{10,450,300,300,0,0};
 }
 
@@ -38,15 +40,26 @@ void Model::getBallDim(int&h, int &w)
     w=m_char->getW();
 }
 
+void Model::getCharDir(bool &left, bool &right)
+{
+    left=m_leftdir;
+    right=m_rightdir;
+}
 
-void Model::moveBall(bool left, bool right)
+void Model::setCharDir(bool &left, bool &right)
+{
+    m_leftdir=left;
+    m_rightdir=right;
+}
+
+void Model::moveBall()
 {
     int a = -5;
     int b = 5;
     int c = 0;
-    if (left)
+    if (m_leftdir)
         m_char->setDX(a);
-    else if (right)
+    else if (m_rightdir)
         m_char->setDX(b);
     else
         m_char->setDX(c);

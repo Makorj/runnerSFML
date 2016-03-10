@@ -19,11 +19,13 @@ View::View(int w, int h)
 {
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
     _window->setFramerateLimit(60);
+    _window->setKeyRepeatEnabled(false);
 
     // IMAGE LOADER //
     if (!_background.loadFromFile(BACKGROUND_IMAGE))
         std::cerr << "ERROR when loading image file: " << BACKGROUND_IMAGE << std::endl;
     else {
+        _background.setSmooth(true);
         GraphicElement tmp{_background, 0,0,_w,_h};
         _backgroundSprite = tmp;
     }
@@ -45,6 +47,7 @@ View::View(int w, int h)
     if (!_balle.loadFromFile(BALLE_IMAGE))
         std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
     else {
+        _balle.setSmooth(true);
         GraphicElement tmp{_balle, 1,1,100,100};
         _balleSprite = tmp;
     }
@@ -84,13 +87,15 @@ void View::draw(){
                     m_logo1=false;
                     m_reverse=false;
                 }
-                (m_transparent--);
+                else
+                    (m_transparent-=2);
             }
             else
             {
                 if(m_transparent>=254)
                     (m_reverse=true);
-                (m_transparent++);
+                else
+                    (m_transparent+=2);
             }
 
             _splashImgSprite1.setTransparency(m_transparent);
@@ -106,13 +111,15 @@ void View::draw(){
                     m_splashtime=false;
                     m_reverse=false;
                 }
-                (m_transparent--);
+                else
+                    (m_transparent-=2);
             }
             else
             {
                 if(m_transparent>=254)
                     (m_reverse=true);
-                (m_transparent++);
+                else
+                    (m_transparent+=2);
             }
 
             _splashImgSprite2.setTransparency(m_transparent);
@@ -138,6 +145,7 @@ void View::draw(){
 bool View::treatEvents(){
     bool result = false;
     bool left(false), right(false);
+    _model->getCharDir(left,right);
 
     if(_window->isOpen()){
         result = true;
@@ -157,7 +165,7 @@ bool View::treatEvents(){
                 right=false;
 
             // SPLASH SCREEN SKEEPER //
-            if (m_splashtime && (event.type == sf::Event::KeyReleased && event.key.code==sf::Keyboard::Return))
+            if (m_splashtime && (event.type == sf::Event::KeyPressed && event.key.code==sf::Keyboard::Return))
             {
                 if(m_logo1)
                 {
@@ -177,7 +185,8 @@ bool View::treatEvents(){
             }
         }
 
-        _model->moveBall(left, right);
+        _model->setCharDir(left,right);
+        _model->moveBall();
     }
 
 

@@ -20,7 +20,7 @@ GraphicElement::GraphicElement(sf::Texture &image, int x, int y, int w, int h)
       m_y(y)
 {
     resize(m_w,m_h);
-    setPosition(*new sf::Vector2f(m_x,m_y));
+    setPosition(sf::Vector2f(m_x,m_y));
 
 }
 
