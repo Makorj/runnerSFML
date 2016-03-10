@@ -8,7 +8,7 @@ using namespace std;
 //=======================================
 Model::Model(int w, int h)
   :  _w(w), _h(h) {
-    mr_rubi=new Balle{10,10,250,250,0,0};
+    mr_rubi=new Balle{10,450,300,300,0,0};
 }
 
 //=======================================
@@ -39,14 +39,15 @@ void Model::getBallDim(int&h, int &w)
 }
 
 
-void Model::moveBall(bool left)
+void Model::moveBall(bool left, bool right)
 {
-
-
-    int a=0;
-    int b=-1;
+    int a = -5;
+    int b = 5;
+    int c = 0;
     if (left)
+        mr_rubi->setDX(a);
+    else if (right)
         mr_rubi->setDX(b);
     else
-        mr_rubi->setDX(a);
+        mr_rubi->setDX(c);
 }

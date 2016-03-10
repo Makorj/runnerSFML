@@ -13,6 +13,7 @@ using namespace std;
 //=======================================
 View::View(int w, int h): _w(w), _h(h){
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
+    _window->setFramerateLimit(60);
 
     if (!_background.loadFromFile(BACKGROUND_IMAGE))
         std::cerr << "ERROR when loading image file: " << BACKGROUND_IMAGE << std::endl;
@@ -24,7 +25,7 @@ View::View(int w, int h): _w(w), _h(h){
     if (!_balle.loadFromFile(BALLE_IMAGE))
         std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
     else {
-        ElementGraphique tmp{_balle, 1,1,1,1};
+        GraphicElement tmp{_balle, 1,1,1,1};
         _balleSprite = tmp;
 
     }
@@ -61,8 +62,9 @@ void View::draw(){
 //    float width_factor = width / bb.width;     // facteur de mise à l'échelle pour la largeur
 //    float height_factor = height / bb.height;  // facteur de mise à l'échelle pour la largeur
 //    _balleSprite.setScale(width_factor, height_factor);
+    _balleSprite.resize(100,100);
     _balleSprite.setPosition(sf::Vector2f(x,y));
-    _window->draw(_balleSprite);
+    _balleSprite.draw(_window);
 
     _window->display();
 }
@@ -72,16 +74,24 @@ void View::draw(){
 //=======================================
 bool View::treatEvents(){
     bool result = false;
+    bool left(false), right(false);
+
     if(_window->isOpen()){
         result = true;
+
+
 
         sf::Event event;
         while (_window->pollEvent(event)) {
             cout << "Event detected" << endl;
-            if (event.key.code == sf::Keyboard::Left)
-                _model->moveBall(true);
-            if (event.key.code == sf::Keyboard::Right)
-                _model->moveBall(false);
+            if ((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Left)
+                left=true;
+            if ((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Right)
+                right=true;
+            if ((event.type == sf::Event::KeyReleased) && event.key.code == sf::Keyboard::Left)
+                left=false;
+            if ((event.type == sf::Event::KeyReleased) && event.key.code == sf::Keyboard::Right)
+                right=false;
             if ((event.type == sf::Event::Closed) ||
                     ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))) {
                 _window->close();
@@ -89,6 +99,9 @@ bool View::treatEvents(){
             }
         }
     }
+
+    _model->moveBall(left, right);
+
     return result;
 }
 

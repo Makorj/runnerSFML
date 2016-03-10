@@ -2,7 +2,7 @@
 #define _VIEW_
 
 #include <SFML/Graphics.hpp>
-#include "elementgraphique.h"
+#include "graphicelement.h"
 
 const std::string BACKGROUND_IMAGE = "Images/city.png";
 const std::string BALLE_IMAGE = "Images/ball.png";
@@ -20,7 +20,7 @@ private:
     sf::Sprite _backgroundSprite;
 
     sf::Texture _balle;
-    ElementGraphique _balleSprite;
+    GraphicElement _balleSprite;
 
 public:
     View(int w, int h);

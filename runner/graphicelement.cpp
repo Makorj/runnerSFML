@@ -1,27 +1,30 @@
-#include "elementgraphique.h"
+#include "graphicelement.h"
 
 #include <SFML/Graphics.hpp>
 
-ElementGraphique::ElementGraphique(sf::Texture &image, int x, int y, int w, int h)
+GraphicElement::GraphicElement(sf::Texture &image, int x, int y, int w, int h)
     : m_w(w),
-      m_h(h),
-      m_x(x),
-      m_y(y)
+      m_h(h)
 {
     setTexture(image);
+    setPosition(*new sf::Vector2f(x,y));
 
 }
 
-ElementGraphique::ElementGraphique(const ElementGraphique& b)
-    : ElementGraphique{b.getTexture(), b.getPosition().x, b.getPosition().y, b.getW(), b.getH()}
-{}
-
-void draw(sf::RenderWindow* fenetre) const
+GraphicElement::GraphicElement(const GraphicElement& b)
 {
-
+    setTexture(*b.getTexture());
+    m_w=b.getW();
+    m_h=b.getH();
+    setPosition(b.getPosition());
 }
 
-void ElementGraphique::resize(int w, int h)
+void GraphicElement::draw(sf::RenderWindow* window) const
+{
+    window->draw(*this);
+}
+
+void GraphicElement::resize(int w, int h)
 {
     sf::FloatRect bb = getLocalBounds();      // retourne les positions et taille réelles de s
     float width_factor = w / bb.width;     // facteur de mise à l'échelle pour la largeur
@@ -29,12 +32,12 @@ void ElementGraphique::resize(int w, int h)
     setScale(width_factor, height_factor);
 }
 
-int ElementGraphique::getH() const
+int GraphicElement::getH() const
 {
     return m_h;
 }
 
-int ElementGraphique::getW() const
+int GraphicElement::getW() const
 {
     return m_w;
 }

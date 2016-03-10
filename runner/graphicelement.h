@@ -1,9 +1,9 @@
-#ifndef ELEMENTGRAPHIQUE_H
-#define ELEMENTGRAPHIQUE_H
+#ifndef GRAPHICELEMENT_H
+#define GRAPHICELEMENT_H
 
 #include <SFML/Graphics.hpp>
 
-class ElementGraphique : public sf::Sprite
+class GraphicElement : public sf::Sprite
 {
 private:
     int m_w;
@@ -11,13 +11,13 @@ private:
     int m_x;
     int m_y;
 public:
-    ElementGraphique() = default;
-    ElementGraphique(sf::Texture &image, int x, int y, int w, int h);
-    ElementGraphique(const ElementGraphique& b);
-    void draw(sf::RenderWindow* fenetre) const;
+    GraphicElement() = default;
+    GraphicElement(sf::Texture &image, int x, int y, int w, int h);
+    GraphicElement(const GraphicElement& b);
+    void draw(sf::RenderWindow* window) const;
     void resize(int w, int h);
     int getH() const;
     int getW() const;
 };
 
-#endif // ELEMENTGRAPHIQUE_H
+#endif // GraphicElement_H
