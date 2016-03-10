@@ -4,12 +4,18 @@
 #include <array>
 
 /*** DEFINE ***/
+
 #define LIMBS_NUMBER 5
+#define MEMBER_TORSO 0
+#define MEMBER_ARM_LEFT 1
+#define MEMBER_ARM_RIGHT 2
+#define MEMBER_LEG_LEFT 3
+#define MEMBER_LEG_RIGHT 4
+
 /**************/
 
-enum limbs {leftarm=0, rightarm=1, leftleg=2, rightleg=3, torso=4};
 
-class character
+class Character
 {
 private:
 
@@ -20,6 +26,8 @@ private:
 
     ///Character's speed
     int m_speed;
+    ///Character's direction
+    int m_dir;
 
     ///Character's maximum life rate
     int m_maxLife;
@@ -34,12 +42,24 @@ private:
     ///Id of the active hat on the character, -1 if default
     int m_actualHatId;
 
-    //std::array<MovableElement*> m_members[LIMBS_NUMBER];
+    //std::array<MovableElement*, LIMBS_NUMBER> m_members;
 
 public:
-    character();
 
-    int getLife();
+    /* CONSTRUCTORS */
+    Character();
+
+    /* DESTRUCTOR */
+    ~Character();
+
+    void addLife(int &x);
+    void setActualBonusId(int& bonusId);
+    void move();
+
+    int getMaxLife() const;
+    int getActualSkinId() const;
+    int getActualHatId() const;
+    int getLife() const;
 };
 
 #endif // CHARACTER_H

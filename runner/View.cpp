@@ -6,29 +6,49 @@
 #include <sstream>
 #include <iostream>
 using namespace std;
-//using namespace sf;
 
 //=======================================
 // Constructeur
 //=======================================
-View::View(int w, int h): _w(w), _h(h){
+View::View(int w, int h)
+    : _w(w), _h(h),
+      m_transparent(0),
+      m_reverse(false),
+      m_splashtime(true),
+      m_logo1(true)
+{
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
     _window->setFramerateLimit(60);
 
+    // IMAGE LOADER //
     if (!_background.loadFromFile(BACKGROUND_IMAGE))
         std::cerr << "ERROR when loading image file: " << BACKGROUND_IMAGE << std::endl;
     else {
-        _backgroundSprite.setTexture(_background);
-        _backgroundSprite.setPosition(sf::Vector2f(0.f,0.f));
+        GraphicElement tmp{_background, 0,0,_w,_h};
+        _backgroundSprite = tmp;
+    }
+
+    if (!_splashImg1.loadFromFile(SPLASH_IMG1))
+        std::cerr << "ERROR when loading image file: " << SPLASH_IMG1 << std::endl;
+    else {
+        GraphicElement tmp{_splashImg1, 225,150,384,298};
+        _splashImgSprite1 = tmp;
+    }
+
+    if (!_splashImg2.loadFromFile(SPLASH_IMG2))
+        std::cerr << "ERROR when loading image file: " << SPLASH_IMG2 << std::endl;
+    else {
+        GraphicElement tmp{_splashImg2, 180,50,452,417};
+        _splashImgSprite2 = tmp;
     }
 
     if (!_balle.loadFromFile(BALLE_IMAGE))
         std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
     else {
-        GraphicElement tmp{_balle, 1,1,1,1};
+        GraphicElement tmp{_balle, 1,1,100,100};
         _balleSprite = tmp;
-
     }
+    // END OF IMAGE LOADER //
 }
 
 //=======================================
@@ -52,19 +72,62 @@ void View::setModel(Model * model){
 void View::draw(){
     _window->clear();
 
-    _window->draw(_backgroundSprite);
+// SPLASH SCREEN //
+    if(m_splashtime)
+    {
+        if(m_logo1)
+        {
+            if(m_reverse)
+            {
+                if(m_transparent<=1)
+                {
+                    m_logo1=false;
+                    m_reverse=false;
+                }
+                (m_transparent--);
+            }
+            else
+            {
+                if(m_transparent>=254)
+                    (m_reverse=true);
+                (m_transparent++);
+            }
 
+            _splashImgSprite1.setTransparency(m_transparent);
+            _window->draw(_splashImgSprite1);
 
-    int x,y;
-    _model->getBallPosition(x,y);
-//    _model->getBallDim(height, width);
-//    sf::FloatRect bb = _balleSprite.getLocalBounds();      // retourne les positions et taille réelles de s
-//    float width_factor = width / bb.width;     // facteur de mise à l'échelle pour la largeur
-//    float height_factor = height / bb.height;  // facteur de mise à l'échelle pour la largeur
-//    _balleSprite.setScale(width_factor, height_factor);
-    _balleSprite.resize(100,100);
-    _balleSprite.setPosition(sf::Vector2f(x,y));
+        }
+        else
+        {
+            if(m_reverse)
+            {
+                if(m_transparent<=1)
+                {
+                    m_splashtime=false;
+                    m_reverse=false;
+                }
+                (m_transparent--);
+            }
+            else
+            {
+                if(m_transparent>=254)
+                    (m_reverse=true);
+                (m_transparent++);
+            }
+
+            _splashImgSprite2.setTransparency(m_transparent);
+            _window->draw(_splashImgSprite2);
+        }
+    }
+// END OF SPLASH SCREEN //
+    else
+    {
+
+    _backgroundSprite.draw(_window);
+
+    _balleSprite.setPosition(_model->getBallPosition());
     _balleSprite.draw(_window);
+    }
 
     _window->display();
 }
@@ -79,28 +142,45 @@ bool View::treatEvents(){
     if(_window->isOpen()){
         result = true;
 
-
-
         sf::Event event;
         while (_window->pollEvent(event)) {
             cout << "Event detected" << endl;
-            if ((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Left)
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                 left=true;
-            if ((event.type == sf::Event::KeyPressed) && event.key.code == sf::Keyboard::Right)
-                right=true;
-            if ((event.type == sf::Event::KeyReleased) && event.key.code == sf::Keyboard::Left)
+            else
                 left=false;
-            if ((event.type == sf::Event::KeyReleased) && event.key.code == sf::Keyboard::Right)
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                right=true;
+            else
                 right=false;
+
+            // SPLASH SCREEN SKEEPER //
+            if (m_splashtime && (event.type == sf::Event::KeyReleased && event.key.code==sf::Keyboard::Return))
+            {
+                if(m_logo1)
+                {
+                    m_logo1=false;
+                    m_reverse=false;
+                    m_transparent=0;
+                }
+                else
+                    m_splashtime=false;
+            }
+            // END OF SPLASH SCREEN SKEEPER //
+
             if ((event.type == sf::Event::Closed) ||
                     ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))) {
                 _window->close();
                 result = false;
             }
         }
+
+        _model->moveBall(left, right);
     }
 
-    _model->moveBall(left, right);
+
 
     return result;
 }

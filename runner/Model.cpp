@@ -7,8 +7,8 @@ using namespace std;
 // Constructeurs
 //=======================================
 Model::Model(int w, int h)
-  :  _w(w), _h(h) {
-    mr_rubi=new Balle{10,450,300,300,0,0};
+  :  _w(w), _h(h){
+    m_char=new Balle{10,450,300,300,0,0};
 }
 
 //=======================================
@@ -16,26 +16,26 @@ Model::Model(int w, int h)
 //=======================================
 Model::~Model(){
 
-    delete mr_rubi;
+    delete m_char;
 }
 
 //=======================================
 // Calcul la prochaine étape
 //=======================================
 void Model::nextStep(){
-    mr_rubi->move();
+    m_char->move();
 }
 
-void Model::getBallPosition(int&x, int&y)
+sf::Vector2f Model::getBallPosition()
 {
-    x=mr_rubi->getX();
-    y=mr_rubi->getY();
+    sf::Vector2f a{m_char->getX(),m_char->getY()};
+    return a;
 }
 
 void Model::getBallDim(int&h, int &w)
 {
-    h=mr_rubi->getH();
-    w=mr_rubi->getW();
+    h=m_char->getH();
+    w=m_char->getW();
 }
 
 
@@ -45,9 +45,9 @@ void Model::moveBall(bool left, bool right)
     int b = 5;
     int c = 0;
     if (left)
-        mr_rubi->setDX(a);
+        m_char->setDX(a);
     else if (right)
-        mr_rubi->setDX(b);
+        m_char->setDX(b);
     else
-        mr_rubi->setDX(c);
+        m_char->setDX(c);
 }

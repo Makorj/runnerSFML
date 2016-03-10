@@ -3,19 +3,29 @@
 
 #include <SFML/Graphics.hpp>
 
-class GraphicElement : public sf::Sprite
+//!
+//! \brief The GraphicElement class.
+//! Herited from the sf::Sprite class from the SFML library.
+//!
+class GraphicElement
+        : public sf::Sprite
 {
+
 private:
-    int m_w;
-    int m_h;
-    int m_x;
-    int m_y;
+
+    int m_w; ///< GraphicElement's width
+    int m_h; ///< GraphicElement's height
+    int m_x; ///< GraphicElement X coordinate
+    int m_y; ///< GraphicElement Y coordinate
+
 public:
+
     GraphicElement() = default;
     GraphicElement(sf::Texture &image, int x, int y, int w, int h);
-    GraphicElement(const GraphicElement& b);
+    GraphicElement(const GraphicElement& copy);
     void draw(sf::RenderWindow* window) const;
     void resize(int w, int h);
+    void setTransparency(int& transparencyLevel);
     int getH() const;
     int getW() const;
 };
