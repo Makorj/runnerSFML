@@ -6,7 +6,8 @@
 #include <sstream>
 #include <iostream>
 using namespace std;
-
+const unsigned int SPEED = 2;
+const unsigned int SPEED1 = 4;
 //=======================================
 // Constructeur
 //=======================================
@@ -17,6 +18,7 @@ View::View(int w, int h)
       m_splashtime(true),
       m_logo1(true)
 {
+
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
     _window->setFramerateLimit(60);
     _window->setKeyRepeatEnabled(false);
@@ -29,6 +31,23 @@ View::View(int w, int h)
         GraphicElement tmp{_background, 0,0,_w,_h};
         _backgroundSprite = tmp;
     }
+
+    if (!_SlidingBackground1.loadFromFile(SLIDING_BACKGROUND_IMAGE1))
+        std::cerr << "ERROR when loading image file: " << SLIDING_BACKGROUND_IMAGE1 << std::endl;
+    else {
+        _SlidingBackground1.setSmooth(true);
+        SlidingBackground tmp{_SlidingBackground1,_w,_h,SPEED};
+        _SlidingBackgroundSprite1 = tmp;
+    }
+
+    if (!_SlidingBackground2.loadFromFile(SLIDING_BACKGROUND_IMAGE2))
+        std::cerr << "ERROR when loading image file: " << SLIDING_BACKGROUND_IMAGE2 << std::endl;
+    else {
+        _SlidingBackground2.setSmooth(true);
+        SlidingBackground tmp{_SlidingBackground2,_w,_h,SPEED1};
+        _SlidingBackgroundSprite2 = tmp;
+    }
+
 
     if (!_splashImg1.loadFromFile(SPLASH_IMG1))
         std::cerr << "ERROR when loading image file: " << SPLASH_IMG1 << std::endl;
@@ -75,7 +94,7 @@ void View::setModel(Model * model){
 void View::draw(){
     _window->clear();
 
-// SPLASH SCREEN //
+    // SPLASH SCREEN //
     if(m_splashtime)
     {
         if(m_logo1)
@@ -126,14 +145,17 @@ void View::draw(){
             _window->draw(_splashImgSprite2);
         }
     }
-// END OF SPLASH SCREEN //
+    // END OF SPLASH SCREEN //
     else
     {
 
-    _backgroundSprite.draw(_window);
+        //_backgroundSprite.draw(_window);
+        _SlidingBackgroundSprite2.draw(_window);
+        _SlidingBackgroundSprite1.draw(_window);
 
-    _balleSprite.setPosition(_model->getBallPosition());
-    _balleSprite.draw(_window);
+
+        _balleSprite.setPosition(_model->getBallPosition());
+        _balleSprite.draw(_window);
     }
 
     _window->display();

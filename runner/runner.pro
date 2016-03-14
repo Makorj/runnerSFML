@@ -9,7 +9,9 @@ SOURCES += main.cpp \
     Model.cpp \
     View.cpp \
     balle.cpp \
-    elementgraphique.cpp
+    character.cpp \
+    graphicelement.cpp \
+    slidingbackground.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -20,5 +22,7 @@ HEADERS += \
     Model.h \
     View.h \
     balle.h \
-    elementgraphique.h
+    character.h \
+    graphicelement.h \
+    slidingbackground.h
 

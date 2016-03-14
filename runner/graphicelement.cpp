@@ -87,3 +87,23 @@ int GraphicElement::getW() const
 {
     return m_w;
 }
+
+int GraphicElement::getX() const
+{
+    return m_x;
+}
+
+int GraphicElement::getY() const
+{
+    return m_y;
+}
+
+void GraphicElement::slideLeft(unsigned int s) {
+    m_x -= s;
+    setPosition(m_x,m_y);
+}
+
+void GraphicElement::replace(int x, int y) {
+    m_x = x;
+    m_y = y;
+}

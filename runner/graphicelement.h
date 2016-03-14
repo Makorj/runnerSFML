@@ -28,6 +28,11 @@ public:
     void setTransparency(int& transparencyLevel);
     int getH() const;
     int getW() const;
+    int getX() const;
+    int getY() const;
+    void slideLeft(unsigned int s);
+    void replace(int x, int y);
+
 };
 
 #endif // GraphicElement_H

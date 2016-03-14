@@ -3,9 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 #include "graphicelement.h"
+#include "slidingbackground.h"
 
-const std::string BACKGROUND_IMAGE = "Images/city.png";
 const std::string BALLE_IMAGE = "Images/ball.png";
+
+const std::string SLIDING_BACKGROUND_IMAGE1 = "Images/city_1.png";
+const std::string SLIDING_BACKGROUND_IMAGE2 = "Images/city_2.png";
 
 const std::string SPLASH_IMG2 = "Images/kaaris.png";
 const std::string SPLASH_IMG1 = "Images/logo_iut.png";
@@ -22,9 +25,6 @@ private:
     sf::RenderWindow * _window;
     Model * _model;
 
-    sf::Texture _background;
-    GraphicElement _backgroundSprite;
-
     sf::Texture _splashImg1;
     GraphicElement _splashImgSprite1;
 
@@ -33,6 +33,13 @@ private:
 
     sf::Texture _balle;
     GraphicElement _balleSprite;
+
+    sf::Texture _SlidingBackground1;
+    SlidingBackground _SlidingBackgroundSprite1;
+
+    sf::Texture _SlidingBackground2;
+    SlidingBackground _SlidingBackgroundSprite2;
+
 
 public:
 
