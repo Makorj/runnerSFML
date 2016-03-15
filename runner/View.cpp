@@ -1,13 +1,15 @@
 #include "View.h"
 #include "Model.h"
 
+#include <math.h>
+
 
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
 using namespace std;
 const unsigned int SPEED = 2;
-const unsigned int SPEED1 = 4;
+const unsigned int SPEED1 = 1;
 //=======================================
 // Constructeur
 //=======================================
@@ -16,7 +18,11 @@ View::View(int w, int h)
       m_transparent(0),
       m_reverse(false),
       m_splashtime(true),
-      m_logo1(true)
+      m_logo1(true),
+      m_jump(false),
+      jumpTime(),
+      jumpStart(),
+      time()
 {
 
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
@@ -24,14 +30,6 @@ View::View(int w, int h)
     _window->setKeyRepeatEnabled(false);
 
     // IMAGE LOADER //
-    if (!_background.loadFromFile(BACKGROUND_IMAGE))
-        std::cerr << "ERROR when loading image file: " << BACKGROUND_IMAGE << std::endl;
-    else {
-        _background.setSmooth(true);
-        GraphicElement tmp{_background, 0,0,_w,_h};
-        _backgroundSprite = tmp;
-    }
-
     if (!_SlidingBackground1.loadFromFile(SLIDING_BACKGROUND_IMAGE1))
         std::cerr << "ERROR when loading image file: " << SLIDING_BACKGROUND_IMAGE1 << std::endl;
     else {
@@ -47,7 +45,6 @@ View::View(int w, int h)
         SlidingBackground tmp{_SlidingBackground2,_w,_h,SPEED1};
         _SlidingBackgroundSprite2 = tmp;
     }
-
 
     if (!_splashImg1.loadFromFile(SPLASH_IMG1))
         std::cerr << "ERROR when loading image file: " << SPLASH_IMG1 << std::endl;
@@ -185,6 +182,25 @@ bool View::treatEvents(){
                 right=true;
             else
                 right=false;
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                if(!m_jump)
+                {
+                jumpStart=time.getElapsedTime();
+                jumpTime.restart();
+                m_jump=true;
+                }
+            }
+
+            if(time.getElapsedTime().asSeconds()-jumpStart.asSeconds()>40)
+                m_jump=false;
+
+            if(m_jump){
+                int timeas=jumpTime.getElapsedTime().asMilliseconds();
+                int newvy=((int)(((cos(3.14/3)*0.1*timeas)-((9.81*timeas*timeas)/2000))));
+                _model->setBallVerticalSpeed(newvy);
+            }
 
             // SPLASH SCREEN SKEEPER //
             if (m_splashtime && (event.type == sf::Event::KeyPressed && event.key.code==sf::Keyboard::Return))

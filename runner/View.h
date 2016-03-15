@@ -22,6 +22,12 @@ private:
     int _w, _h, m_transparent;
     bool m_reverse, m_splashtime, m_logo1;
 
+    bool m_jump;
+    sf::Time jumpStart;
+    sf::Clock jumpTime;
+
+    sf::Clock time;
+
     sf::RenderWindow * _window;
     Model * _model;
 

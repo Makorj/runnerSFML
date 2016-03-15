@@ -40,6 +40,11 @@ void Model::getBallDim(int&h, int &w)
     w=m_char->getW();
 }
 
+void Model::setBallVerticalSpeed(int &x)
+{
+    m_char->setDY(x);
+}
+
 void Model::getCharDir(bool &left, bool &right)
 {
     left=m_leftdir;
