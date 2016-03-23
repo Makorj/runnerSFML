@@ -7,8 +7,8 @@
 
 const std::string BALLE_IMAGE = "Images/ball.png";
 
-const std::string SLIDING_BACKGROUND_IMAGE1 = "Images/city_1.png";
-const std::string SLIDING_BACKGROUND_IMAGE2 = "Images/city_2.png";
+const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/city_1.png";
+const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/city_2.png";
 
 const std::string SPLASH_IMG2 = "Images/kaaris.png";
 const std::string SPLASH_IMG1 = "Images/logo_iut.png";

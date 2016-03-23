@@ -20,4 +20,4 @@ public :
     void setSpeed(unsigned int s);
 };
 
-#endif // FONDCOULISSANT_H
+#endif // SLIDINGBACKGROUND_H

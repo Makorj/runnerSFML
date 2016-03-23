@@ -191,15 +191,7 @@ bool View::treatEvents(){
                 jumpTime.restart();
                 m_jump=true;
                 }
-            }
 
-            if(time.getElapsedTime().asSeconds()-jumpStart.asSeconds()>40)
-                m_jump=false;
-
-            if(m_jump){
-                int timeas=jumpTime.getElapsedTime().asMilliseconds();
-                int newvy=((int)(((cos(3.14/3)*0.1*timeas)-((9.81*timeas*timeas)/2000))));
-                _model->setBallVerticalSpeed(newvy);
             }
 
             // SPLASH SCREEN SKEEPER //
@@ -223,9 +215,18 @@ bool View::treatEvents(){
             }
         }
 
+
+    }
         _model->setCharDir(left,right);
         _model->moveBall();
-    }
+        if(time.getElapsedTime().asSeconds()-jumpStart.asSeconds()>40)
+            m_jump=false;
+
+        if(m_jump){
+            int timeas=jumpTime.getElapsedTime().asMilliseconds();
+            int newvy=((int)(((cos(3.14/3)*0.1*timeas)-((9.81*timeas*timeas)/2000))));
+            _model->setBallVerticalSpeed(newvy);
+        }
 
 
 

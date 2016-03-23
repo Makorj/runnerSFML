@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     balle.cpp \
     character.cpp \
     graphicelement.cpp \
-    slidingbackground.cpp
+    slidingbackground.cpp \
+    animatedgraphicelement.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -24,5 +25,6 @@ HEADERS += \
     balle.h \
     character.h \
     graphicelement.h \
-    slidingbackground.h
+    slidingbackground.h \
+    animatedgraphicelement.h
 

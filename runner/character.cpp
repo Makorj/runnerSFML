@@ -68,6 +68,10 @@
 
 /*****************/
 
+//struct Limb {
+// int x, y, originx, originy;
+// string name;
+//};
 
 Character::Character()
     : m_x(10),
@@ -84,8 +88,17 @@ Character::Character()
     for(int i=0;i<LIMBS_NUMBER;i++)
         m_members[i]=new MovableElement;
     */
-    for(int i=0;i<LIMBS_NUMBER;i++)
-        m_members[i]=new sf::RectangleShape;
+//    std::List<Limb> _limbs;
+    
+//    for (var it = std::List<Limb>.BeginIterator(); it != endIterator; ++it) {
+//        members[*it->name] = new sf::RectangleShape;
+//        members[*it->name]->setPosition(*it->)
+        
+//    }
+    
+//    for(int i=0;i<LIMBS_NUMBER;i++) {
+//          m_members[i]
+//    }
 
     m_members[MEMBER_TORSO]->setOrigin((float)TORSO_ORIGIN_X,(float)TORSO_ORIGIN_Y);
     m_members[MEMBER_TORSO]->setPosition((float)TORSO_XPOS,(float)TORSO_YPOS);
