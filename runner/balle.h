@@ -1,6 +1,8 @@
 #ifndef BALLE_H
 #define BALLE_H
 
+#include <SFML/Graphics.hpp>
+
 class Balle
 {
 private:
@@ -9,24 +11,25 @@ private:
     int m_h;
     int m_w;
     int m_dx;
-    int m_dy;
+    float m_dy;
 
+
+    sf::Clock jumpTime;
     bool m_jumping;
 
 public:
-    Balle(int x, int y, int w, int h, int dx, int dy);
+    Balle(int x, float y, int w, int h, int dx, int dy);
     void move();
 
-
-
-    bool isJumping();
+    void isJumping();
+    void jump();
 
     float getX() const;
     float getY() const;
     int getH() const;
     int getW() const;
     void setDX(int &b);
-    void setDY(int &b);
+    void setDY(float &b);
 };
 
 #endif // BALLE_H

@@ -13,6 +13,7 @@ int main(){
 
   while(view.treatEvents()){
     model.nextStep();
+    view.synchronize();
     view.draw();
   }
 

@@ -23,7 +23,6 @@ private:
     bool m_reverse, m_splashtime, m_logo1;
 
     bool m_jump;
-    sf::Time jumpStart;
     sf::Clock jumpTime;
 
     sf::Clock time;
@@ -54,6 +53,7 @@ public:
 
     void setModel(Model * model);
     void draw();
+    void synchronize();
     bool treatEvents();
 
 };

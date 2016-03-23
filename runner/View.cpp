@@ -7,7 +7,9 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
+
 using namespace std;
+
 const unsigned int SPEED = 2;
 const unsigned int SPEED1 = 1;
 //=======================================
@@ -20,9 +22,7 @@ View::View(int w, int h)
       m_splashtime(true),
       m_logo1(true),
       m_jump(false),
-      jumpTime(),
-      jumpStart(),
-      time()
+      jumpTime()
 {
 
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
@@ -51,6 +51,7 @@ View::View(int w, int h)
     else {
         GraphicElement tmp{_splashImg1, 225,150,384,298};
         _splashImgSprite1 = tmp;
+        _splashImgSprite1.setTransparency(m_transparent);
     }
 
     if (!_splashImg2.loadFromFile(SPLASH_IMG2))
@@ -58,6 +59,7 @@ View::View(int w, int h)
     else {
         GraphicElement tmp{_splashImg2, 180,50,452,417};
         _splashImgSprite2 = tmp;
+        _splashImgSprite2.setTransparency(m_transparent);
     }
 
     if (!_balle.loadFromFile(BALLE_IMAGE))
@@ -96,49 +98,10 @@ void View::draw(){
     {
         if(m_logo1)
         {
-            if(m_reverse)
-            {
-                if(m_transparent<=1)
-                {
-                    m_logo1=false;
-                    m_reverse=false;
-                }
-                else
-                    (m_transparent-=2);
-            }
-            else
-            {
-                if(m_transparent>=254)
-                    (m_reverse=true);
-                else
-                    (m_transparent+=2);
-            }
-
-            _splashImgSprite1.setTransparency(m_transparent);
             _window->draw(_splashImgSprite1);
-
         }
         else
         {
-            if(m_reverse)
-            {
-                if(m_transparent<=1)
-                {
-                    m_splashtime=false;
-                    m_reverse=false;
-                }
-                else
-                    (m_transparent-=2);
-            }
-            else
-            {
-                if(m_transparent>=254)
-                    (m_reverse=true);
-                else
-                    (m_transparent+=2);
-            }
-
-            _splashImgSprite2.setTransparency(m_transparent);
             _window->draw(_splashImgSprite2);
         }
     }
@@ -149,9 +112,6 @@ void View::draw(){
         //_backgroundSprite.draw(_window);
         _SlidingBackgroundSprite2.draw(_window);
         _SlidingBackgroundSprite1.draw(_window);
-
-
-        _balleSprite.setPosition(_model->getBallPosition());
         _balleSprite.draw(_window);
     }
 
@@ -183,15 +143,10 @@ bool View::treatEvents(){
             else
                 right=false;
 
+            // JUMP KEY
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
-                if(!m_jump)
-                {
-                jumpStart=time.getElapsedTime();
-                jumpTime.restart();
-                m_jump=true;
-                }
-
+                _model->jumpBall();
             }
 
             // SPLASH SCREEN SKEEPER //
@@ -218,18 +173,73 @@ bool View::treatEvents(){
 
     }
         _model->setCharDir(left,right);
-        _model->moveBall();
-        if(time.getElapsedTime().asSeconds()-jumpStart.asSeconds()>40)
-            m_jump=false;
 
-        if(m_jump){
-            int timeas=jumpTime.getElapsedTime().asMilliseconds();
-            int newvy=((int)(((cos(3.14/3)*0.1*timeas)-((9.81*timeas*timeas)/2000))));
-            _model->setBallVerticalSpeed(newvy);
-        }
 
+        std::cout << _model->getBallPosition().y << endl;
 
 
     return result;
 }
 
+void View::synchronize()
+{
+    //SplashScreen
+    if(m_splashtime)
+    {
+        if(m_logo1)
+        {
+            if(m_reverse)
+            {
+                if(m_transparent<=1)
+                {
+                    m_transparent=0;
+                    m_logo1=false;
+                    m_reverse=false;
+                }
+                else
+                    (m_transparent-=2);
+            }
+            else
+            {
+                if(m_transparent>=254)
+                    (m_reverse=true);
+                else
+                    (m_transparent+=2);
+            }
+            _splashImgSprite1.setTransparency(m_transparent);
+
+        }
+        else
+        {
+            if(m_reverse)
+            {
+                if(m_transparent<=1)
+                {
+                    m_splashtime=false;
+                    m_reverse=false;
+                }
+                else
+                    (m_transparent-=2);
+            }
+            else
+            {
+                if(m_transparent>=254)
+                    (m_reverse=true);
+                else
+                    (m_transparent+=2);
+            }
+            _splashImgSprite2.setTransparency(m_transparent);
+        }
+    }
+    //EndSplashScreen
+
+
+    //Ball's Position Updating
+    _balleSprite.setPosition(_model->getBallPosition());
+
+
+    //Move
+    _model->moveBall();
+
+
+}

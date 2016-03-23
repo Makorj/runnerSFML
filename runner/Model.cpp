@@ -26,6 +26,7 @@ Model::~Model(){
 //=======================================
 void Model::nextStep(){
     m_char->move();
+    m_char->jump();
 }
 
 sf::Vector2f Model::getBallPosition()
@@ -40,7 +41,7 @@ void Model::getBallDim(int&h, int &w)
     w=m_char->getW();
 }
 
-void Model::setBallVerticalSpeed(int &x)
+void Model::setBallVerticalSpeed(float &x)
 {
     m_char->setDY(x);
 }
@@ -68,4 +69,9 @@ void Model::moveBall()
         m_char->setDX(b);
     else
         m_char->setDX(c);
+}
+
+void Model::jumpBall()
+{
+    m_char->isJumping();
 }

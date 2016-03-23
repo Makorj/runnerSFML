@@ -18,9 +18,10 @@ class Model {
   sf::Vector2f getBallPosition();
   void getBallDim(int&h, int &w);
   void moveBall();
-  void setBallVerticalSpeed(int &x);
+  void setBallVerticalSpeed(float &x);
   void getCharDir(bool &left, bool &right);
   void setCharDir(bool& left, bool& right);
   void nextStep();
+  void jumpBall();
 };
 #endif
