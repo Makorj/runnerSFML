@@ -60,9 +60,9 @@ void Model::setCharDir(bool &left, bool &right)
 
 void Model::moveBall()
 {
-    int a = -5;
-    int b = 5;
-    int c = 0;
+    float a = -5.;
+    float b = 5.;
+    float c = 0.;
     if (m_leftdir)
         m_char->setDX(a);
     else if (m_rightdir)

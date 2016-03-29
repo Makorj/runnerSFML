@@ -3,6 +3,7 @@
 
 #include <array>
 #include <SFML/Graphics.hpp>
+#include <movableelement.h>
 
 /*** DEFINES ***/
 
@@ -20,14 +21,9 @@
 /**************/
 
 
-class Character
+class Character : public MovableElement
 {
 private:
-
-    ///Character's horizontal position
-    int m_x;
-    ///Character's vertical position
-    int m_y;
 
     ///Character's speed
     int m_speed;
@@ -58,7 +54,8 @@ public:
     /* DESTRUCTOR */
     ~Character();
 
-    void addLife(int &x);
+    void addLife(int const& x);
+    void subLife(int const& x);
     void setActualBonusId(int& bonusId);
     void move();
 

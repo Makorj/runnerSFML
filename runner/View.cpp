@@ -112,6 +112,7 @@ void View::draw(){
         //_backgroundSprite.draw(_window);
         _SlidingBackgroundSprite2.draw(_window);
         _SlidingBackgroundSprite1.draw(_window);
+
         _balleSprite.draw(_window);
     }
 

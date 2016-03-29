@@ -88,11 +88,19 @@ int GraphicElement::getW() const
     return m_w;
 }
 
+//!
+//! \brief Get the GrahicElement's X position
+//! \return GraphicElement's X position
+//!
 int GraphicElement::getX() const
 {
     return m_x;
 }
 
+//!
+//! \brief Get the GrahicElement's Y position
+//! \return GraphicElement's Y position
+//!
 int GraphicElement::getY() const
 {
     return m_y;
@@ -103,6 +111,11 @@ void GraphicElement::slideLeft(unsigned int s) {
     setPosition(m_x,m_y);
 }
 
+//!
+//! \brief Set GraphicElement's X and Y coordinates
+//! \param x New X position of the GraphicElement
+//! \param y New Y position of the GraphicElement
+//!
 void GraphicElement::replace(int x, int y) {
     m_x = x;
     m_y = y;

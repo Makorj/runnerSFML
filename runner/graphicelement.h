@@ -11,7 +11,7 @@ class GraphicElement
         : public sf::Sprite
 {
 
-private:
+protected:
 
     int m_w; ///< GraphicElement's width
     int m_h; ///< GraphicElement's height
