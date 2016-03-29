@@ -10,7 +10,7 @@ Model::Model(int w, int h)
   :  _w(w), _h(h),
     m_leftdir(false), m_rightdir(false)
 {
-    m_char=new Balle{10,450,300,300,0,0};
+    m_char=new Balle{10,450,50,50,0,0};
 }
 
 //=======================================

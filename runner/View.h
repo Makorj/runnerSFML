@@ -3,15 +3,28 @@
 
 #include <SFML/Graphics.hpp>
 #include "graphicelement.h"
+#include "animatedgraphicelement.h"
 #include "slidingbackground.h"
 
-const std::string BALLE_IMAGE = "Images/ball.png";
+const std::string BALLE_IMAGE = "Images/balls.png";
+
+const int SIZE_BALL = 50;
 
 const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/city_1.png";
 const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/city_2.png";
 
 const std::string SPLASH_IMG2 = "Images/kaaris.png";
 const std::string SPLASH_IMG1 = "Images/logo_iut.png";
+
+const sf::IntRect ball_rect1{0,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect ball_rect2{50,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect ball_rect3{100,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect ball_rect4{150,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect ball_rect5{200,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect ball_rect6{250,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect ball_rect7{300,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect ball_rect8{350,0,SIZE_BALL,SIZE_BALL};
+
 
 class Model;
 
@@ -21,9 +34,6 @@ private:
 
     int _w, _h, m_transparent;
     bool m_reverse, m_splashtime, m_logo1;
-
-    bool m_jump;
-    sf::Clock jumpTime;
 
     sf::Clock time;
 
@@ -37,7 +47,7 @@ private:
     GraphicElement _splashImgSprite2;
 
     sf::Texture _balle;
-    GraphicElement _balleSprite;
+    AnimatedGraphicElement _balleSprite;
 
     sf::Texture _SlidingBackground1;
     SlidingBackground _SlidingBackgroundSprite1;

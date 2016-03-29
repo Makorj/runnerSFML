@@ -13,8 +13,8 @@ SOURCES += main.cpp \
     graphicelement.cpp \
     slidingbackground.cpp \
     animatedgraphicelement.cpp \
-    moovableelement.cpp \
-    obstacle.cpp
+    obstacle.cpp \
+    movableelement.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -29,6 +29,6 @@ HEADERS += \
     graphicelement.h \
     slidingbackground.h \
     animatedgraphicelement.h \
-    moovableelement.h \
-    obstacle.h
+    obstacle.h \
+    movableelement.h
 
