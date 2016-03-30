@@ -11,7 +11,7 @@
 //! \param w Width of the GraphicalElement
 //! \param h Height of the GraphicalElement
 //!
-GraphicElement::GraphicElement(sf::Texture &image, int x, int y, int w, int h)
+GraphicElement::GraphicElement(sf::Texture &image, int x, int y, int w, int h, bool resiz)
     :
       Sprite(image),
       m_w(w),
@@ -19,7 +19,8 @@ GraphicElement::GraphicElement(sf::Texture &image, int x, int y, int w, int h)
       m_x(x),
       m_y(y)
 {
-    resize(m_w,m_h);
+    if(resiz)
+        resize(m_w,m_h);
     setPosition(sf::Vector2f(m_x,m_y));
 
 }

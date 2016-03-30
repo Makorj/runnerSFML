@@ -21,7 +21,7 @@ protected:
 public:
 
     GraphicElement() = default;
-    GraphicElement(sf::Texture &image, int x, int y, int w, int h);
+    GraphicElement(sf::Texture &image, int x, int y, int w, int h, bool resiz = true);
     GraphicElement(const GraphicElement& copy);
     void draw(sf::RenderWindow* window) const;
     void resize(int w, int h);

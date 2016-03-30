@@ -60,23 +60,15 @@ View::View(int w, int h)
         _splashImgSprite2.setTransparency(m_transparent);
     }
     vector<sf::IntRect> clipRect_balle;
-//    for (int i=0;i<8;i++) {
-//        clipRect_balle.push_back(sf::IntRect(0,i*SIZE_BALL, SIZE_BALL, SIZE_BALL));
-//    }
-    clipRect_balle.push_back(ball_rect1);
-    clipRect_balle.push_back(ball_rect2);
-    clipRect_balle.push_back(ball_rect3);
-    clipRect_balle.push_back(ball_rect4);
-    clipRect_balle.push_back(ball_rect5);
-    clipRect_balle.push_back(ball_rect6);
-    clipRect_balle.push_back(ball_rect7);
-    clipRect_balle.push_back(ball_rect8);
+    for (int i=0;i<8;i++) {
+        clipRect_balle.push_back(sf::IntRect(i*SIZE_BALL,0, SIZE_BALL, SIZE_BALL));
+    }
 
     if (!_balle.loadFromFile(BALLE_IMAGE))
         std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
     else {
         _balle.setSmooth(true);
-        AnimatedGraphicElement tmp{clipRect_balle, _balle, 1,1,100,100};
+        AnimatedGraphicElement tmp{clipRect_balle, _balle, 1,1,50,50};
         _balleSprite = tmp;
     }
     // END OF IMAGE LOADER //
