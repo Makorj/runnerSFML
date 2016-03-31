@@ -14,7 +14,7 @@ private:
 public:
     Balle(float x, float y, int w, int h, float dx, float dy);
 
-    void move();
+    void move(int screen_w);
 
     void isJumping();
     void jump();

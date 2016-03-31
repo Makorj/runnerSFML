@@ -110,8 +110,6 @@ void View::draw(){
     // END OF SPLASH SCREEN //
     else
     {
-
-        //_backgroundSprite.draw(_window);
         _SlidingBackgroundSprite2.draw(_window);
         _SlidingBackgroundSprite1.draw(_window);
 
@@ -134,7 +132,7 @@ bool View::treatEvents(){
 
         sf::Event event;
         while (_window->pollEvent(event)) {
-            cout << "Event detected" << endl;
+            //cout << "Event detected" << endl;
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                 left=true;
@@ -178,7 +176,7 @@ bool View::treatEvents(){
         _model->setCharDir(left,right);
 
 
-        std::cout << _model->getBallPosition().y << endl;
+       // std::cout << _model->getBallPosition().y << endl;
 
 
     return result;

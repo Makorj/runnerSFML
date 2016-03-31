@@ -1,12 +1,13 @@
 #include "movableelement.h"
 
-MovableElement::MovableElement(float x, float y, int w, int h, float dx, float dy):
-    m_x(x),
-    m_y(y),
-    m_w(w),
-    m_h(h),
-    m_dx(dx),
-    m_dy(dy)
+MovableElement::MovableElement(float x, float y, int w, int h, float dx, float dy, int type)
+    : m_type(type),
+      m_x(x),
+      m_y(y),
+      m_w(w),
+      m_h(h),
+      m_dx(dx),
+      m_dy(dy)
 {
 }
 
@@ -21,6 +22,10 @@ void MovableElement::setDX(float d) {
 
 void MovableElement::setDY(float d) {
     m_dy = d;
+}
+
+int MovableElement::getType() const {
+    return m_type;
 }
 
 float MovableElement::getX() const {

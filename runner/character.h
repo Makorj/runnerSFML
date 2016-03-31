@@ -5,21 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include <movableelement.h>
 
-/*** DEFINES ***/
-
-#define LIMBS_NUMBER 9
-#define MEMBER_TORSO 0
-#define MEMBER_ARM_LEFT 1
-#define MEMBER_FOREARM_LEFT 2
-#define MEMBER_ARM_RIGHT 3
-#define MEMBER_FOREARM_RIGHT 4
-#define MEMBER_LEG_LEFT 5
-#define MEMBER_CALF_LEFT 6
-#define MEMBER_LEG_RIGHT 7
-#define MEMBER_CALF_RIGHT 8
-
-/**************/
-
 
 class Character : public MovableElement
 {
@@ -42,9 +27,6 @@ private:
     int m_actualSkinId;
     ///Id of the active hat on the character, -1 if default
     int m_actualHatId;
-
-    //std::array<MovableElement*, LIMBS_NUMBER> m_members;
-    std::array<sf::RectangleShape*, LIMBS_NUMBER> m_members;
 
 public:
 
