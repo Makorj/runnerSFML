@@ -43,3 +43,14 @@ int MovableElement::getH() const {
 int MovableElement::getW() const {
     return m_w;
 }
+
+
+bool collide (MovableElement elem1,MovableElement elem2) {
+    if (elem1.getX() < elem2.getX() + elem2.getW() &&
+            elem1.getX() + elem1.getW() > elem2.getX() &&
+            elem1.getY() < elem2.getY() + elem2.getH() &&
+            elem1.getY() + elem1.getH() > elem2.getY() &&)
+        return true;
+    else
+        return false;
+}
