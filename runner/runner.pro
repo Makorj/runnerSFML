@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     slidingbackground.cpp \
     animatedgraphicelement.cpp \
     obstacle.cpp \
-    movableelement.cpp
+    movableelement.cpp \
+    TU/TU_ball.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
