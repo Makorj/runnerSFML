@@ -8,7 +8,7 @@ class Model {
  private:
   int _w, _h;
   int m_money;
-  Balle* m_char;
+  Character m_char;
   bool m_leftdir, m_rightdir;
   std::vector<MovableElement * > m_elements;
 
@@ -22,8 +22,8 @@ class Model {
 
   void nextStep();
 
-  sf::Vector2f getBallPosition();
-  void getElemsPos(std::vector<std::pair<int, sf::Vector2f> > &elemPos);
+  std::pair<float, float> getBallPosition();
+  void getElemsPos(std::vector<std::pair<int, std::pair<float, float> > > &elemPos);
 
   void getBallDim(int&h, int &w);
   void getCharDir(bool &left, bool &right);

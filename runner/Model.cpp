@@ -18,10 +18,12 @@ const float BALL_INIT_DY = 0;
 //! \param h
 //!
 Model::Model(int w, int h)
-  :  _w(w), _h(h),
-    m_leftdir(false), m_rightdir(false)
+  : _w(w),
+    _h(h),
+    m_char((float)BALL_INIT_X,(float)BALL_INIT_Y,(int)BALL_INIT_H,(int)BALL_INIT_W,(float)BALL_INIT_DX,(float)BALL_INIT_DY),
+    m_leftdir(false),
+    m_rightdir(false)
 {
-    m_char=new Balle{BALL_INIT_X,BALL_INIT_Y,BALL_INIT_H,BALL_INIT_W,BALL_INIT_DX,BALL_INIT_DY};
 
     for(int i=0;i<5;i++)
         m_elements.push_back(new Obstacle{(float)700+(100*i),450,50,50,0,0,1});
@@ -32,9 +34,6 @@ Model::Model(int w, int h)
 //!
 Model::~Model(){
 
-    //Deleting Balle
-    delete m_char;
-
     //Deleting all MovableElement still here
     for(auto x : m_elements)
         delete x;
@@ -44,8 +43,8 @@ Model::~Model(){
 // Calcul la prochaine étape
 //=======================================
 void Model::nextStep(){
-    m_char->move(_w);
-    m_char->jump();
+    m_char.move(_w);
+    m_char.jump();
 
     for(auto elem : m_elements)
     {
@@ -58,10 +57,9 @@ void Model::nextStep(){
 //! \brief Get the ball's position
 //! \return Position of the Ball in a sf::Vector2f
 //!
-sf::Vector2f Model::getBallPosition()
+std::pair<float,float> Model::getBallPosition()
 {
-    sf::Vector2f a{m_char->getX(),m_char->getY()};
-    return a;
+    return std::make_pair(m_char.getX(),m_char.getY());
 }
 
 //!
@@ -71,8 +69,8 @@ sf::Vector2f Model::getBallPosition()
 //!
 void Model::getBallDim(int&h, int &w)
 {
-    h=m_char->getH();
-    w=m_char->getW();
+    h=m_char.getH();
+    w=m_char.getW();
 }
 
 //!
@@ -81,7 +79,7 @@ void Model::getBallDim(int&h, int &w)
 //!
 void Model::setBallVerticalSpeed(float &x)
 {
-    m_char->setDY(x);
+    m_char.setDY(x);
 }
 
 void Model::getCharDir(bool &left, bool &right)
@@ -102,11 +100,11 @@ void Model::moveBall()
     float right = 5.;
     float stop = 0.;
     if (m_leftdir)
-        m_char->setDX(left);
+        m_char.setDX(left);
     else if (m_rightdir)
-        m_char->setDX(right);
+        m_char.setDX(right);
     else
-        m_char->setDX(stop);
+        m_char.setDX(stop);
 }
 
 //!
@@ -117,7 +115,7 @@ void Model::moveBall()
 //! \param elemPos std::vector used to store Elements positions passed by reference
 //! \author TEAM Carambar de l'IUT
 //!
-void Model::getElemsPos( std::vector<std::pair<int ,sf::Vector2f> >& elemPos)
+void Model::getElemsPos( std::vector<std::pair<int , std::pair<float, float> > >& elemPos)
 {
 
     unsigned int i=0;
@@ -125,12 +123,12 @@ void Model::getElemsPos( std::vector<std::pair<int ,sf::Vector2f> >& elemPos)
     {
         if(i<elemPos.size())
         {
-            elemPos[i] = std::make_pair(x->getType(), sf::Vector2f{x->getX(), x->getY()});
+            elemPos[i] = std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY()));
             i++;
         }
         else
         {
-            elemPos.push_back(std::make_pair(x->getType(), sf::Vector2f{x->getX(), x->getY()}));
+            elemPos.push_back(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
         }
     }
 
@@ -140,7 +138,7 @@ void Model::getElemsPos( std::vector<std::pair<int ,sf::Vector2f> >& elemPos)
 
 void Model::jumpBall()
 {
-    m_char->isJumping();
+    m_char.isJumping();
 }
 
 //!

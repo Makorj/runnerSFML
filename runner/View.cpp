@@ -175,10 +175,6 @@ bool View::treatEvents(){
     }
         _model->setCharDir(left,right);
 
-
-       // std::cout << _model->getBallPosition().y << endl;
-
-
     return result;
 }
 
@@ -236,7 +232,8 @@ void View::synchronize()
 
 
     //Ball's Position Updating
-    _balleSprite.setPosition(_model->getBallPosition());
+    std::pair<float,float> a = _model->getBallPosition();
+    _balleSprite.setPosition(sf::Vector2f{a.first, a.second});
 
 
     //Move

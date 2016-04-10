@@ -4,7 +4,7 @@
 #include <array>
 #include <SFML/Graphics.hpp>
 #include <movableelement.h>
-
+#include "clock.h"
 
 class Character : public MovableElement
 {
@@ -28,23 +28,29 @@ private:
     ///Id of the active hat on the character, -1 if default
     int m_actualHatId;
 
+    Clock jumpTime;
+    bool m_jumping;
+
 public:
 
     /* CONSTRUCTORS */
-    Character();
-
-    /* DESTRUCTOR */
-    ~Character();
+    Character(float x, float y, int w, int h, float dx, float dy);
 
     void addLife(int const& x);
     void subLife(int const& x);
     void setActualBonusId(int& bonusId);
-    void move();
+    void damage(int& damage);
+    void move(int screen_w);
+
+    void isJumping();
+    void jump();
+    void setDX(float d);
 
     int getMaxLife() const;
     int getActualSkinId() const;
     int getActualHatId() const;
     int getLife() const;
+
 };
 
 #endif // CHARACTER_H
