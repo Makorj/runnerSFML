@@ -2,9 +2,10 @@
 #define CHARACTER_H
 
 #include <array>
+#include "movableelement.h"
 #include <SFML/Graphics.hpp>
-#include <movableelement.h>
 #include "clock.h"
+
 
 class Character : public MovableElement
 {
@@ -39,7 +40,7 @@ public:
     void addLife(int const& x);
     void subLife(int const& x);
     void setActualBonusId(int& bonusId);
-    void damage(int& damage);
+    void damage(int const& damage);
     void move(int screen_w);
 
     void isJumping();

@@ -7,6 +7,8 @@
 #define MOVABLE_ELEMENT_TYPE_PIECE 3
 #define MOVABLE_ELEMENT_TYPE_CHAR 4
 
+class Character;
+
 class MovableElement
 {
 private:
@@ -28,16 +30,21 @@ public:
 
     MovableElement(float x, float y, int w, int h, float dx, float dy, int type=MOVABLE_ELEMENT_TYPE_DEFAULT);
 
-    void move();
+    void move(int timeElapsed);
 
     void setDX(float d);
     void setDY(float d);
 
-    int getType() const;
+    virtual int getType() const;
     float getX() const;
     float getY() const;
     int getH() const;
     int getW() const;
+    virtual void apply(Character& charact);
+
+    bool outOfScreen();
 };
+
+bool collide (MovableElement elem1,MovableElement elem2);
 
 #endif // MOOVABLEELEMENT_H

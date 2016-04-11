@@ -11,9 +11,8 @@ MovableElement::MovableElement(float x, float y, int w, int h, float dx, float d
 {
 }
 
-void MovableElement::move() {
+void MovableElement::move(int timeElapsed) {
     m_x+=m_dx;
-    m_y+=m_dx;
 }
 
 void MovableElement::setDX(float d) {
@@ -44,12 +43,23 @@ int MovableElement::getW() const {
     return m_w;
 }
 
+bool MovableElement::outOfScreen(){
+    if(m_x+m_w<-100)
+        return true;
+    return false;
+}
+
+void MovableElement::apply(Character &charact)
+{
+
+}
+
 
 bool collide (MovableElement elem1,MovableElement elem2) {
     if (elem1.getX() < elem2.getX() + elem2.getW() &&
             elem1.getX() + elem1.getW() > elem2.getX() &&
             elem1.getY() < elem2.getY() + elem2.getH() &&
-            elem1.getY() + elem1.getH() > elem2.getY() &&)
+            elem1.getY() + elem1.getH() > elem2.getY())
         return true;
     else
         return false;

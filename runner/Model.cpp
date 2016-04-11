@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "obstacle.h"
+#include "movableelement.h"
 #include <iostream>
 #include <fstream>
 #include <utility>
@@ -12,21 +13,21 @@ const int BALL_INIT_W = 50;
 const float BALL_INIT_DX = 0;
 const float BALL_INIT_DY = 0;
 
+int timeTest=0;
+
 //!
 //! \brief Constructor
 //! \param w
 //! \param h
 //!
 Model::Model(int w, int h)
-  : _w(w),
-    _h(h),
-    m_char((float)BALL_INIT_X,(float)BALL_INIT_Y,(int)BALL_INIT_H,(int)BALL_INIT_W,(float)BALL_INIT_DX,(float)BALL_INIT_DY),
-    m_leftdir(false),
-    m_rightdir(false)
+    : _w(w),
+      _h(h),
+      m_char((float)BALL_INIT_X,(float)BALL_INIT_Y,(int)BALL_INIT_H,(int)BALL_INIT_W,(float)BALL_INIT_DX,(float)BALL_INIT_DY),
+      m_leftdir(false),
+      m_rightdir(false)
 {
-
-    for(int i=0;i<5;i++)
-        m_elements.push_back(new Obstacle{(float)700+(100*i),450,50,50,0,0,1});
+    m_timeElapsed.restart();
 }
 
 //!
@@ -43,13 +44,44 @@ Model::~Model(){
 // Calcul la prochaine étape
 //=======================================
 void Model::nextStep(){
+    MovableElement* tmp;
     m_char.move(_w);
     m_char.jump();
 
-    for(auto elem : m_elements)
+    cout << m_char.getLife() << endl;
+
+    if(m_timeElapsed.asMilliseconds()-timeTest>5000)
     {
-        elem->setDX(-2.);
-        elem->move();
+        m_elements.push_back(new Obstacle{(float)900,435,65,65,-2,0,(1+(rand()%3))});
+                timeTest=m_timeElapsed.asMilliseconds();
+    }
+//    else if(m_timeElapsed.asMilliseconds()-timeTestBonus>2000)
+//    {
+
+//    }
+
+    for(auto elem=m_elements.begin();elem<m_elements.end();++elem)
+    {
+        tmp=*elem;
+
+        if(tmp->outOfScreen())
+        {
+            m_elements.erase(elem);
+            delete tmp;
+            tmp=nullptr;
+        }
+        else if(collide(m_char, *tmp))
+        {
+            tmp->apply(m_char);
+            m_elements.erase(elem);
+            delete tmp;
+            tmp=nullptr;
+        }
+        else
+        {
+            tmp->setDX(-2.);
+            tmp->move(m_timeElapsed.asSeconds());
+        }
     }
 }
 
@@ -118,23 +150,14 @@ void Model::moveBall()
 void Model::getElemsPos( std::vector<std::pair<int , std::pair<float, float> > >& elemPos)
 {
 
-    unsigned int i=0;
-    for(auto x : m_elements)
-    {
-        if(i<elemPos.size())
+        elemPos.clear();
+        for(auto x : m_elements)
         {
-            elemPos[i] = std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY()));
-            i++;
-        }
-        else
-        {
-            elemPos.push_back(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
-        }
-    }
+                elemPos.push_back(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
 
-    if(i<elemPos.size()-1)
-        elemPos.resize(i);
+        }
 }
+
 
 void Model::jumpBall()
 {

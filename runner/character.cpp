@@ -106,6 +106,6 @@ int Character::getLife() const
     return m_actualLife;
 }
 
-void Character::damage(int &damage){
+void Character::damage(const int &damage){
     m_actualLife-=damage;
 }

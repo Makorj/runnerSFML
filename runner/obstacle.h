@@ -7,14 +7,13 @@
 class Obstacle : public MovableElement
 {
 private:
-    int m_type;
+    int m_typeObs;
     int m_damage;
 public:
     Obstacle(float x, float y, int w, int h, float dx, float dy, int type);
 
     int getType() const;
-
-    void damageChar(Character &player);
+    void apply(Character &charact) override;
 };
 
 #endif // OBSTACLE_H

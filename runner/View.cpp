@@ -55,14 +55,53 @@ View::View(int w, int h)
     if (!_splashImg2.loadFromFile(SPLASH_IMG2))
         std::cerr << "ERROR when loading image file: " << SPLASH_IMG2 << std::endl;
     else {
-        GraphicElement tmp{_splashImg2, 180,50,452,417};
+        GraphicElement tmp{_splashImg2, 0,125,800,380};
         _splashImgSprite2 = tmp;
         _splashImgSprite2.setTransparency(m_transparent);
     }
-    vector<sf::IntRect> clipRect_balle;
-    for (int i=0;i<8;i++) {
-        clipRect_balle.push_back(sf::IntRect(i*SIZE_BALL,0, SIZE_BALL, SIZE_BALL));
+
+    if (!_elem.loadFromFile(ELEM_IMG))
+        std::cerr << "ERROR when loading image file: " << ELEM_IMG << std::endl;
+    else {
+        GraphicElement tmp{_elem, 0,0,65,65};
+        _elemSprite = tmp;
     }
+
+    if (!_boobaSong.openFromFile(SONG_BOOBA))
+        std::cerr << "ERROR when opening music stram with file: " << SONG_BOOBA << std::endl;
+    else
+    {
+        _boobaSong.setLoop(false);
+        _boobaSong.setVolume(30.);
+    }
+
+    if (!_boobaLoop.openFromFile(SONG_BOOBA))
+        std::cerr << "ERROR when opening music stram with file: " << SONG_BOOBA_LOOP << std::endl;
+    else
+    {
+        _boobaLoop.setLoop(true);
+        _boobaLoop.setVolume(30.);
+    }
+
+    if (!izi.loadFromFile(SOUND_IZI))
+        std::cerr << "ERROR when opening sound stream with file: " << SOUND_IZI << std::endl;
+    else
+        Jump.setBuffer(izi);
+
+
+    vector<sf::IntRect> clipRect_balle;
+//    for (int i=0;i<8;i++) {
+//        clipRect_balle.push_back(sf::IntRect(i*SIZE_BALL,0, SIZE_BALL, SIZE_BALL));
+//    }
+
+    clipRect_balle.push_back(ball_rect1);
+    clipRect_balle.push_back(ball_rect2);
+    clipRect_balle.push_back(ball_rect3);
+    clipRect_balle.push_back(ball_rect4);
+    clipRect_balle.push_back(ball_rect5);
+    clipRect_balle.push_back(ball_rect6);
+    clipRect_balle.push_back(ball_rect7);
+    clipRect_balle.push_back(ball_rect8);
 
     if (!_balle.loadFromFile(BALLE_IMAGE))
         std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
@@ -110,8 +149,43 @@ void View::draw(){
     // END OF SPLASH SCREEN //
     else
     {
+        if(_boobaSong.getStatus()==sf::SoundSource::Stopped && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
+            _boobaLoop.play();
+        else if(_boobaSong.getStatus()!=sf::SoundSource::Playing)
+            _boobaSong.play();
+
+
         _SlidingBackgroundSprite2.draw(_window);
         _SlidingBackgroundSprite1.draw(_window);
+
+        for(auto x : m_elemPos)
+        {
+            switch (x.first) {
+            case 11:
+                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+                _elemSprite.draw(_window);
+                break;
+            case 12:
+                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+                _elemSprite.draw(_window);
+                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second-65});
+                _elemSprite.draw(_window);
+                break;
+            case 13:
+                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+                _elemSprite.draw(_window);
+                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second-65});
+                _elemSprite.draw(_window);
+                _elemSprite.setPosition(sf::Vector2f{x.second.first+65, x.second.second});
+                _elemSprite.draw(_window);
+                _elemSprite.setPosition(sf::Vector2f{x.second.first+65, x.second.second-65});
+                _elemSprite.draw(_window);
+                break;
+            default:
+                break;
+            }
+
+        }
 
         _balleSprite.draw(_window);
     }
@@ -148,6 +222,7 @@ bool View::treatEvents(){
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             {
                 _model->jumpBall();
+                Jump.play();
             }
 
             // SPLASH SCREEN SKEEPER //
@@ -229,6 +304,8 @@ void View::synchronize()
         }
     }
     //EndSplashScreen
+
+    _model->getElemsPos(m_elemPos);
 
 
     //Ball's Position Updating

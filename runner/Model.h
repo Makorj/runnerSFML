@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "balle.h"
+#include "clock.h"
 
 class Model {
  private:
@@ -11,6 +12,7 @@ class Model {
   Character m_char;
   bool m_leftdir, m_rightdir;
   std::vector<MovableElement * > m_elements;
+  Clock m_timeElapsed;
 
  public:
 
