@@ -11,7 +11,7 @@ MovableElement::MovableElement(float x, float y, int w, int h, float dx, float d
 {
 }
 
-void MovableElement::move(int timeElapsed) {
+void MovableElement::move() {
     m_x+=m_dx;
 }
 
@@ -49,7 +49,7 @@ bool MovableElement::outOfScreen(){
     return false;
 }
 
-void MovableElement::apply(Character &charact)
+void MovableElement::apply(Character *charact)
 {
 
 }

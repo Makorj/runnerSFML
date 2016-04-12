@@ -34,7 +34,7 @@ void Character::jump()
 
 void Character::isJumping()
 {
-    if(!m_jumping)
+    if(!m_jumping || !m_DoubleJumpTimer.hasEnded())
     {
         jumpTime.restart();
         m_jumping=true;
@@ -43,7 +43,7 @@ void Character::isJumping()
 
 void Character::setDX(float d)
 {
-    if(!m_jumping)
+    if(!m_jumping || !!m_DoubleJumpTimer.hasEnded())
     {
         if(m_dx<5 && m_dx>-3 && d!=0)
             m_dx+=d*HORIZONTAL_JUMPING_SPEED_MULTIPLIER;
@@ -68,17 +68,18 @@ void Character::move(int screen_w)
 }
 
 
-Character::Character(float x, float y, int w, int h, float dx, float dy)
+Character::Character(float x, float y, int w, int h, float dx, float dy, int maxLife)
     : MovableElement(x,y,w,h,dx,dy,MOVABLE_ELEMENT_TYPE_CHAR),
       jumpTime(),
       m_jumping(false),
       m_speed(1),
       m_dir(1),
-      m_maxLife(100),
+      m_maxLife(maxLife),
       m_actualLife(m_maxLife),
-      m_actualBonusId(-1),
-      m_actualSkinId(-1),
-      m_actualHatId(-1)
+      m_score(0),
+      m_InvicibleTimer(),
+      m_DoubleJumpTimer(),
+      m_ScoreMultiplierTimer()
 {
 
 }
@@ -91,14 +92,22 @@ void Character::addLife(const int &x)
         m_actualLife+=x;
 }
 
+void Character::addScore(int& x)
+{
+    m_score+=x;
+}
+
 void Character::subLife(const int &x)
 {
     m_actualLife-=x;
 }
 
-void Character::setActualBonusId(int& bonusId)
-{
-    m_actualBonusId=bonusId;
+void Character::startInvicibility(const int &countdown) {
+    m_InvicibleTimer.startCounter(countdown);
+}
+
+void Character::startDoubleJump(const int &countdown) {
+    m_DoubleJumpTimer.startCounter(countdown);
 }
 
 int Character::getLife() const
@@ -106,6 +115,16 @@ int Character::getLife() const
     return m_actualLife;
 }
 
+int Character::getScore() const
+{
+    return m_score;
+}
+
 void Character::damage(const int &damage){
-    m_actualLife-=damage;
+    if(m_InvicibleTimer.hasEnded())
+        m_actualLife-=damage;
+}
+
+bool Character::isInvicible() {
+    return m_InvicibleTimer.hasEnded();
 }

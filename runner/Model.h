@@ -8,9 +8,10 @@
 class Model {
  private:
   int _w, _h;
-  int m_money;
+  float m_allSpeed;
+  unsigned int m_money;
   Character m_char;
-  bool m_leftdir, m_rightdir;
+  bool m_leftdir, m_rightdir, m_collide;
   std::vector<MovableElement * > m_elements;
   Clock m_timeElapsed;
 
@@ -19,8 +20,14 @@ class Model {
   Model(int w, int h);
   ~Model();
 
+  void restart();
+  void afterShopUpdate();
+  void pause();
+
   void moveBall();
   void jumpBall();
+
+  bool hasCollide();
 
   void nextStep();
 
@@ -29,7 +36,9 @@ class Model {
 
   void getBallDim(int&h, int &w);
   void getCharDir(bool &left, bool &right);
-  int getMoney();
+  unsigned int getMoney();
+  int getScore();
+  int getAllSpeed() const;
 
   void setBallVerticalSpeed(float &x);
   void setCharDir(bool& left, bool& right);

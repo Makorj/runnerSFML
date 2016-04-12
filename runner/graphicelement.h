@@ -30,7 +30,7 @@ public:
     int getW() const;
     int getX() const;
     int getY() const;
-    void slideLeft(unsigned int s);
+    void slideLeft(float s);
     void replace(int x, int y);
 
 };
