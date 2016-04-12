@@ -15,7 +15,10 @@ SOURCES += main.cpp \
     animatedgraphicelement.cpp \
     obstacle.cpp \
     movableelement.cpp \
-    TU/TU_ball.cpp
+    TU/TU_ball.cpp \
+    bonus.cpp \
+    clock.cpp \
+    menu.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -31,5 +34,8 @@ HEADERS += \
     slidingbackground.h \
     animatedgraphicelement.h \
     obstacle.h \
-    movableelement.h
+    movableelement.h \
+    bonus.h \
+    clock.h \
+    menu.h
 
