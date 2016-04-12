@@ -47,7 +47,8 @@ View::View(int w, int h)
     if (!_splashImg1.loadFromFile(SPLASH_IMG1))
         std::cerr << "ERROR when loading image file: " << SPLASH_IMG1 << std::endl;
     else {
-        GraphicElement tmp{_splashImg1, 225,150,384,298};
+        _splashImg1.setSmooth(true);
+        GraphicElement tmp{_splashImg1, 115,150,1000,298};
         _splashImgSprite1 = tmp;
         _splashImgSprite1.setTransparency(m_transparent);
     }
@@ -55,15 +56,23 @@ View::View(int w, int h)
     if (!_splashImg2.loadFromFile(SPLASH_IMG2))
         std::cerr << "ERROR when loading image file: " << SPLASH_IMG2 << std::endl;
     else {
-        GraphicElement tmp{_splashImg2, 0,125,800,380};
+        _splashImg2.setSmooth(true);
+        GraphicElement tmp{_splashImg2, 0,65,1200,500};
         _splashImgSprite2 = tmp;
         _splashImgSprite2.setTransparency(m_transparent);
+    }
+
+    if (!_coin.loadFromFile(COIN_IMG))
+        std::cerr << "ERROR when loading image file: " << COIN_IMG << std::endl;
+    else {
+        GraphicElement tmp{_coin, 0,0,50,50};
+        _coinSprite = tmp;
     }
 
     if (!_elem.loadFromFile(ELEM_IMG))
         std::cerr << "ERROR when loading image file: " << ELEM_IMG << std::endl;
     else {
-        GraphicElement tmp{_elem, 0,0,65,65};
+        GraphicElement tmp{_elem, 0,0,50,50};
         _elemSprite = tmp;
     }
 
@@ -88,6 +97,11 @@ View::View(int w, int h)
     else
         Jump.setBuffer(izi);
 
+    if (!carre.loadFromFile(SOUND_CARRE))
+        std::cerr << "ERROR when opening sound stream with file: " << SOUND_CARRE << std::endl;
+    else
+        Collision.setBuffer(carre);
+
 
     vector<sf::IntRect> clipRect_balle;
 //    for (int i=0;i<8;i++) {
@@ -107,7 +121,7 @@ View::View(int w, int h)
         std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
     else {
         _balle.setSmooth(true);
-        AnimatedGraphicElement tmp{clipRect_balle, _balle, 1,1,50,50};
+        AnimatedGraphicElement tmp{clipRect_balle, _balle, 1,1,40,40};
         _balleSprite = tmp;
     }
     // END OF IMAGE LOADER //
@@ -151,16 +165,22 @@ void View::draw(){
     {
         if(_boobaSong.getStatus()==sf::SoundSource::Stopped && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
             _boobaLoop.play();
-        else if(_boobaSong.getStatus()!=sf::SoundSource::Playing)
+        else if(_boobaSong.getStatus()!=sf::SoundSource::Playing && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
             _boobaSong.play();
-
 
         _SlidingBackgroundSprite2.draw(_window);
         _SlidingBackgroundSprite1.draw(_window);
 
+        if(_model->hasCollide())
+            Collision.play();
+
         for(auto x : m_elemPos)
         {
             switch (x.first) {
+            case 22:
+                _coinSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+                _coinSprite.draw(_window);
+                break;
             case 11:
                 _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
                 _elemSprite.draw(_window);
@@ -168,23 +188,24 @@ void View::draw(){
             case 12:
                 _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
                 _elemSprite.draw(_window);
-                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second-65});
+                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second+50});
                 _elemSprite.draw(_window);
                 break;
             case 13:
                 _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
                 _elemSprite.draw(_window);
-                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second-65});
+                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second+50});
                 _elemSprite.draw(_window);
-                _elemSprite.setPosition(sf::Vector2f{x.second.first+65, x.second.second});
+                _elemSprite.setPosition(sf::Vector2f{x.second.first+50, x.second.second});
                 _elemSprite.draw(_window);
-                _elemSprite.setPosition(sf::Vector2f{x.second.first+65, x.second.second-65});
+                _elemSprite.setPosition(sf::Vector2f{x.second.first+50, x.second.second+50});
                 _elemSprite.draw(_window);
                 break;
             default:
+                _coinSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+                _coinSprite.draw(_window);
                 break;
             }
-
         }
 
         _balleSprite.draw(_window);
@@ -307,6 +328,8 @@ void View::synchronize()
 
     _model->getElemsPos(m_elemPos);
 
+    _SlidingBackgroundSprite1.setSpeed((float)-1*(_model->getAllSpeed()));
+    _SlidingBackgroundSprite2.setSpeed((float)-1*_model->getAllSpeed()-1);
 
     //Ball's Position Updating
     std::pair<float,float> a = _model->getBallPosition();

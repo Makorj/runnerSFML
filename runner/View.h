@@ -13,8 +13,8 @@ const std::string BALLE_IMAGE = "Images/balls.png";
 
 const int SIZE_BALL = 50;
 
-const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/city_1.png";
-const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/city_2.png";
+const std::string SLIDING_BACKGROUND_IMAGE1 = "Images/city_1.png";
+const std::string SLIDING_BACKGROUND_IMAGE2 = "Images/city_2.png";
 
 const std::string SPLASH_IMG2 = "Images/logo_carambar.png";
 const std::string SPLASH_IMG1 = "Images/logo_iut.png";
@@ -23,8 +23,10 @@ const std::string SONG_BOOBA= "Audio/sonBooba.ogg";
 const std::string SONG_BOOBA_LOOP= "Audio/sonBoobaLoop.ogg";
 
 const std::string SOUND_IZI="Audio/izi.ogg";
+const std::string SOUND_CARRE="Audio/carre.ogg";
 
 const std::string ELEM_IMG = "Images/k.png";
+const std::string COIN_IMG = "Images/tigkappa.png";
 
 const sf::IntRect ball_rect1{0,0,42,50};
 const sf::IntRect ball_rect2{42,0,57,SIZE_BALL};
@@ -59,6 +61,9 @@ private:
     sf::Texture _balle;
     AnimatedGraphicElement _balleSprite;
 
+    sf::Texture _coin;
+    GraphicElement _coinSprite;
+
     sf::Texture _elem;
     GraphicElement _elemSprite;
 
@@ -70,6 +75,9 @@ private:
 
     sf::SoundBuffer izi;
     sf::Sound Jump;
+
+    sf::SoundBuffer carre;
+    sf::Sound Collision;
 
     sf::Music _boobaSong;
     sf::Music _boobaLoop;

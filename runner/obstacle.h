@@ -2,7 +2,7 @@
 #define OBSTACLE_H
 
 #include <movableelement.h>
-#include <balle.h>
+#include <character.h>
 
 class Obstacle : public MovableElement
 {
@@ -13,7 +13,7 @@ public:
     Obstacle(float x, float y, int w, int h, float dx, float dy, int type);
 
     int getType() const;
-    void apply(Character &charact) override;
+    void apply(Character* charact) override;
 };
 
 #endif // OBSTACLE_H
