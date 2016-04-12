@@ -20,7 +20,9 @@ View::View(int w, int h)
       m_transparent(0),
       m_reverse(false),
       m_splashtime(true),
-      m_logo1(true)
+      m_logo1(true),
+      m_menu(true),
+      m_mainmenu{w,h/*,MAIN_MENU_ITEMS,NB_MAINMENU_ITEMS*/}
 {
 
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
@@ -147,6 +149,9 @@ void View::draw(){
         }
     }
     // END OF SPLASH SCREEN //
+    else if(m_menu) {
+        m_mainmenu.draw(_window);
+    }
     else
     {
         if(_boobaSong.getStatus()==sf::SoundSource::Stopped && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
