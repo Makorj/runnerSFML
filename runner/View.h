@@ -29,6 +29,7 @@ const std::string SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
 const std::string SOUND_IZI="../Audio/izi.ogg";
 
 const std::string ELEM_IMG = "../Images/k.png";
+const std::string COIN_IMG = "../Images/tigkappa.png";
 
 <<<<<<< HEAD
 const std::string SOUND_IZI="Audio/izi.ogg";
@@ -41,7 +42,6 @@ const std::string MAIN_MENU_ITEMS[NB_MAINMENU_ITEMS] = {"Play","Best Scores","Sh
 
 const std::string SHOP_MENU_ITEMS[NB_SHOP_ITEMS] = {"","","","",""};
 >>>>>>> 6c12cccc539de40edd1d5fea0ba216b51f39701c
-
 
 //const sf::IntRect ball_rect1{0,0,42,50};
 //const sf::IntRect ball_rect2{42,0,57,SIZE_BALL};
