@@ -2,17 +2,25 @@
 #define MENU_H
 
 #include "SFML/Graphics.hpp"
-
+#include "graphicelement.h"
+#include <map>
 #define MAX_NUMBER_BOUTONS 4
+
+const std::string MENUITEM_PATH = "../Images/menuitems.png";
+//const sf::IntRect READ_RECT = {sf::IntRect{0,0,300,50}, sf::IntRect{0,50,300,50}, sf::IntRect{0,100,300,}};
+
 class Menu
 {
 private :
+    sf::Texture m_menu_sprite;
+    int m_nb_items;
     int m_selectedItem;
     sf::Font m_font;
-    std::vector<sf::Text> m_items;
+    std::vector<std::pair<sf::Text,sf::Sprite> >m_items;
 public:
-    Menu(float w, float h/*,std::string MenuItems[], int size*/);
+    Menu(float w, float h, const std::string MenuItems[], int size);
     void draw(sf::RenderWindow *window);
+    void eventMenu(sf::Mouse mouse, sf::RenderWindow *window);
     void MoveUp();
     void MoveDown();
 

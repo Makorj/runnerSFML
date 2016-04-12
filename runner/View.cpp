@@ -22,7 +22,7 @@ View::View(int w, int h)
       m_splashtime(true),
       m_logo1(true),
       m_menu(true),
-      m_mainmenu{w,h/*,MAIN_MENU_ITEMS,NB_MAINMENU_ITEMS*/}
+      m_mainmenu{w,h,MAIN_MENU_ITEMS,NB_MAINMENU_ITEMS}
 {
 
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
@@ -150,7 +150,10 @@ void View::draw(){
     }
     // END OF SPLASH SCREEN //
     else if(m_menu) {
-        m_mainmenu.draw(_window);
+
+        _SlidingBackgroundSprite2.draw(_window);
+        _SlidingBackgroundSprite1.draw(_window);
+         m_mainmenu.draw(_window);
     }
     else
     {
@@ -212,7 +215,10 @@ bool View::treatEvents(){
         sf::Event event;
         while (_window->pollEvent(event)) {
             //cout << "Event detected" << endl;
-
+            if(m_menu) {
+                //sf::Mouse mouse;
+                //m_mainmenu.eventMenu(mouse, _window);
+            }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                 left=true;
             else
