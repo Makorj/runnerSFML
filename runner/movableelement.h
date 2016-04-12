@@ -30,7 +30,7 @@ public:
 
     MovableElement(float x, float y, int w, int h, float dx, float dy, int type=MOVABLE_ELEMENT_TYPE_DEFAULT);
 
-    void move(int timeElapsed);
+    void move();
 
     void setDX(float d);
     void setDY(float d);
@@ -40,7 +40,7 @@ public:
     float getY() const;
     int getH() const;
     int getW() const;
-    virtual void apply(Character& charact);
+    virtual void apply(Character* charact);
 
     bool outOfScreen();
 };

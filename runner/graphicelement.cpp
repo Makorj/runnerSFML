@@ -107,7 +107,7 @@ int GraphicElement::getY() const
     return m_y;
 }
 
-void GraphicElement::slideLeft(unsigned int s) {
+void GraphicElement::slideLeft(float s) {
     m_x -= s;
     setPosition(m_x,m_y);
 }

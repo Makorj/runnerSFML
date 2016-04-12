@@ -1,6 +1,8 @@
 #include "Model.h"
 #include "obstacle.h"
 #include "movableelement.h"
+#include "coin.h"
+#include "heal.h"
 #include <iostream>
 #include <fstream>
 #include <utility>
@@ -8,12 +10,13 @@ using namespace std;
 
 const float BALL_INIT_X = 10.;
 const float BALL_INIT_Y = 450.;
-const int BALL_INIT_H = 50;
-const int BALL_INIT_W = 50;
+const int BALL_INIT_H = 40;
+const int BALL_INIT_W = 40;
 const float BALL_INIT_DX = 0;
 const float BALL_INIT_DY = 0;
 
 int timeTest=0;
+int timeTestBonus=0;
 
 //!
 //! \brief Constructor
@@ -23,9 +26,11 @@ int timeTest=0;
 Model::Model(int w, int h)
     : _w(w),
       _h(h),
+      m_allSpeed(2.),
       m_char((float)BALL_INIT_X,(float)BALL_INIT_Y,(int)BALL_INIT_H,(int)BALL_INIT_W,(float)BALL_INIT_DX,(float)BALL_INIT_DY),
       m_leftdir(false),
-      m_rightdir(false)
+      m_rightdir(false),
+      m_collide(false)
 {
     m_timeElapsed.restart();
 }
@@ -48,17 +53,33 @@ void Model::nextStep(){
     m_char.move(_w);
     m_char.jump();
 
+    m_allSpeed=-2-(2.*m_timeElapsed.asSeconds()*0.01666666);
     cout << m_char.getLife() << endl;
 
-    if(m_timeElapsed.asMilliseconds()-timeTest>5000)
+    if(m_timeElapsed.asMilliseconds()-timeTest>7000)
     {
-        m_elements.push_back(new Obstacle{(float)900,435,65,65,-2,0,(1+(rand()%3))});
+        m_elements.push_back(new Obstacle{(float)1300,435,50,50,-2,0,(1+(rand()%3))});
                 timeTest=m_timeElapsed.asMilliseconds();
     }
-//    else if(m_timeElapsed.asMilliseconds()-timeTestBonus>2000)
-//    {
+    else if(m_timeElapsed.asMilliseconds()-timeTestBonus>2000)
+    {
+         m_elements.push_back(new Heal{1300.,310,50,50,-2,0,100});
+//        switch(1)//+(rand()%3))
+//        {
+//        case 1:
+//            m_elements.push_back(new Coin{1300.,310,50,50,-2,0});
+//            break;
+//        case 2:
+//            break;
+//        case 3:
+//            break;
+//        default:
+//            break;
+//        }
+         timeTestBonus=m_timeElapsed.asMilliseconds();
+    }
 
-//    }
+    m_collide=false;
 
     for(auto elem=m_elements.begin();elem<m_elements.end();++elem)
     {
@@ -72,17 +93,28 @@ void Model::nextStep(){
         }
         else if(collide(m_char, *tmp))
         {
-            tmp->apply(m_char);
+            int x = tmp->getType();
+            (x>=11 && x<20)?m_collide=true:false;
+//                    (x==22)?m_blingbling=true:
+//                    ;
+
+
+            tmp->apply(&m_char);
             m_elements.erase(elem);
             delete tmp;
             tmp=nullptr;
         }
         else
         {
-            tmp->setDX(-2.);
-            tmp->move(m_timeElapsed.asSeconds());
+            tmp->setDX(m_allSpeed);
+            tmp->move();
         }
     }
+}
+
+bool Model::hasCollide()
+{
+    return m_collide;
 }
 
 //!
@@ -126,6 +158,10 @@ void Model::setCharDir(bool &left, bool &right)
     m_rightdir=right;
 }
 
+int Model::getAllSpeed() const{
+    return m_allSpeed;
+}
+
 void Model::moveBall()
 {
     float left = -3.;
@@ -153,8 +189,7 @@ void Model::getElemsPos( std::vector<std::pair<int , std::pair<float, float> > >
         elemPos.clear();
         for(auto x : m_elements)
         {
-                elemPos.push_back(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
-
+            elemPos.push_back(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
         }
 }
 
@@ -168,7 +203,12 @@ void Model::jumpBall()
 //! \brief Get the player's money
 //! \return Player's money
 //!
-int Model::getMoney()
+unsigned int Model::getMoney()
 {
     return m_money;
+}
+
+int Model::getScore()
+{
+    return m_char.getScore()+(m_timeElapsed.asMilliseconds()*5);
 }

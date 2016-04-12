@@ -1,7 +1,7 @@
 #include "slidingbackground.h"
 #include "graphicelement.h"
 
-SlidingBackground::SlidingBackground(sf::Texture &image, int w, int h, unsigned int speed):
+SlidingBackground::SlidingBackground(sf::Texture &image, int w, int h,float speed):
     m_w(w),
     m_h(h),
     m_speed(speed)
@@ -32,6 +32,6 @@ void SlidingBackground::draw(sf::RenderWindow *window) {
     }
 }
 
-void SlidingBackground::setSpeed(unsigned int s) {
+void SlidingBackground::setSpeed(float s) {
     m_speed = s;
 }

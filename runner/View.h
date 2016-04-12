@@ -29,11 +29,11 @@ const std::string SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
 const std::string SOUND_IZI="../Audio/izi.ogg";
 
 const std::string ELEM_IMG = "../Images/k.png";
+const std::string COIN_IMG = "../Images/tigkappa.png";
 
 const std::string MAIN_MENU_ITEMS[NB_MAINMENU_ITEMS] = {"Play","Best Scores","Shop","Quit"};
 
 const std::string SHOP_MENU_ITEMS[NB_SHOP_ITEMS] = {"","","","",""};
-
 
 //const sf::IntRect ball_rect1{0,0,42,50};
 //const sf::IntRect ball_rect2{42,0,57,SIZE_BALL};
@@ -76,6 +76,9 @@ private:
     sf::Texture _balle;
     AnimatedGraphicElement _balleSprite;
 
+    sf::Texture _coin;
+    GraphicElement _coinSprite;
+
     sf::Texture _elem;
     GraphicElement _elemSprite;
 
@@ -87,6 +90,9 @@ private:
 
     sf::SoundBuffer izi;
     sf::Sound Jump;
+
+    sf::SoundBuffer carre;
+    sf::Sound Collision;
 
     sf::Music _boobaSong;
     sf::Music _boobaLoop;
