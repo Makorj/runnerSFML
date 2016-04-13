@@ -1,6 +1,6 @@
 #ifndef BONUS_H
 #define BONUS_H
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
 #include "movableelement.h"
 
@@ -17,14 +17,5 @@ private:
 public:
     Bonus(float x, float y, int w, int h, float dx, float dy, int typeBon=BONUS_TYPE_DEFAULT);
     int getType() const override;
-=======
-#include "movableelement.h"
-
-class Bonus : public MovableElement
-{
-public:
-    Bonus(float x, float y, int w, int h, float dx, float dy, int type);
->>>>>>> 6c12cccc539de40edd1d5fea0ba216b51f39701c
 };
-
 #endif // BONUS_H
