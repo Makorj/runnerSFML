@@ -27,6 +27,7 @@ const std::string SONG_BOOBA= "../Audio/sonBooba.ogg";
 const std::string SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
 
 const std::string SOUND_IZI="../Audio/izi.ogg";
+const std::string SOUND_CARRE="../Audio/carre.ogg";
 
 const std::string ELEM_IMG = "../Images/k.png";
 const std::string COIN_IMG = "../Images/tigkappa.png";

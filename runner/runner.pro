@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     TU/TU_ball.cpp \
     bonus.cpp \
     clock.cpp \
-    menu.cpp
+    menu.cpp \
+    heal.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -37,5 +38,6 @@ HEADERS += \
     movableelement.h \
     bonus.h \
     clock.h \
-    menu.h
+    menu.h \
+    heal.h
 
