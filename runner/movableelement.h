@@ -30,6 +30,8 @@ public:
 
     MovableElement(float x, float y, int w, int h, float dx, float dy, int type=MOVABLE_ELEMENT_TYPE_DEFAULT);
 
+    //virtual ~MovableElement();
+
     void move();
 
     void setDX(float d);

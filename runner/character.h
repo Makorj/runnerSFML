@@ -34,7 +34,9 @@ private:
 public:
 
     /* CONSTRUCTORS */
-    Character(float x, float y, int w, int h, float dx, float dy,int maxLife=100);
+    Character(float x, float y, int w, int h, float dx, float dy, int maxLife=100);
+    //~Character() override;
+
 
     void addLife(int const& x);
     void subLife(int const& x);

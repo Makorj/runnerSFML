@@ -5,15 +5,23 @@
 #include "balle.h"
 #include "clock.h"
 
+const int SAVED_PARAM_ID_MAXLIFE=0;
+const int SAVED_PARAM_ID_HEAL_POWER=1;
+const int SAVED_PARAM_ID_DOUBLE_JUMP_DURATION=2;
+const int SAVED_PARAM_ID_INVICIBILITY_DURATION=3;
+
+const int SAVED_PARAM_MONEY=5;
+
 class Model {
  private:
   int _w, _h;
   float m_allSpeed;
   unsigned int m_money;
-  Character m_char;
+  Character* m_char;
   bool m_leftdir, m_rightdir, m_collide;
   std::vector<MovableElement * > m_elements;
   Clock m_timeElapsed;
+  std::array<int, 10> m_savedParam;
 
  public:
 
@@ -21,13 +29,16 @@ class Model {
   ~Model();
 
   void restart();
-  void afterShopUpdate();
+  void shopUpdate(std::array<int, 10>& newParam);
   void pause();
+  void load();
+  void save();
 
   void moveBall();
   void jumpBall();
 
   bool hasCollide();
+  bool hasEnded();
 
   void nextStep();
 

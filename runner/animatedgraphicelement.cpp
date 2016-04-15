@@ -1,4 +1,5 @@
 #include "animatedgraphicelement.h"
+#include <SFML/Graphics.hpp>
 
 AnimatedGraphicElement::AnimatedGraphicElement(const std::vector<sf::IntRect>& clipRects, sf::Texture &image, int x, int y, int w, int h)
     :GraphicElement(image, x, y, w, h, false)
@@ -30,3 +31,10 @@ void AnimatedGraphicElement::draw(sf::RenderWindow *window) {
     window->draw(*this);
 
 }
+
+//void resize(int w, int h) {
+////    sf::FloatRect dd =
+////    float width_factor = w / bb.width;
+////    float height_factor = h / bb.height;
+////    setScale(width_factor, height_factor);
+//}

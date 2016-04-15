@@ -10,15 +10,16 @@
 #include "slidingbackground.h"
 #include "menu.h"
 
-#define NB_MAINMENU_ITEMS 4
-#define NB_SHOP_ITEMS 5
+const int NB_MAINMENU_ITEMS = 4;
+const int NB_SHOP_ITEMS = 5;
 
-const std::string BALLE_IMAGE = "../Images/balls.png";
+//const std::string BALLE_IMAGE = "../Images/balls.png";
+const std::string BALLE_IMAGE = "../Images/popo_sprite_sheet.png";
 
 const int SIZE_BALL = 50;
 
-const std::string SLIDING_BACKGROUND_IMAGE1 = "Images/city_1.png";
-const std::string SLIDING_BACKGROUND_IMAGE2 = "Images/city_2.png";
+const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/city_1.png";
+const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/city_2.png";
 
 const std::string SPLASH_IMG2 = "../Images/logo_carambar.png";
 const std::string SPLASH_IMG1 = "../Images/logo_iut.png";
@@ -32,17 +33,9 @@ const std::string SOUND_CARRE="../Audio/carre.ogg";
 const std::string ELEM_IMG = "../Images/k.png";
 const std::string COIN_IMG = "../Images/tigkappa.png";
 
-<<<<<<< HEAD
-const std::string SOUND_IZI="Audio/izi.ogg";
-const std::string SOUND_CARRE="Audio/carre.ogg";
-
-const std::string ELEM_IMG = "Images/k.png";
-const std::string COIN_IMG = "Images/tigkappa.png";
-=======
 const std::string MAIN_MENU_ITEMS[NB_MAINMENU_ITEMS] = {"Play","Best Scores","Shop","Quit"};
 
 const std::string SHOP_MENU_ITEMS[NB_SHOP_ITEMS] = {"","","","",""};
->>>>>>> 6c12cccc539de40edd1d5fea0ba216b51f39701c
 
 //const sf::IntRect ball_rect1{0,0,42,50};
 //const sf::IntRect ball_rect2{42,0,57,SIZE_BALL};
@@ -61,6 +54,16 @@ const sf::IntRect ball_rect5{200,0,SIZE_BALL,SIZE_BALL};
 const sf::IntRect ball_rect6{250,0,SIZE_BALL,SIZE_BALL};
 const sf::IntRect ball_rect7{300,0,SIZE_BALL,SIZE_BALL};
 const sf::IntRect ball_rect8{350,0,SIZE_BALL,SIZE_BALL};
+
+
+const sf::IntRect popo_still_rect{5,0,120,200};
+const sf::IntRect popo_run3_rect{480,0,140,200};
+const sf::IntRect popo_run1_rect{160,0,130,190};
+const sf::IntRect popo_run2_rect{320,0,120,200};
+const sf::IntRect popo_jump1_rect{350,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect popo_jump2_rect{350,0,SIZE_BALL,SIZE_BALL};
+const sf::IntRect popo_jump3_rect{350,0,SIZE_BALL,SIZE_BALL};
+
 
 class Model;
 
