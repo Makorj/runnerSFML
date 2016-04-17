@@ -4,20 +4,20 @@
 #include <math.h>
 #include <movableelement.h>
 
-#define GRAVITATIONAL_CONST 9.81
-#define JUMP_TIME_CONST_MILLISECONDS 485
-#define JUMP_TIME_MULTIPLIER 0.5
-#define JUMP_FIRST_MULTIPLIER 1.5
-#define JUMP_FINAL_MULTIPLIER 0.9
+const float GRAVITATIONAL_CONST = 9.81;
+const int JUMP_TIME_CONST_MILLISECONDS = 485;
+const float JUMP_TIME_MULTIPLIER = 0.5;
+const float JUMP_FIRST_MULTIPLIER = 1.5;
+const float JUMP_FINAL_MULTIPLIER = 0.9;
 
-#define HORIZONTAL_JUMPING_SPEED_MULTIPLIER 0.09
-#define HORIZONTAL_SPEED_MULTIPLIER 0.05
+const float HORIZONTAL_JUMPING_SPEED_MULTIPLIER = 0.09;
+const float HORIZONTAL_SPEED_MULTIPLIER = 0.05;
 
 void Character::jump()
 {
     if(m_jumping)
     {
-        if(jumpTime.asMilliseconds()<=JUMP_TIME_CONST_MILLISECONDS)//1388
+        if(jumpTime.asMilliseconds()<=JUMP_TIME_CONST_MILLISECONDS && m_y-1<450)//1388
         {
 
             int timeas=jumpTime.asMilliseconds()*JUMP_TIME_MULTIPLIER;
@@ -25,7 +25,6 @@ void Character::jump()
         }
         else
         {
-            //m_dy=0.;
             m_jumping=false;
             m_y=450;
         }
@@ -43,7 +42,7 @@ void Character::isJumping()
 
 void Character::setDX(float d)
 {
-    if(!m_jumping || !!m_DoubleJumpTimer.hasEnded())
+    if(!m_jumping)
     {
         if(m_dx<5 && m_dx>-3 && d!=0)
             m_dx+=d*HORIZONTAL_JUMPING_SPEED_MULTIPLIER;

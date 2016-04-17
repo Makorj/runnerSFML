@@ -10,6 +10,7 @@ private:
     int m_duration;
 public:
     Invicibility(float x, float y, int w, int h, float dx, float dy, int duration);
+    //~Invicibility() override;
     void apply(Character* player) override;
 };
 

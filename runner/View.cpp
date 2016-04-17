@@ -21,7 +21,7 @@ View::View(int w, int h)
       m_reverse(false),
       m_splashtime(true),
       m_logo1(true),
-      m_menu(true),
+      m_menu(false),
       m_mainmenu{w,h,MAIN_MENU_ITEMS,NB_MAINMENU_ITEMS}
 {
 
@@ -91,14 +91,9 @@ View::View(int w, int h)
 //        clipRect_balle.push_back(sf::IntRect(i*SIZE_BALL,0, SIZE_BALL, SIZE_BALL));
 //    }
 
-    clipRect_balle.push_back(ball_rect1);
-    clipRect_balle.push_back(ball_rect2);
-    clipRect_balle.push_back(ball_rect3);
-    clipRect_balle.push_back(ball_rect4);
-    clipRect_balle.push_back(ball_rect5);
-    clipRect_balle.push_back(ball_rect6);
-    clipRect_balle.push_back(ball_rect7);
-    clipRect_balle.push_back(ball_rect8);
+    clipRect_balle.push_back(popo_run1_rect);
+    clipRect_balle.push_back(popo_run2_rect);
+    clipRect_balle.push_back(popo_run3_rect);
 
     if (!_balle.loadFromFile(BALLE_IMAGE))
         std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
@@ -247,6 +242,12 @@ bool View::treatEvents(){
             {
                 _model->jumpBall();
                 Jump.play();
+            }
+
+            if (event.type == sf::Event::KeyPressed && event.key.code==sf::Keyboard::R)
+            {
+                _model->restart();
+                m_elemPos.clear();
             }
 
             // SPLASH SCREEN SKEEPER //

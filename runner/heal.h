@@ -10,6 +10,7 @@ private:
     int m_healingPower;
 public:
     Heal(float x, float y, int w, int h, float dx, float dy, int healingPower);
+    //~Heal() override;
     void apply(Character* player) override;
 };
 

@@ -24,7 +24,7 @@ public:
     GraphicElement(sf::Texture &image, int x, int y, int w, int h, bool resiz = true);
     GraphicElement(const GraphicElement& copy);
     void draw(sf::RenderWindow* window) const;
-    void resize(int w, int h);
+     void resize(int w, int h);
     void setTransparency(int& transparencyLevel);
     int getH() const;
     int getW() const;
