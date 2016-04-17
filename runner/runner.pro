@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     bonus.cpp \
     clock.cpp \
     menu.cpp \
-    heal.cpp
+    heal.cpp \
+    splashscreen.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -39,5 +40,6 @@ HEADERS += \
     bonus.h \
     clock.h \
     menu.h \
-    heal.h
+    heal.h \
+    splashscreen.h
 

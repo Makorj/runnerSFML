@@ -9,6 +9,7 @@
 #include "animatedgraphicelement.h"
 #include "slidingbackground.h"
 #include "menu.h"
+#include "splashscreen.h"
 
 #define NB_MAINMENU_ITEMS 4
 #define NB_SHOP_ITEMS 5
@@ -19,9 +20,6 @@ const int SIZE_BALL = 50;
 
 const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/city_1.png";
 const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/city_2.png";
-
-const std::string SPLASH_IMG2 = "../Images/logo_carambar.png";
-const std::string SPLASH_IMG1 = "../Images/logo_iut.png";
 
 const std::string SONG_BOOBA= "../Audio/sonBooba.ogg";
 const std::string SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
@@ -99,6 +97,9 @@ private:
     sf::Music _boobaLoop;
 
     std::vector<std::pair<int , std::pair<float, float> > > m_elemPos;
+
+    sf::Vector2f m_mouse;
+    SplashScreen m_splashscreen;
 
     Menu m_mainmenu;
 

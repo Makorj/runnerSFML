@@ -44,26 +44,7 @@ View::View(int w, int h)
         _SlidingBackground2.setSmooth(true);
         SlidingBackground tmp{_SlidingBackground2,_w,_h,SPEED1};
         _SlidingBackgroundSprite2 = tmp;
-    }
-
-    if (!_splashImg1.loadFromFile(SPLASH_IMG1))
-        std::cerr << "ERROR when loading image file: " << SPLASH_IMG1 << std::endl;
-    else {
-        _splashImg1.setSmooth(true);
-        GraphicElement tmp{_splashImg1, 115,150,1000,298};
-        _splashImgSprite1 = tmp;
-        _splashImgSprite1.setTransparency(m_transparent);
-    }
-
-    if (!_splashImg2.loadFromFile(SPLASH_IMG2))
-        std::cerr << "ERROR when loading image file: " << SPLASH_IMG2 << std::endl;
-    else {
-        _splashImg2.setSmooth(true);
-        GraphicElement tmp{_splashImg2, 0,65,1200,500};
-        _splashImgSprite2 = tmp;
-        _splashImgSprite2.setTransparency(m_transparent);
-    }
-
+    }   
     if (!_coin.loadFromFile(COIN_IMG))
         std::cerr << "ERROR when loading image file: " << COIN_IMG << std::endl;
     else {
@@ -151,17 +132,8 @@ void View::draw(){
     _window->clear();
 
     // SPLASH SCREEN //
-    if(m_splashtime)
-    {
-        if(m_logo1)
-        {
-            _window->draw(_splashImgSprite1);
-        }
-        else
-        {
-            _window->draw(_splashImgSprite2);
-        }
-    }
+    if(m_splashscreen.getSplashTime())
+        m_splashscreen.draw(_window);
     // END OF SPLASH SCREEN //
     else if(m_menu) {
 
@@ -236,10 +208,9 @@ bool View::treatEvents(){
         sf::Event event;
         while (_window->pollEvent(event)) {
             //cout << "Event detected" << endl;
-            if(m_menu) {
-                //sf::Mouse mouse;
-                //m_mainmenu.eventMenu(mouse, _window);
-            }
+            sf::Vector2f mousePos = static_cast<sf::Vector2f>(sf::Mouse::getPosition());
+            m_mainmenu.hoverMenu(mousePos);
+
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                 left=true;
             else
@@ -249,6 +220,27 @@ bool View::treatEvents(){
                 right=true;
             else
                 right=false;
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && m_menu) {
+                m_mainmenu.MoveUp();
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)&& m_menu) {
+                m_mainmenu.MoveDown();
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+                if(m_menu) {
+                    switch(m_mainmenu.getSelectedItem()) {
+                    case 0:
+                        m_menu = false;
+                        break;
+                    case 1:
+                        //Traiter
+                        break;
+                    case 3:
+                        _window->close();
+                        break;
+                    }
+                }
+            }
 
             // JUMP KEY
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
@@ -258,17 +250,8 @@ bool View::treatEvents(){
             }
 
             // SPLASH SCREEN SKEEPER //
-            if (m_splashtime && (event.type == sf::Event::KeyPressed && event.key.code==sf::Keyboard::Return))
-            {
-                if(m_logo1)
-                {
-                    m_logo1=false;
-                    m_reverse=false;
-                    m_transparent=0;
-                }
-                else
-                    m_splashtime=false;
-            }
+            if (m_splashscreen.getSplashTime())
+                m_splashscreen.event();
             // END OF SPLASH SCREEN SKEEPER //
 
             if ((event.type == sf::Event::Closed) ||
@@ -287,55 +270,10 @@ bool View::treatEvents(){
 
 void View::synchronize()
 {
-    //SplashScreen
-    if(m_splashtime)
-    {
-        if(m_logo1)
-        {
-            if(m_reverse)
-            {
-                if(m_transparent<=1)
-                {
-                    m_transparent=0;
-                    m_logo1=false;
-                    m_reverse=false;
-                }
-                else
-                    (m_transparent-=2);
-            }
-            else
-            {
-                if(m_transparent>=254)
-                    (m_reverse=true);
-                else
-                    (m_transparent+=2);
-            }
-            _splashImgSprite1.setTransparency(m_transparent);
-
-        }
-        else
-        {
-            if(m_reverse)
-            {
-                if(m_transparent<=1)
-                {
-                    m_splashtime=false;
-                    m_reverse=false;
-                }
-                else
-                    (m_transparent-=2);
-            }
-            else
-            {
-                if(m_transparent>=254)
-                    (m_reverse=true);
-                else
-                    (m_transparent+=2);
-            }
-            _splashImgSprite2.setTransparency(m_transparent);
-        }
-    }
-    //EndSplashScreen
+    //m_splashscreen
+    if(m_splashscreen.getSplashTime())
+        m_splashscreen.synchronize();
+    //End splashscreen
 
     _model->getElemsPos(m_elemPos);
 
