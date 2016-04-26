@@ -8,4 +8,5 @@ Coin::Coin(float x, float y, int w, int h, float dx, float dy, int scoreValue)
 
 void Coin::apply(Character* charact) {
     charact->addScore(m_scoreValue);
+    charact->addCoin(COIN_MONEY_VALUE);
 }

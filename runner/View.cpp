@@ -237,6 +237,9 @@ bool View::treatEvents(){
                     case 1:
                         //Traiter
                         break;
+                    case 2:
+                        //Traiter
+                        break;
                     case 3:
                         _window->close();
                         break;

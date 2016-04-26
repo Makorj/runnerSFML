@@ -114,9 +114,13 @@ void Character::startDoubleJump(const int &countdown) {
     m_DoubleJumpTimer.startCounter(countdown);
 }
 
+void Character::startScoreMultiplier(const int &countdown) {
+    m_ScoreMultiplierTimer.startCounter(countdown);
+}
+
 int Character::getGold() const
 {
-    return m_gold;
+    return m_coin;
 }
 int Character::getLife() const
 {
