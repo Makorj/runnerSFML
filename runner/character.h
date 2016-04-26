@@ -22,6 +22,8 @@ private:
 
     int m_score;
 
+    int m_coin;
+
     Clock jumpTime;
     bool m_jumping;
 
@@ -44,13 +46,16 @@ public:
     void move(int screen_w);
     void startInvicibility(int const& countdown);
     void startDoubleJump(int const& countdown);
+    void startScoreMultiplier(const int &countdown);
 
     void isJumping();
     void jump();
     void setDX(float d);
     void addScore(int &x);
+    void addCoin(int &x);
 
     bool isInvicible();
+    int getGold() const;
     int getScore() const;
     int getMaxLife() const;
     int getLife() const;

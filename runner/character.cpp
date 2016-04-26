@@ -96,6 +96,11 @@ void Character::addScore(int& x)
     m_score+=x;
 }
 
+void Character::addCoin(int &x)
+{
+    m_coin+=x;
+}
+
 void Character::subLife(const int &x)
 {
     m_actualLife-=x;
@@ -109,6 +114,10 @@ void Character::startDoubleJump(const int &countdown) {
     m_DoubleJumpTimer.startCounter(countdown);
 }
 
+int Character::getGold() const
+{
+    return m_gold;
+}
 int Character::getLife() const
 {
     return m_actualLife;

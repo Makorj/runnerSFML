@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     splashscreen.cpp \
     coin.cpp \
     invicibility.cpp \
-    doublejump.cpp
+    doublejump.cpp \
+    scoremultiplier.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -47,7 +48,8 @@ HEADERS += \
     splashscreen.h \
     coin.h \
     invicibility.h \
-    doublejump.h
+    doublejump.h \
+    scoremultiplier.h
 
 OTHER_FILES += \
     ../Images/flocon.png \
