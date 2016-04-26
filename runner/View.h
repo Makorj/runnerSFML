@@ -9,20 +9,19 @@
 #include "animatedgraphicelement.h"
 #include "slidingbackground.h"
 #include "menu.h"
+#include "splashscreen.h"
 
 const int NB_MAINMENU_ITEMS = 4;
 const int NB_SHOP_ITEMS = 5;
 
 //const std::string BALLE_IMAGE = "../Images/balls.png";
-const std::string BALLE_IMAGE = "../Images/popo_sprite_sheet.png";
+const std::string BALLE_IMAGE = "../Images/iceclimber.png";
 
 const int SIZE_BALL = 50;
 
-const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/city_1.png";
-const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/city_2.png";
-
-const std::string SPLASH_IMG2 = "../Images/logo_carambar.png";
-const std::string SPLASH_IMG1 = "../Images/logo_iut.png";
+const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/sapin_background.png";
+const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/moutain_background.png";
+const std::string BACKGROUND_IMAGE = "../Images/sun.png";
 
 const std::string SONG_BOOBA= "../Audio/sonBooba.ogg";
 const std::string SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
@@ -30,8 +29,8 @@ const std::string SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
 const std::string SOUND_IZI="../Audio/izi.ogg";
 const std::string SOUND_CARRE="../Audio/carre.ogg";
 
-const std::string ELEM_IMG = "../Images/k.png";
-const std::string COIN_IMG = "../Images/tigkappa.png";
+const std::string ELEM_IMG = "../Images/iceblock.png";
+const std::string COIN_IMG = "../Images/flocon.png";
 
 const std::string MAIN_MENU_ITEMS[NB_MAINMENU_ITEMS] = {"Play","Best Scores","Shop","Quit"};
 
@@ -57,13 +56,16 @@ const sf::IntRect ball_rect8{350,0,SIZE_BALL,SIZE_BALL};
 
 
 const sf::IntRect popo_still_rect{5,0,120,200};
-const sf::IntRect popo_run3_rect{480,0,140,200};
 const sf::IntRect popo_run1_rect{160,0,130,190};
 const sf::IntRect popo_run2_rect{320,0,120,200};
+const sf::IntRect popo_run3_rect{480,0,140,200};
 const sf::IntRect popo_jump1_rect{350,0,SIZE_BALL,SIZE_BALL};
 const sf::IntRect popo_jump2_rect{350,0,SIZE_BALL,SIZE_BALL};
 const sf::IntRect popo_jump3_rect{350,0,SIZE_BALL,SIZE_BALL};
 
+const sf::IntRect poposwag_run1_rect{0,0,100,134};
+const sf::IntRect poposwag_run2_rect{134,0,100,134};
+const sf::IntRect poposwag_run3_rect{269,0,100,134};
 
 class Model;
 
@@ -94,6 +96,9 @@ private:
     sf::Texture _elem;
     GraphicElement _elemSprite;
 
+    sf::Texture _Background;
+    GraphicElement _BackgroundSprite;
+
     sf::Texture _SlidingBackground1;
     SlidingBackground _SlidingBackgroundSprite1;
 
@@ -110,6 +115,9 @@ private:
     sf::Music _boobaLoop;
 
     std::vector<std::pair<int , std::pair<float, float> > > m_elemPos;
+
+    sf::Vector2f m_mouse;
+    SplashScreen m_splashscreen;
 
     Menu m_mainmenu;
 

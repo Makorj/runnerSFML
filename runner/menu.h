@@ -20,9 +20,10 @@ private :
 public:
     Menu(float w, float h, const std::string MenuItems[], int size);
     void draw(sf::RenderWindow *window);
-    void eventMenu(sf::Mouse mouse, sf::RenderWindow *window);
+    void hoverMenu(sf::Vector2f mouse);
     void MoveUp();
     void MoveDown();
+    int getSelectedItem() const;
 
 };
 

@@ -19,7 +19,11 @@ SOURCES += main.cpp \
     bonus.cpp \
     clock.cpp \
     menu.cpp \
-    heal.cpp
+    heal.cpp \
+    splashscreen.cpp \
+    coin.cpp \
+    invicibility.cpp \
+    doublejump.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -39,5 +43,19 @@ HEADERS += \
     bonus.h \
     clock.h \
     menu.h \
-    heal.h
+    heal.h \
+    splashscreen.h \
+    coin.h \
+    invicibility.h \
+    doublejump.h
+
+OTHER_FILES += \
+    ../Images/flocon.png \
+    ../Images/iceblock.png \
+    ../Images/iceclimber.png \
+    ../Images/menuitems.png \
+    ../Images/moutain_background.png \
+    ../Images/popo_sprite_sheet.png \
+    ../Images/sapin_background.png \
+    ../Images/sun.png
 

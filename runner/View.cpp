@@ -21,7 +21,7 @@ View::View(int w, int h)
       m_reverse(false),
       m_splashtime(true),
       m_logo1(true),
-      m_menu(false),
+      m_menu(true),
       m_mainmenu{w,h,MAIN_MENU_ITEMS,NB_MAINMENU_ITEMS}
 {
 
@@ -30,6 +30,13 @@ View::View(int w, int h)
     _window->setKeyRepeatEnabled(false);
 
     // IMAGE LOADER //
+    if(!_Background.loadFromFile(BACKGROUND_IMAGE))
+        std::cerr << "ERROR when loading image file: " << BACKGROUND_IMAGE << std::endl;
+    else {
+        _Background.setSmooth(true);
+        GraphicElement tmp1{_Background,0,0,_w,_h};
+        _BackgroundSprite = tmp1;
+    }
     if (!_SlidingBackground1.loadFromFile(SLIDING_BACKGROUND_IMAGE1))
         std::cerr << "ERROR when loading image file: " << SLIDING_BACKGROUND_IMAGE1 << std::endl;
     else {
@@ -44,26 +51,7 @@ View::View(int w, int h)
         _SlidingBackground2.setSmooth(true);
         SlidingBackground tmp{_SlidingBackground2,_w,_h,SPEED1};
         _SlidingBackgroundSprite2 = tmp;
-    }
-
-    if (!_splashImg1.loadFromFile(SPLASH_IMG1))
-        std::cerr << "ERROR when loading image file: " << SPLASH_IMG1 << std::endl;
-    else {
-        _splashImg1.setSmooth(true);
-        GraphicElement tmp{_splashImg1, 115,150,1000,298};
-        _splashImgSprite1 = tmp;
-        _splashImgSprite1.setTransparency(m_transparent);
-    }
-
-    if (!_splashImg2.loadFromFile(SPLASH_IMG2))
-        std::cerr << "ERROR when loading image file: " << SPLASH_IMG2 << std::endl;
-    else {
-        _splashImg2.setSmooth(true);
-        GraphicElement tmp{_splashImg2, 0,65,1200,500};
-        _splashImgSprite2 = tmp;
-        _splashImgSprite2.setTransparency(m_transparent);
-    }
-
+    }   
     if (!_coin.loadFromFile(COIN_IMG))
         std::cerr << "ERROR when loading image file: " << COIN_IMG << std::endl;
     else {
@@ -110,9 +98,9 @@ View::View(int w, int h)
 //        clipRect_balle.push_back(sf::IntRect(i*SIZE_BALL,0, SIZE_BALL, SIZE_BALL));
 //    }
 
-    clipRect_balle.push_back(popo_run1_rect);
-    clipRect_balle.push_back(popo_run2_rect);
-    clipRect_balle.push_back(popo_run3_rect);
+    clipRect_balle.push_back(poposwag_run1_rect);
+    clipRect_balle.push_back(poposwag_run2_rect);
+    clipRect_balle.push_back(poposwag_run3_rect);
 
     if (!_balle.loadFromFile(BALLE_IMAGE))
         std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
@@ -146,20 +134,11 @@ void View::draw(){
     _window->clear();
 
     // SPLASH SCREEN //
-    if(m_splashtime)
-    {
-        if(m_logo1)
-        {
-            _window->draw(_splashImgSprite1);
-        }
-        else
-        {
-            _window->draw(_splashImgSprite2);
-        }
-    }
+    if(m_splashscreen.getSplashTime())
+        m_splashscreen.draw(_window);
     // END OF SPLASH SCREEN //
     else if(m_menu) {
-
+        _BackgroundSprite.draw(_window);
         _SlidingBackgroundSprite2.draw(_window);
         _SlidingBackgroundSprite1.draw(_window);
          m_mainmenu.draw(_window);
@@ -170,7 +149,7 @@ void View::draw(){
             _boobaLoop.play();
         else if(_boobaSong.getStatus()!=sf::SoundSource::Playing && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
             _boobaSong.play();
-
+        _BackgroundSprite.draw(_window);
         _SlidingBackgroundSprite2.draw(_window);
         _SlidingBackgroundSprite1.draw(_window);
 
@@ -231,10 +210,9 @@ bool View::treatEvents(){
         sf::Event event;
         while (_window->pollEvent(event)) {
             //cout << "Event detected" << endl;
-            if(m_menu) {
-                //sf::Mouse mouse;
-                //m_mainmenu.eventMenu(mouse, _window);
-            }
+            sf::Vector2f mousePos = static_cast<sf::Vector2f>(sf::Mouse::getPosition());
+            m_mainmenu.hoverMenu(mousePos);
+
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                 left=true;
             else
@@ -244,6 +222,27 @@ bool View::treatEvents(){
                 right=true;
             else
                 right=false;
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && m_menu) {
+                m_mainmenu.MoveUp();
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)&& m_menu) {
+                m_mainmenu.MoveDown();
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)&& !m_splashscreen.getSplashTime()) {
+                if(m_menu) {
+                    switch(m_mainmenu.getSelectedItem()) {
+                    case 0:
+                        m_menu = false;
+                        break;
+                    case 1:
+                        //Traiter
+                        break;
+                    case 3:
+                        _window->close();
+                        break;
+                    }
+                }
+            }
 
             // JUMP KEY
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
@@ -259,17 +258,8 @@ bool View::treatEvents(){
             }
 
             // SPLASH SCREEN SKEEPER //
-            if (m_splashtime && (event.type == sf::Event::KeyPressed && event.key.code==sf::Keyboard::Return))
-            {
-                if(m_logo1)
-                {
-                    m_logo1=false;
-                    m_reverse=false;
-                    m_transparent=0;
-                }
-                else
-                    m_splashtime=false;
-            }
+            if (m_splashscreen.getSplashTime())
+                m_splashscreen.event();
             // END OF SPLASH SCREEN SKEEPER //
 
             if ((event.type == sf::Event::Closed) ||
@@ -289,67 +279,19 @@ bool View::treatEvents(){
 void View::synchronize()
 {
     //SplashScreen
-    if(m_splashtime)
-    {
-        if(m_logo1)
-        {
-            if(m_reverse)
-            {
-                if(m_transparent<=1)
-                {
-                    m_transparent=0;
-                    m_logo1=false;
-                    m_reverse=false;
-                }
-                else
-                    (m_transparent-=2);
-            }
-            else
-            {
-                if(m_transparent>=254)
-                    (m_reverse=true);
-                else
-                    (m_transparent+=2);
-            }
-            _splashImgSprite1.setTransparency(m_transparent);
+    if(m_splashscreen.getSplashTime())
+        m_splashscreen.synchronize();
+    //Splashscreen
+    if(!m_menu){
+         _model->getElemsPos(m_elemPos);
 
-        }
-        else
-        {
-            if(m_reverse)
-            {
-                if(m_transparent<=1)
-                {
-                    m_splashtime=false;
-                    m_reverse=false;
-                }
-                else
-                    (m_transparent-=2);
-            }
-            else
-            {
-                if(m_transparent>=254)
-                    (m_reverse=true);
-                else
-                    (m_transparent+=2);
-            }
-            _splashImgSprite2.setTransparency(m_transparent);
-        }
+         std::pair<float,float> a = _model->getBallPosition();
+         _balleSprite.setPosition(sf::Vector2f{a.first, a.second});
+
+         _SlidingBackgroundSprite1.setSpeed((float)-1*(_model->getAllSpeed()));
+         _SlidingBackgroundSprite2.setSpeed((float)-1*_model->getAllSpeed()-1);
+
+         _model->moveBall();
+
     }
-    //EndSplashScreen
-
-    _model->getElemsPos(m_elemPos);
-
-    _SlidingBackgroundSprite1.setSpeed((float)-1*(_model->getAllSpeed()));
-    _SlidingBackgroundSprite2.setSpeed((float)-1*_model->getAllSpeed()-1);
-
-    //Ball's Position Updating
-    std::pair<float,float> a = _model->getBallPosition();
-    _balleSprite.setPosition(sf::Vector2f{a.first, a.second});
-
-
-    //Move
-    _model->moveBall();
-
-
 }
