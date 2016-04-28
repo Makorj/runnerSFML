@@ -39,8 +39,7 @@ SlidingBackground::SlidingBackground(const SlidingBackground& copy):
     m_left(copy.m_left),
     m_right(copy.m_right),
     m_speed(copy.m_speed)
-{
-}
+{}
 
 
 void SlidingBackground::draw(sf::RenderWindow *window) {

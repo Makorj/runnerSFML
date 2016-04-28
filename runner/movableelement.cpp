@@ -28,9 +28,17 @@ THE SOFTWARE.
    \file movableelement.cpp
    \brief MovableElement c++ source file
    \author VAIN Florent, BLANC Thomas
-   \date 27/04/2016
 */
 
+//!
+//! \brief Constructor
+//!	\param x float : X position of the MovableElement
+//! \param y float : Y position of the MovableElement
+//! \param w int : Width of the MovableElement
+//! \param h int : Height of the MovableElement
+//! \param dx float : Y speed of the MovableElement
+//! \param dy float : X speed of the MovableElement
+//! \param type int : Type of the movable element defined by infant classes who herite from MovableElement
 MovableElement::MovableElement(float x, float y, int w, int h, float dx, float dy, int type)
     : m_type(type),
       m_x(x),
@@ -41,59 +49,84 @@ MovableElement::MovableElement(float x, float y, int w, int h, float dx, float d
       m_dy(dy)
 {}
 
+//!
+//! \brief Move the Element. Add the speed values to the actual position
+//! 
 void MovableElement::move() {
     m_x+=m_dx;
+	m_y+=m_dy;
 }
 
 //!
-//! /brief DX setter
-//! /param d Float new value
-//!
+//! \brief DX setter
+//! \param d Float new value
+//!                                                                              
 void MovableElement::setDX(float d) {
     m_dx = d;
 }
 
-
+//!
+//! \brief DY setter
+//! \param d Float new value
+//!
 void MovableElement::setDY(float d) {
     m_dy = d;
 }
 
+//!
+//! \brief Type getter
+//!	\return int MovableElement's type
+//!
 int MovableElement::getType() const {
     return m_type;
 }
 
+//!
+//! \brief X position getter
+//!	\return float MovableElement's X position
+//!
 float MovableElement::getX() const {
     return m_x;
 }
 
+//!
+//! \brief Y position getter
+//!	\return float MovableElement's Y position
+//!
 float MovableElement::getY() const {
     return m_y;
 }
 
+//!
+//! \brief Height getter
+//!	\return int MovableElement's height
+//!
 int MovableElement::getH() const {
     return m_h;
 }
 
+//!
+//! \brief Width getter
+//!	\return int MovableElement's width
+//!
 int MovableElement::getW() const {
     return m_w;
 }
 
+//!
+//! \brief Check if the movableelement is out of the screen
+//!	\return bool True if the MovableElement is out of the screen, false otherwise
+//!
 bool MovableElement::outOfScreen(){
-    if(m_x+m_w<-100)
-        return true;
-    return false;
-}
-
-void MovableElement::apply(Character *charact)
-{
-
+    return !(m_x+m_w<-10);
 }
 
 //!
-//! /brief  MovableElement collisions function
-//! /param elem1 First MovableElement
-//! /param elem2 Second MovableElement
-//! /return true if they are collided, false otherwise
+//! \fn collide
+//! \brief  MovableElement collisions function
+//! \param elem1 First MovableElement
+//! \param elem2 Second MovableElement
+//! \return true if they have collided, false otherwise
 //!
 bool collide (MovableElement elem1,MovableElement elem2) {
     return (elem1.getX() < elem2.getX() + elem2.getW() &&

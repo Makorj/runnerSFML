@@ -54,11 +54,13 @@ private:
 	///Character's jump state boolean
     bool m_jumping;
 
-	///
+	///Invincibility bonus timer
     Clock m_InvicibleTimer;
 
+	///Double Jump Bonus Timer
     Clock m_DoubleJumpTimer;
 
+	///Score Multiplayer Bonus Timer
     Clock m_ScoreMultiplierTimer;
 
 public:

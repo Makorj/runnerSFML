@@ -21,6 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*!
+	\file movableement.h
+	\brief MovableElement c++ header file
+	\author VAIN Florent, BLANC Thomas
+*/
+
 #ifndef MOOVABLEELEMENT_H
 #define MOOVABLEELEMENT_H
 
@@ -32,22 +39,26 @@ THE SOFTWARE.
 
 class Character;
 
+/*!
+ * \brief Abstract base class for all element in the game that move.
+ * 
+*/
 class MovableElement
 {
 private:
 
-    int m_type;
+    int m_type; 	///< Type is used to avoid dynamic casting
 
 protected:
 
-    float m_x;
-    float m_y;
+    float m_x; 		///< X position
+    float m_y; 		///< Y position
 
-    int m_h;
-    int m_w;
+    int m_h;		///< Element's Height
+    int m_w;		///< Element's Width
 
-    float m_dx;
-    float m_dy;
+    float m_dx;		///< X speed
+    float m_dy;		///< Y speed
 
 public:
 
@@ -60,7 +71,7 @@ public:
     void setDX(float d);
     void setDY(float d);
 
-    virtual int getType() const;
+    virtual int getType()=0 const;
     float getX() const;
     float getY() const;
     int getH() const;

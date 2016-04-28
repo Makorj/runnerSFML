@@ -110,6 +110,8 @@ Model::~Model(){
 // Calcul la prochaine étape
 //=======================================
 void Model::nextStep(){
+	if(!m_paused)
+	{
     MovableElement* tmp;
     m_char->move(_w);
     m_char->jump();
@@ -176,6 +178,7 @@ void Model::nextStep(){
             tmp->move();
         }
     }
+	}
 }
 
 bool Model::hasCollide()
@@ -212,6 +215,10 @@ void Model::setBallVerticalSpeed(float &x)
     m_char->setDY(x);
 }
 
+/*!
+ * \brief Getter of the character direction
+ * \param left INOUT 
+*/
 void Model::getCharDir(bool &left, bool &right)
 {
     left=m_leftdir;
@@ -276,7 +283,7 @@ unsigned int Model::getMoney()
 
 int Model::getScore()
 {
-    return m_char->getScore()+(m_timeElapsed.asMilliseconds()*5);
+    return m_char->getScore()+(m_timeElapsed.asMilliseconds()*0.5);
 }
 
 void Model::restart() {
@@ -298,11 +305,16 @@ void Model::restart() {
                            (int)BALL_INIT_H,
                            (int)BALL_INIT_W,
                            (float)BALL_INIT_DX,
-                           (float)BALL_INIT_DY);
+                           (float)BALL_INIT_DY,
+						   m_savedParam[SAVED_PARAM_ID_MAXLIFE]);
 }
 
 bool Model::hasEnded() {
     return (m_char->getLife()>0)?false:true;
+}
+
+void Model::pause() {
+	m_paused?m_pause=false:m_pause=true;
 }
 
 void Model::shopUpdate(std::array<int, 10>& newParam) {
@@ -397,26 +409,14 @@ void setNewData(string file, string& inData)
     }
 }
 
-string decrypt(string& encryptedData)
+string decrypt(string Data)
 {
     string outData;
     int i=0;
-    for(auto x : encryptedData)
+    for(auto x : Data)
     {
         outData+=x^(i+LRU[i%5])%256;
         i++;
     }
     return outData;
-}
-
-string encrypt(string& data)
-{
-    string encryptedDat;
-    int i=0;
-    for(auto x : data)
-    {
-        encryptedDat+=x^(i+LRU[i%5])%256;
-        i++;
-    }
-    return encryptedDat;
 }

@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
 #ifndef _MODEL_
 #define _MODEL_
 
@@ -35,16 +36,25 @@ const int SAVED_PARAM_ID_INVICIBILITY_DURATION=3;
 
 const int SAVED_PARAM_MONEY=5;
 
+/*!
+ * \brief Main class of the game containing all the data
+ *	
+*/
+
 class Model {
  private:
-  int _w, _h;
-  float m_allSpeed;
-  unsigned int m_money;
-  Character* m_char;
-  bool m_leftdir, m_rightdir, m_collide;
-  std::vector<MovableElement * > m_elements;
-  Clock m_timeElapsed;
-  std::array<int, 10> m_savedParam;
+  int 	_w,					///< Width of the game screen
+		_h;					///< Height of the game screen
+  float m_allSpeed;			///< Global speed of all the objects in the game except Character objects
+  unsigned int m_money;		///< Money of the player in the game
+  Character* m_char;		///< Player's Character
+  bool 	m_leftdir,			///< True if the player is moving left
+		m_rightdir,			///< True if the player is moving right
+		m_paused,			///< Trus if the game is paused
+		m_collide;			///< True if there is a collision between objects in the game 
+  std::vector<MovableElement * > m_elements; 	///< Collection of all elements in the game except Character objects
+  Clock m_timeElapsed;	///< Game's clock
+  std::array<int, 10> m_savedParam;	///< Player's saved data, attributs, etc... 
 
  public:
 
