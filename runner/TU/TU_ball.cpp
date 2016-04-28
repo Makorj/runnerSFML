@@ -26,11 +26,11 @@ THE SOFTWARE.
 
 #include <boost/test/unit_test.hpp>
 
-#include "balle.h"
 #include "Model.h"
 #include "character.h"
 #include "Model.h"
 #include "doublejump.h"
+#include "invicibility.h"
 #include "time.h"
 #include "obstacle.h"
 #include "heal.h"
@@ -47,20 +47,11 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 BOOST_AUTO_TEST_CASE(test_Balle)
 {
-    Balle test_ball {BALL_INIT_X,BALL_INIT_Y,BALL_INIT_H,BALL_INIT_W,BALL_INIT_DX,BALL_INIT_DY};
+    Character test_ball {BALL_INIT_X,BALL_INIT_Y,BALL_INIT_H,BALL_INIT_W,BALL_INIT_DX,BALL_INIT_DY};
     test_ball.move(SCREEN_WIDTH);
     BOOST_CHECK(test_ball.getX() == 10 && test_ball.getY() == 450);
 }
 
-BOOST_AUTO_TEST_CASE(test_Model) {
-    Model test_model {SCREEN_WIDTH, SCREEN_HEIGHT};
-    int h;
-    int w;
-    test_model.getBallDim(h, w);
-    BOOST_CHECK(h == 50);
-    BOOST_CHECK(w == 50);
-
-}
 
 BOOST_AUTO_TEST_CASE(test_Char)
 {
@@ -177,44 +168,48 @@ BOOST_AUTO_TEST_CASE(test_Model) {
 }
 
 BOOST_AUTO_TEST_CASE(test_Model_Pause) {
-    Model test_model {SCREEN_WIDTH, SCREEN_HEIGHT};
-    float x_or=test_model.getBallPosition().first;
+    bool left = false;
+    bool right = true;
+    Model test_model_pause {SCREEN_WIDTH, SCREEN_HEIGHT};
+    float x_or=test_model_pause.getBallPosition().first;
     BOOST_CHECK(x_or == 10.);
-    test_model.setCharDir(false,true);
-    test_model.moveBall();
+    test_model_pause.setCharDir(left,right);
+    test_model_pause.moveBall();
     for(int i=0;i<5;i++)
-        test_model.nextStep();
-    BOOST_CHECK(x_or != test_model.getBallPosition().first);
-    test_model.pause();
-    x_or=test_model.getBallPosition().first;
+        test_model_pause.nextStep();
+    BOOST_CHECK(x_or != test_model_pause.getBallPosition().first);
+    test_model_pause.pause();
+    x_or=test_model_pause.getBallPosition().first;
     for(int i=0;i<5;i++)
-        test_model.nextStep();
-    BOOST_CHECK(x_or == test_model.getBallPosition().first);
-    test_model.pause();
+        test_model_pause.nextStep();
+    BOOST_CHECK(x_or == test_model_pause.getBallPosition().first);
+    test_model_pause.pause();
     for(int i=0;i<5;i++)
-        test_model.nextStep();
-    BOOST_CHECK(x_or != test_model.getBallPosition().first);
+        test_model_pause.nextStep();
+    BOOST_CHECK(x_or != test_model_pause.getBallPosition().first);
 }
 
-BOOST_AUTO_TEST_CASE(test_Model_Restart) {
-    Model test_model {SCREEN_WIDTH, SCREEN_HEIGHT};
-    float x_or=test_model.getBallPosition().first;
+BOOST_AUTO_TEST_CASE(test_model_restart_Restart) {
+    bool left = false;
+    bool right = true;
+    Model test_model_restart {SCREEN_WIDTH, SCREEN_HEIGHT};
+    float x_or=test_model_restart.getBallPosition().first;
     BOOST_CHECK(x_or == BALL_INIT_X);
-    test_model.setCharDir(false,true);
-    test_model.moveBall();
+    test_model_restart.setCharDir(left,right);
+    test_model_restart.moveBall();
     for(int i=0;i<100;i++)
-        test_model.nextStep();
-    BOOST_CHECK(x_or != test_model.getBallPosition().first);
-    test_model.restart();
-    test_model.pause();
-    BOOST_CHECK(test_model.getBallPosition().first == x_or && x_or == BALL_INIT_X);
+        test_model_restart.nextStep();
+    BOOST_CHECK(x_or != test_model_restart.getBallPosition().first);
+    test_model_restart.restart();
+    test_model_restart.pause();
+    BOOST_CHECK(test_model_restart.getBallPosition().first == x_or && x_or == BALL_INIT_X);
 }
 
 BOOST_AUTO_TEST_CASE(test_Encryption)
 {
     std::string TestString = "Roses are red, Violets are blue";
     std::string ProofString = TestString;
-    std::string EncryptedString = encrypt(TestString);
+    std::string EncryptedString = crypting(TestString);
     BOOST_CHECK(EncryptedString!=ProofString);
     BOOST_CHECK(TestString == ProofString);
 }
@@ -223,8 +218,16 @@ BOOST_AUTO_TEST_CASE(test_Decryption)
 {
     std::string TestString = "Roses are red, Violets are blue";
     std::string ProofString = TestString;
-    std::string EncryptedString = encrypt(TestString);
+    std::string EncryptedString = crypting(TestString);
     BOOST_CHECK(EncryptedString!=ProofString);
-    std::string DecryptedString = decrypt(EncryptedString);
+    std::string DecryptedString = crypting(EncryptedString);
     BOOST_CHECK(DecryptedString == ProofString);
+}
+
+BOOST_AUTO_TEST_CASE(test_bonuses) {
+    DoubleJump test_jump{10.,10.,10,10,-2.,0.,50};
+    Invicibility test_inv{10.,10.,10,10,-2.,0.,50};
+    Character test_char4 {BALL_INIT_X,BALL_INIT_Y,BALL_INIT_H,BALL_INIT_W,BALL_INIT_DX,BALL_INIT_DY, 100};
+
+    test_jump.apply(&test_char4);
 }

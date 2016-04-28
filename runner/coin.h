@@ -31,7 +31,7 @@ class Coin : public Bonus
 {
 private:
     int m_scoreValue;
-    static const int COIN_MONEY_VALUE=1;
+    static int COIN_MONEY_VALUE;
 public:
     Coin(float x, float y, int w, int h, float dx, float dy, int scoreValue=5);
     //~Coin() override;

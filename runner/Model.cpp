@@ -397,11 +397,11 @@ void setNewData(string file, string& inData)
     }
 }
 
-string decrypt(string& encryptedData)
+string crypting(string Data)
 {
     string outData;
     int i=0;
-    for(auto x : encryptedData)
+    for(auto x : Data)
     {
         outData+=x^(i+LRU[i%5])%256;
         i++;
@@ -409,14 +409,4 @@ string decrypt(string& encryptedData)
     return outData;
 }
 
-string encrypt(string& data)
-{
-    string encryptedDat;
-    int i=0;
-    for(auto x : data)
-    {
-        encryptedDat+=x^(i+LRU[i%5])%256;
-        i++;
-    }
-    return encryptedDat;
-}
+

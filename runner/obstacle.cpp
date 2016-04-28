@@ -38,3 +38,7 @@ void Obstacle::apply(Character *player) {
 int Obstacle::getType() const {
     return (MOVABLE_ELEMENT_TYPE_OBSTACLE*10)+m_typeObs;
 }
+
+int Obstacle::getDamage() const {
+    return m_damage;
+}

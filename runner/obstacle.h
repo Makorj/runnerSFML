@@ -37,6 +37,7 @@ public:
     //~Obstacle() override;
     int getType() const;
     void apply(Character* charact) override;
+    int getDamage() const;
 };
 
 #endif // OBSTACLE_H

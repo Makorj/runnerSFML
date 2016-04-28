@@ -8,7 +8,6 @@ QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra
 SOURCES += main.cpp \
     Model.cpp \
     View.cpp \
-    balle.cpp \
     character.cpp \
     graphicelement.cpp \
     slidingbackground.cpp \
