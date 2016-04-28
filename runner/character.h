@@ -29,6 +29,10 @@ THE SOFTWARE.
 #include "movableelement.h"
 #include "clock.h"
 
+//!
+//! \brief Player's character's class.
+//! Inherit from MovableElement
+//!
 class Character : public MovableElement
 {
 private:
@@ -65,7 +69,7 @@ private:
 
 public:
 
-    /* CONSTRUCTORS */
+    //// CONSTRUCTORS /////
     Character(float x, float y, int w, int h, float dx, float dy, int maxLife=100);
     //~Character() override;
 
@@ -77,14 +81,16 @@ public:
     void startInvicibility(int const& countdown);
     void startDoubleJump(int const& countdown);
     void startScoreMultiplier(const int &countdown);
-
-    void isJumping();
-    void jump();
-    void setDX(float d);
     void addScore(int &x);
     void addCoin(int &x);
+    void isJumping();
+    void jump();
 
-    bool isInvicible();
+    void setDX(float d);
+
+	//// Getter ////
+	
+    bool isInvicible();	
     int getGold() const;
     int getScore() const;
     int getMaxLife() const;

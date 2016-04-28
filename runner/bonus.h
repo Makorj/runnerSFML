@@ -33,6 +33,7 @@ THE SOFTWARE.
 #define BONUS_TYPE_DOUBLE_JUMP 4
 #define BONUS_TYPE_SCORE 5
 
+
 class Bonus : public MovableElement
 {
 private:

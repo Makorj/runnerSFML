@@ -21,14 +21,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*!
+ * \file doublejump.cpp
+ * \brief DoubleJump c++ source file
+ */
+
 #include "doublejump.h"
 
+/*!
+ * \brief Constructor
+ * \param x float : X position
+ * \param y float : Y position
+ * \param w int : Width of the doublejump
+ * \param h int : height of the doublejump
+ * \param dx float : X speed
+ * \param dy float : Y speed
+ * \param duration int : Duration of the buff on the character
+ */
 DoubleJump::DoubleJump(float x, float y, int w, int h, float dx, float dy, int duration)
     : Bonus(x,y,w,h,dx,dy,BONUS_TYPE_DOUBLE_JUMP),
       m_duration(duration)
-{
-}
+{}
 
+/*!
+ * \brief Apply the doublejump effect on a Character.
+ * \param charact Character on wich the effect of the doublejump is applied.
+ */
 void DoubleJump::apply(Character *player)
 {
     player->startDoubleJump(m_duration);

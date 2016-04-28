@@ -21,15 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*!
+ * \file invicibility.h
+ * \brief Invincibility header file
+ */
 #include "invicibility.h"
 #include "character.h"
 
+/*!
+ * \brief Constructor
+ */
 Invicibility::Invicibility(float x, float y, int w, int h, float dx, float dy, int duration)
     : Bonus(x,y,w,h,dx,dy,BONUS_TYPE_INVICIBILITY),
       m_duration(duration)
 {
 }
 
+
+/*!
+ * \brief Apply the invicibility effect on a Character.
+ * \param charact Character on wich the effect of the invicibility is applied.
+ */
 void Invicibility::apply(Character* player)
 {
     player->startInvicibility(m_duration);

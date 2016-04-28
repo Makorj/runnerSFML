@@ -40,8 +40,6 @@ string encrypt(string& data);
 string decrypt(string& encryptedData);
 
 const string SAVE_FILE="pack1.rsvf";
-const char KEY='d';
-const string LRU="POMME";
 
 const float BALL_INIT_X = 10.;
 const float BALL_INIT_Y = 450.;
@@ -67,8 +65,8 @@ int timeTestBonus=0;
 
 //!
 //! \brief Constructor
-//! \param w
-//! \param h
+//! \param w Width of the game screen
+//! \param h Height of the game screen
 //!
 Model::Model(int w, int h)
     : _w(w),
@@ -79,10 +77,7 @@ Model::Model(int w, int h)
       m_collide(false)
 {
     load();
-
-    for(auto x : m_savedParam)
-        cout << x << " ; ";
-
+	
     m_char = new Character((float)BALL_INIT_X,
                            (float)BALL_INIT_Y,
                            (int)BALL_INIT_H,
@@ -106,20 +101,24 @@ Model::~Model(){
     save();
 }
 
-//=======================================
-// Calcul la prochaine étape
-//=======================================
+/*!
+ * \brief Doing actions for the next step.
+ * Unless m_paused is true, this stop the model from working/progressing.
+*/
 void Model::nextStep(){
 	if(!m_paused)
 	{
     MovableElement* tmp;
+	
+	//Move character
     m_char->move(_w);
     m_char->jump();
 
+	//Update global speed
     m_allSpeed=-2-(1.5*m_timeElapsed.asSeconds()*GLOBAL_SPEED_MULTIPLIER);
-    //cout << m_char->getLife() << endl;
 
-
+	
+	// Spawn bonus or obstacle
     if(m_timeElapsed.asMilliseconds()-timeTestBonus>2000)
     {
 
@@ -146,32 +145,39 @@ void Model::nextStep(){
         m_elements.push_back(new Obstacle{ELEM_X_INIT,OBS_Y_INIT,50,50,-2,0,(1+(rand()%3))});
         timeTest=m_timeElapsed.asMilliseconds();
     }
-
     m_collide=false;
 
+	// Tests on games elements
     for(auto elem=m_elements.begin();elem<m_elements.end();++elem)
     {
         tmp=*elem;
-
+		
+		//test if the element is to delete because it's out of the screen 
         if(tmp->outOfScreen())
         {
             m_elements.erase(elem);
             delete tmp;
             tmp=nullptr;
         }
+		//test if it's collided with the ball
         else if(collide(*m_char, *tmp))
         {
             int x = tmp->getType();
+			
+			//If the collision is with an obstacle
             (x>=11 && x<20)?m_collide=true:false;
             //                    (x==22)?m_blingbling=true:
             //                    ;
 
-
+			//Apply the effect of the collided effect on the character
             tmp->apply(m_char);
+			
+			//erase
             m_elements.erase(elem);
             delete tmp;
             tmp=nullptr;
         }
+		//otherwise set his new speed and move it
         else
         {
             tmp->setDX(m_allSpeed);
@@ -181,6 +187,10 @@ void Model::nextStep(){
 	}
 }
 
+/*!
+ * \brief Return if there is a collision in the game
+ * \return boolean True if there is a collision, false otherwise
+*/
 bool Model::hasCollide()
 {
     return m_collide;
@@ -217,13 +227,15 @@ void Model::setBallVerticalSpeed(float &x)
 
 /*!
  * \brief Getter of the character direction
- * \param left INOUT 
+ * \param left INOUT Player moving left if true otherwise he is not
+ * \param right INOUT Player moving right if true otherwise he is not
 */
 void Model::getCharDir(bool &left, bool &right)
 {
     left=m_leftdir;
     right=m_rightdir;
 }
+
 
 void Model::setCharDir(bool &left, bool &right)
 {
@@ -281,6 +293,10 @@ unsigned int Model::getMoney()
     return m_money;
 }
 
+//!
+//! \brief Get the player's score
+//! \return Player's score
+//!
 int Model::getScore()
 {
     return m_char->getScore()+(m_timeElapsed.asMilliseconds()*0.5);
@@ -372,6 +388,14 @@ void Model::save(){
 /*                         UTILITY FUNCTIONS                         */
 /*********************************************************************/
 
+const char KEY='d';		///< Fake Encryption key
+const string LRU="POMME"; ///< Encryption key
+
+/*!
+ * \brief Read save file to get the game data
+ * \param file A string containing the path to the file
+ * \return A string containing the file's data
+*/
 string getData(string file){
     fstream f;
     string data, outData;
@@ -384,7 +408,7 @@ string getData(string file){
         }
         f.close();
 
-        outData=decrypt(outData);
+        outData=decrypt(outData); //decrypting data
         return outData;
     }
     else
@@ -394,13 +418,18 @@ string getData(string file){
 
 }
 
+/*!
+ * \brief Write the game data in save file
+ * \param file A string containing the path to the file
+ * \param inData A string containing the data to insert in the save file
+*/
 void setNewData(string file, string& inData)
 {
     fstream f;
     f.open(file.c_str(), ios::out);
     if(f.is_open())
     {
-        f << encrypt(inData);
+        f << encrypt(inData); //crypting data
         f.close();
     }
     else
@@ -409,6 +438,11 @@ void setNewData(string file, string& inData)
     }
 }
 
+/*!
+ * \brief XOR Encrytpion/Decrytion Algorithm
+ * \param Data Data string to encrypt/decrypt
+ * \return An encrypted/decrypted string 
+*/
 string crypting(string Data)
 {
     string outData;

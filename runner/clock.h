@@ -24,12 +24,20 @@ THE SOFTWARE.
 #ifndef CLOCK_H
 #define CLOCK_H
 
+/*!
+ * \file clock.h
+ * \brief Clock header file
+ */
+
 #include <SFML/Graphics.hpp>
 
+/*!
+ * \brief Time management class
+*/
 class Clock {
 private:
-    sf::Clock m_time;
-    int m_delayAsSec;
+    sf::Clock m_time; ///< Time clock
+    int m_delayAsSec;	///< Delai for the timer
 public:
     Clock();
     int asMinutes();

@@ -21,16 +21,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*!
+ * \file heal.h
+ * \brief Heal header file
+ */
+
 #ifndef HEAL_H
 #define HEAL_H
 #include "character.h"
 #include "bonus.h"
 
-
+/*!
+ * \brief heal bonus class.
+ * Inherit from Bonus class
+ */
 class Heal : public Bonus
 {
 private:
-    int m_healingPower;
+    int m_healingPower; ///< Value of the health given back to the player
 public:
     Heal(float x, float y, int w, int h, float dx, float dy, int healingPower);
     //~Heal() override;

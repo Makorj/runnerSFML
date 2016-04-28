@@ -21,16 +21,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*!
+ * \file doublejump.h
+ * \brief DoubleJump header file
+ */
+
 #ifndef DOUBLEJUMP_H
 #define DOUBLEJUMP_H
 #include "bonus.h"
 #include "character.h"
 
-
+/*!
+ * \brief Bonus herited class
+ */
 class DoubleJump : public Bonus
 {
 private:
-    int m_duration;
+    int m_duration; ///< Duration of the buff in seconds
 public:
     DoubleJump(float x, float y, int w, int h, float dx, float dy, int duration);
     //~DoubleJump() override;

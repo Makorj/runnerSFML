@@ -21,14 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*!
+ * \file graphicelement.harderr
+ * \brief GraphicElement header file
+ */
+
 #ifndef GRAPHICELEMENT_H
 #define GRAPHICELEMENT_H
 
 #include <SFML/Graphics.hpp>
 
 //!
-//! \brief The GraphicElement class.
-//! Herited from the sf::Sprite class from the SFML library.
+//! \brief Element drawable on the screen class.
+//! Inherit from the sf::Sprite class from the SFML library.
 //!
 class GraphicElement
         : public sf::Sprite

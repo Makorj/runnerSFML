@@ -21,15 +21,36 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*!
+ * \file coin.cpp
+ * \brief Coin c++ source file
+ */
+
 #include "coin.h"
 
 int Coin::COIN_MONEY_VALUE=1;
+
+/*!
+ * \brief Constructor
+ * \param x float : X position
+ * \param y float : Y position
+ * \param w int : Width of the coin
+ * \param h int : height of the coin
+ * \param dx float : X speed
+ * \param dy float : Y speed
+ * \param scoreValue int : Value of a coin in score
+ */
 Coin::Coin(float x, float y, int w, int h, float dx, float dy, int scoreValue)
     : Bonus(x,y,w,h,dx,dy,BONUS_TYPE_COIN),
       m_scoreValue(scoreValue)
 {
 }
 
+/*!
+ * \brief Apply the coin effect on a Character.
+ * \param charact Character on wich the effect of the coin is applied.
+ */
 void Coin::apply(Character* charact) {
     charact->addScore(m_scoreValue);
     charact->addCoin(COIN_MONEY_VALUE);

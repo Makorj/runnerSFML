@@ -21,33 +21,65 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+/*!
+ * \file clock.cpp
+ * \brief Clock c++ source file
+ */
+
 #include "clock.h"
 
+/*!
+ * \brief Constructor
+ */
 Clock::Clock()
 {}
 
+/*!
+ * \brief Get the the time elapsed as minutes since the last start of the clock.
+ * \return int Minutes elapsed since the last start of the clock.
+ */
 int Clock::asMinutes(){
     return (m_time.getElapsedTime().asSeconds()/60);
 }
 
+/*!
+ * \brief Get the the time elapsed as seconds since the last start of the clock.
+ * \return int Secondes elapsed since the last start of the clock.
+ */
 int Clock::asSeconds(){
     return m_time.getElapsedTime().asSeconds();
 }
 
+/*!
+ * \brief Get the the time elapsed as milliseconds since the last start of the clock.
+ * \return int Milliseconds elapsed since the last start of the clock.
+ */
 int Clock::asMilliseconds(){
     return m_time.getElapsedTime().asMilliseconds();
 }
 
+/*!
+ * \brief Restart the clock.
+ */
 void Clock::restart(){
     m_time.restart();
 }
 
+/*!
+ * \brief Start a counter from the given time in seconds.
+ * \param delay int delay of the counter in seconds
+ */
 void Clock::startCounter(int delay)
 {
     m_delayAsSec=delay;
     restart();
 }
 
+/*!
+ * \brief Give the state of the counter.
+ * \return boolean True if the counter as ended, false otherwise
+ */
 bool Clock::hasEnded(){
     return ((asSeconds() - m_delayAsSec)>=0)?true:false;
 }

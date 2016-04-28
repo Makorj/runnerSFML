@@ -130,6 +130,9 @@ int GraphicElement::getY() const
     return m_y;
 }
 
+//!
+//! \brief Special method for SlidingBackgrounds
+//! \param s float X speed of the moving
 void GraphicElement::slideLeft(float s) {
     m_x -= s;
     setPosition(m_x,m_y);

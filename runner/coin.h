@@ -24,14 +24,22 @@ THE SOFTWARE.
 #ifndef COIN_H
 #define COIN_H
 
+/*!
+ * \file coin.h
+ * \brief Coin header file
+ */
+
 #include "bonus.h"
 #include "character.h"
 
+/*!
+ * \brief Bonus herited class
+ */
 class Coin : public Bonus
 {
 private:
-    int m_scoreValue;
-    static int COIN_MONEY_VALUE;
+    int m_scoreValue; ///< Score's value given by the coin
+    static int COIN_MONEY_VALUE; ///< Money's value given by the coin.
 public:
     Coin(float x, float y, int w, int h, float dx, float dy, int scoreValue=5);
     //~Coin() override;
