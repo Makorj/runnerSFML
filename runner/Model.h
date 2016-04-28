@@ -26,7 +26,7 @@ THE SOFTWARE.
 #define _MODEL_
 
 #include <SFML/Graphics.hpp>
-#include "balle.h"
+#include "character.h"
 #include "clock.h"
 
 const int SAVED_PARAM_ID_MAXLIFE=0;

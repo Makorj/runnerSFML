@@ -409,7 +409,7 @@ void setNewData(string file, string& inData)
     }
 }
 
-string decrypt(string Data)
+string crypting(string Data)
 {
     string outData;
     int i=0;
