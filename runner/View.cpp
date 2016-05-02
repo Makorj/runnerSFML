@@ -148,6 +148,7 @@ View::~View(){
 //=======================================
 void View::setModel(Model * model){
     _model = model;
+    _model->pause();
 }
 
 //=======================================
@@ -256,6 +257,7 @@ bool View::treatEvents(){
                     switch(m_mainmenu.getSelectedItem()) {
                     case 0:
                         m_menu = false;
+                        _model->restart();
                         break;
                     case 1:
                         //Traiter
