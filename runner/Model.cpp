@@ -36,13 +36,12 @@ using namespace std;
 
 string getData(string file);
 void setNewData(string file, string& inData);
-string encrypt(string& data);
-string decrypt(string& encryptedData);
+
 
 const string SAVE_FILE="pack1.rsvf";
 
 const float BALL_INIT_X = 10.;
-const float BALL_INIT_Y = 450.;
+const float BALL_INIT_Y = 400.;
 const int BALL_INIT_H = 40;
 const int BALL_INIT_W = 40;
 const float BALL_INIT_DX = 0.;
@@ -160,7 +159,7 @@ void Model::nextStep(){
             tmp=nullptr;
         }
 		//test if it's collided with the ball
-        else if(collide(*m_char, *tmp))
+        else if(collide(m_char, tmp))
         {
             int x = tmp->getType();
 			
@@ -330,7 +329,7 @@ bool Model::hasEnded() {
 }
 
 void Model::pause() {
-	m_paused?m_pause=false:m_pause=true;
+    m_paused?m_paused=false:m_paused=true;
 }
 
 void Model::shopUpdate(std::array<int, 10>& newParam) {
@@ -408,7 +407,7 @@ string getData(string file){
         }
         f.close();
 
-        outData=decrypt(outData); //decrypting data
+        outData=pomme(outData); //decrypting data
         return outData;
     }
     else
@@ -429,7 +428,7 @@ void setNewData(string file, string& inData)
     f.open(file.c_str(), ios::out);
     if(f.is_open())
     {
-        f << encrypt(inData); //crypting data
+        f << pomme(inData); //crypting data
         f.close();
     }
     else
@@ -443,7 +442,7 @@ void setNewData(string file, string& inData)
  * \param Data Data string to encrypt/decrypt
  * \return An encrypted/decrypted string 
 */
-string crypting(string Data)
+string pomme(string Data)
 {
     string outData;
     int i=0;

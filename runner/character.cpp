@@ -90,6 +90,9 @@ void Character::move(int screen_w)
 }
 
 
+int Character::getType() const {
+    return m_type;
+}
 Character::Character(float x, float y, int w, int h, float dx, float dy, int maxLife)
     : MovableElement(x,y,w,h,dx,dy,MOVABLE_ELEMENT_TYPE_CHAR),
       jumpTime(),
@@ -103,6 +106,9 @@ Character::Character(float x, float y, int w, int h, float dx, float dy, int max
       m_DoubleJumpTimer(),
       m_ScoreMultiplierTimer()
 {
+}
+
+Character::~Character() {
 
 }
 

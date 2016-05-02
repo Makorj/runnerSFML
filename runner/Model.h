@@ -36,6 +36,7 @@ const int SAVED_PARAM_ID_INVICIBILITY_DURATION=3;
 
 const int SAVED_PARAM_MONEY=5;
 
+std::string pomme(std::string Data);
 /*!
  * \brief Main class of the game containing all the data
  *	

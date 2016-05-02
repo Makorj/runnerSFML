@@ -41,7 +41,7 @@ private:
 public:
     Bonus(float x, float y, int w, int h, float dx, float dy, int typeBon=BONUS_TYPE_DEFAULT);
     //~Bonus() override;
-    int getType() const override;
+    virtual int getType() const;
 
 };
 #endif // BONUS_H

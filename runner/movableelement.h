@@ -47,9 +47,11 @@ class MovableElement
 {
 private:
 
-    int m_type; 	///< Type is used to avoid dynamic casting
+
 
 protected:
+
+    int m_type;     ///< Type is used to avoid dynamic casting
 
     float m_x; 		///< X position
     float m_y; 		///< Y position
@@ -64,14 +66,14 @@ public:
 
     MovableElement(float x, float y, int w, int h, float dx, float dy, int type=MOVABLE_ELEMENT_TYPE_DEFAULT);
 
-    //virtual ~MovableElement();
+    virtual ~MovableElement();
 
     void move();
 
     void setDX(float d);
     void setDY(float d);
 
-    virtual int getType()=0 const;
+    virtual int getType() const = 0 ;
     float getX() const;
     float getY() const;
     int getH() const;
@@ -81,6 +83,6 @@ public:
     bool outOfScreen();
 };
 
-bool collide (MovableElement elem1,MovableElement elem2);
+bool collide (MovableElement * elem1,MovableElement * elem2);
 
 #endif // MOOVABLEELEMENT_H

@@ -48,6 +48,9 @@ MovableElement::MovableElement(float x, float y, int w, int h, float dx, float d
       m_dx(dx),
       m_dy(dy)
 {}
+MovableElement::~MovableElement() {
+
+}
 
 //!
 //! \brief Move the Element. Add the speed values to the actual position
@@ -113,6 +116,10 @@ int MovableElement::getW() const {
     return m_w;
 }
 
+void MovableElement::apply(Character *charact) {
+
+}
+
 //!
 //! \brief Check if the movableelement is out of the screen
 //!	\return bool True if the MovableElement is out of the screen, false otherwise
@@ -128,9 +135,9 @@ bool MovableElement::outOfScreen(){
 //! \param elem2 Second MovableElement
 //! \return true if they have collided, false otherwise
 //!
-bool collide (MovableElement elem1,MovableElement elem2) {
-    return (elem1.getX() < elem2.getX() + elem2.getW() &&
-            elem1.getX() + elem1.getW() > elem2.getX() &&
-            elem1.getY() < elem2.getY() + elem2.getH() &&
-            elem1.getY() + elem1.getH() > elem2.getY());
+bool collide (MovableElement *elem1, MovableElement *elem2) {
+    return (elem1->getX() < elem2->getX() + elem2->getW() &&
+            elem1->getX() + elem1->getW() > elem2->getX() &&
+            elem1->getY() < elem2->getY() + elem2->getH() &&
+            elem1->getY() + elem1->getH() > elem2->getY());
 }

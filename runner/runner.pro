@@ -14,7 +14,6 @@ SOURCES += main.cpp \
     animatedgraphicelement.cpp \
     obstacle.cpp \
     movableelement.cpp \
-    TU/TU_ball.cpp \
     bonus.cpp \
     clock.cpp \
     menu.cpp \

@@ -71,7 +71,7 @@ public:
 
     //// CONSTRUCTORS /////
     Character(float x, float y, int w, int h, float dx, float dy, int maxLife=100);
-    //~Character() override;
+    ~Character() override;
 
 
     void addLife(int const& x);
@@ -85,6 +85,7 @@ public:
     void addCoin(int &x);
     void isJumping();
     void jump();
+    int getType() const override;
 
     void setDX(float d);
 
