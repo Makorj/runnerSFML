@@ -41,14 +41,14 @@ void setNewData(string file, string& inData);
 const string SAVE_FILE="pack1.rsvf";
 
 const float BALL_INIT_X = 10.;
-const float BALL_INIT_Y = 400.;
-const int BALL_INIT_H = 40;
-const int BALL_INIT_W = 40;
+const float BALL_INIT_Y = 450.;
+const int BALL_INIT_H = 125;
+const int BALL_INIT_W = 90;
 const float BALL_INIT_DX = 0.;
 const float BALL_INIT_DY = 0.;
 
 const float ELEM_X_INIT = 1210.;
-const float OBS_Y_INIT = 440.;
+const float OBS_Y_INIT = 525.;
 const float BONUS_Y_INIT = 315.;
 
 const float INIT_GLOBAL_SPEED = 2.;
@@ -79,8 +79,8 @@ Model::Model(int w, int h)
 	
     m_char = new Character((float)BALL_INIT_X,
                            (float)BALL_INIT_Y,
-                           (int)BALL_INIT_H,
                            (int)BALL_INIT_W,
+                           (int)BALL_INIT_H,
                            (float)BALL_INIT_DX,
                            (float)BALL_INIT_DY,
                            m_savedParam[SAVED_PARAM_ID_MAXLIFE]);
@@ -138,8 +138,9 @@ void Model::nextStep(){
             break;
         }
         timeTestBonus=m_timeElapsed.asMilliseconds();
+        cerr << "ntm" << endl;
     }
-    else if(m_timeElapsed.asMilliseconds()-timeTest>5000)
+    if(m_timeElapsed.asMilliseconds()-timeTest>5000)
     {
         m_elements.push_back(new Obstacle{ELEM_X_INIT,OBS_Y_INIT,50,50,-2,0,(1+(rand()%3))});
         timeTest=m_timeElapsed.asMilliseconds();
@@ -154,6 +155,7 @@ void Model::nextStep(){
 		//test if the element is to delete because it's out of the screen 
         if(tmp->outOfScreen())
         {
+            cerr << "nts" << endl;
             m_elements.erase(elem);
             delete tmp;
             tmp=nullptr;
@@ -173,6 +175,7 @@ void Model::nextStep(){
 			
 			//erase
             m_elements.erase(elem);
+//            cerr << "ntf" << endl;
             delete tmp;
             tmp=nullptr;
         }
@@ -271,8 +274,11 @@ void Model::getElemsPos( std::vector<std::pair<int , std::pair<float, float> > >
 {
 
     elemPos.clear();
+
     for(auto x : m_elements)
     {
+        std::cout << "x : " << x->getX() << " , y : " << x->getY() << endl;
+        std::cout << x->getType() << endl;
         elemPos.push_back(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
     }
 }

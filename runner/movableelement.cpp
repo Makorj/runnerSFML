@@ -125,7 +125,7 @@ void MovableElement::apply(Character *charact) {
 //!	\return bool True if the MovableElement is out of the screen, false otherwise
 //!
 bool MovableElement::outOfScreen(){
-    return !(m_x+m_w<-10);
+    return (m_x+m_w<(-10));
 }
 
 //!
