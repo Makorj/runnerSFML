@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "SFML/Graphics.hpp"
 #include "graphicelement.h"
-#include <map>
+#include <vector>
 #define MAX_NUMBER_BOUTONS 4
 
 const std::string MENUITEM_PATH = "../Images/menuitems.png";
@@ -36,12 +36,12 @@ class Menu
 {
 private :
     sf::Texture m_menu_sprite;
-    int m_nb_items;
     int m_selectedItem;
     sf::Font m_font;
     std::vector<std::pair<sf::Text,sf::Sprite> >m_items;
+    std::vector<std::string> m_stringItems;
 public:
-    Menu(float w, float h, const std::string MenuItems[], int size);
+    Menu(float w, float h, const std::vector<std::string> &MenuItems);
     void draw(sf::RenderWindow *window);
     void hoverMenu(sf::Vector2f mouse);
     void MoveUp();

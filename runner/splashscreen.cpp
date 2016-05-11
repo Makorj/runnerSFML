@@ -26,7 +26,6 @@ THE SOFTWARE.
 
 SplashScreen::SplashScreen():
     m_reverse(false),
-    m_splashtime(true),
     m_logo1(true),
     m_transparent(0)
 {
@@ -60,7 +59,18 @@ void SplashScreen::draw(sf::RenderWindow *window) {
     }
 }
 
-void SplashScreen::synchronize() {
+void SplashScreen::event(State &state) {
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+        if(m_logo1)
+        {
+            m_logo1=false;
+            m_reverse=false;
+            m_transparent=0;
+        }
+        else {
+            state = MAIN_MENU;
+        }
+    }
 
     if(m_logo1)
     {
@@ -90,7 +100,7 @@ void SplashScreen::synchronize() {
         {
             if(m_transparent<=1)
             {
-                m_splashtime=false;
+                state = MAIN_MENU;
                 m_reverse=false;
             }
             else
@@ -107,21 +117,3 @@ void SplashScreen::synchronize() {
     }
 }
 
-void SplashScreen::event() {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-        if(m_logo1)
-        {
-            m_logo1=false;
-            m_reverse=false;
-            m_transparent=0;
-        }
-        else {
-            m_splashtime=false;
-        }
-    }
-}
-
-
-bool SplashScreen::getSplashTime() const {
-    return m_splashtime;
-}

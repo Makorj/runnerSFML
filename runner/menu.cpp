@@ -25,8 +25,9 @@ THE SOFTWARE.
 #include <iostream>
 #include <map>
 
-Menu::Menu(float w, float h, const std::string MenuItems[], int size):
-    m_nb_items(size)
+Menu::Menu(float w, float h, const std::vector<std::string> &MenuItems):
+    m_selectedItem(0),
+    m_stringItems(MenuItems)
 {
     if(!m_menu_sprite.loadFromFile("../Images/menuitems.png")){
         std::cout << "menu image not load"<< std::endl;
@@ -43,12 +44,12 @@ Menu::Menu(float w, float h, const std::string MenuItems[], int size):
 
     std::cout << sprite_tmp.getLocalBounds().width << "    " << sprite_tmp.getLocalBounds().height << std::endl;
 
-    for (int i = 0; i < m_nb_items; i ++) {
+    for (int i = 0; i < m_stringItems.size(); i ++) {
         tmp.setFont(m_font);
-        tmp.setColor(sf::Color::Black);
+        tmp.setColor(sf::Color::White);
         tmp.setString(MenuItems[i]);
         tmp.setOrigin(tmp.getLocalBounds().width/2, tmp.getLocalBounds().height/2);
-        tmp.setPosition(sf::Vector2f(w/4, h/ (m_nb_items + 1) * (i+1)));
+        tmp.setPosition(sf::Vector2f(w/4, h/ (m_stringItems.size() + 1) * (i+1)));
 
 
         sprite_tmp.setPosition(tmp.getPosition().x,tmp.getPosition().y+7);
@@ -61,7 +62,7 @@ Menu::Menu(float w, float h, const std::string MenuItems[], int size):
 }
 
 void Menu::draw(sf::RenderWindow *window) {
-    for (int i = 0; i < m_nb_items; i++ ){
+    for (int i = 0; i < m_stringItems.size(); i++ ){
         window->draw(m_items[i].second);
         window->draw(m_items[i].first);
 
@@ -77,7 +78,7 @@ void Menu::MoveUp() {
 }
 
 void Menu::MoveDown() {
-    if(m_selectedItem + 1 < m_nb_items) {
+    if(m_selectedItem + 1 < m_stringItems.size()) {
         m_items[m_selectedItem].second.setTextureRect(sf::IntRect(0,0,300,50));
         m_selectedItem++;
         m_items[m_selectedItem].second.setTextureRect(sf::IntRect(0,50,300,50));
@@ -85,7 +86,7 @@ void Menu::MoveDown() {
 }
 
 void Menu::hoverMenu(sf::Vector2f mouse) {
-    for( int i = 0; i <m_nb_items; i++) {
+    for( int i = 0; i <m_stringItems.size(); i++) {
         if(m_items[i].second.getLocalBounds().contains(mouse))
         {
             std::cout << "TEST REUSSI A " + i << std::endl;

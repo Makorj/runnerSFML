@@ -47,7 +47,8 @@ HEADERS += \
     coin.h \
     invicibility.h \
     doublejump.h \
-    scoremultiplier.h
+    scoremultiplier.h \
+    State.h
 
 OTHER_FILES += \
     ../Images/flocon.png \

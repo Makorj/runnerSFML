@@ -33,15 +33,10 @@ THE SOFTWARE.
 #include "slidingbackground.h"
 #include "menu.h"
 #include "splashscreen.h"
+#include "State.h"
 
-const int NB_MAINMENU_ITEMS = 4;
-const int NB_SHOP_ITEMS = 5;
 
-//const std::string BALLE_IMAGE = "../Images/balls.png";
 const std::string BALLE_IMAGE = "../Images/iceclimber.png";
-
-const int SIZE_BALL = 50;
-
 const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/sapin_background.png";
 const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/moutain_background.png";
 const std::string BACKGROUND_IMAGE = "../Images/sun.png";
@@ -55,36 +50,9 @@ const std::string SOUND_CARRE="../Audio/carre.ogg";
 const std::string ELEM_IMG = "../Images/iceblock.png";
 const std::string COIN_IMG = "../Images/flocon.png";
 
-const std::string MAIN_MENU_ITEMS[NB_MAINMENU_ITEMS] = {"Play","Best Scores","Shop","Quit"};
-
-const std::string SHOP_MENU_ITEMS[NB_SHOP_ITEMS] = {"","","","",""};
-
-//const sf::IntRect ball_rect1{0,0,42,50};
-//const sf::IntRect ball_rect2{42,0,57,SIZE_BALL};
-//const sf::IntRect ball_rect3{100,0,53,SIZE_BALL};
-//const sf::IntRect ball_rect4{154,0,46,SIZE_BALL};
-//const sf::IntRect ball_rect5{204,0,42,SIZE_BALL};
-//const sf::IntRect ball_rect6{248,0,54,SIZE_BALL};
-//const sf::IntRect ball_rect7{302,0,51,SIZE_BALL};
-//const sf::IntRect ball_rect8{355,0,45,SIZE_BALL};
-
-const sf::IntRect ball_rect1{0,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect ball_rect2{50,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect ball_rect3{100,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect ball_rect4{150,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect ball_rect5{200,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect ball_rect6{250,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect ball_rect7{300,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect ball_rect8{350,0,SIZE_BALL,SIZE_BALL};
-
-
-const sf::IntRect popo_still_rect{5,0,120,200};
-const sf::IntRect popo_run1_rect{160,0,130,190};
-const sf::IntRect popo_run2_rect{320,0,120,200};
-const sf::IntRect popo_run3_rect{480,0,140,200};
-const sf::IntRect popo_jump1_rect{350,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect popo_jump2_rect{350,0,SIZE_BALL,SIZE_BALL};
-const sf::IntRect popo_jump3_rect{350,0,SIZE_BALL,SIZE_BALL};
+const std::vector<std::string> MAIN_MENU_ITEMS = {"Play","Multiplayer","Best Scores","Shop","Options","Quit"};
+const std::vector<std::string> OPTIONS_MENU_ITEMS = {"Langage","Volume","Back"};
+const std::vector<std::string> LANGAGE_MENU_ITEMS = {"English","French","German","Spanish","Portugese","Main Menu","Back"};
 
 const sf::IntRect poposwag_run1_rect{0,0,100,134};
 const sf::IntRect poposwag_run2_rect{134,0,100,134};
@@ -142,7 +110,10 @@ private:
     sf::Vector2f m_mouse;
     SplashScreen m_splashscreen;
 
+    State m_state;
     Menu m_mainmenu;
+    Menu m_optionmenu;
+    Menu m_langagemenu;
 
 public:
 
@@ -151,6 +122,7 @@ public:
 
     void setModel(Model * model);
     void draw();
+    void drawObstacles();
     void synchronize();
     bool treatEvents();
 

@@ -40,12 +40,10 @@ const unsigned int SPEED1 = 1;
 //=======================================
 View::View(int w, int h)
     : _w(w), _h(h),
-      m_transparent(0),
-      m_reverse(false),
-      m_splashtime(true),
-      m_logo1(true),
-      m_menu(true),
-      m_mainmenu{w,h,MAIN_MENU_ITEMS,NB_MAINMENU_ITEMS}
+      m_mainmenu{w,h,MAIN_MENU_ITEMS},
+      m_optionmenu{w,h,OPTIONS_MENU_ITEMS},
+      m_langagemenu{w,h,LANGAGE_MENU_ITEMS},
+      m_state{MAIN_MENU}
 {
 
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
@@ -115,12 +113,7 @@ View::View(int w, int h)
     else
         Collision.setBuffer(carre);
 
-
-    vector<sf::IntRect> clipRect_balle;
-//    for (int i=0;i<8;i++) {
-//        clipRect_balle.push_back(sf::IntRect(i*SIZE_BALL,0, SIZE_BALL, SIZE_BALL));
-//    }
-
+    std::vector<sf::IntRect> clipRect_balle;
     clipRect_balle.push_back(poposwag_run1_rect);
     clipRect_balle.push_back(poposwag_run2_rect);
     clipRect_balle.push_back(poposwag_run3_rect);
@@ -157,67 +150,71 @@ void View::setModel(Model * model){
 void View::draw(){
     _window->clear();
 
-    // SPLASH SCREEN //
-    if(m_splashscreen.getSplashTime())
+    if(m_state !=SPLASHSCREEN) {
+        _BackgroundSprite.draw(_window);
+        _SlidingBackgroundSprite2.draw(_window);
+        _SlidingBackgroundSprite1.draw(_window);
+    }
+
+    switch(m_state) {
+    case SPLASHSCREEN:
         m_splashscreen.draw(_window);
-    // END OF SPLASH SCREEN //
-    else if(m_menu) {
-        _BackgroundSprite.draw(_window);
-        _SlidingBackgroundSprite2.draw(_window);
-        _SlidingBackgroundSprite1.draw(_window);
-         m_mainmenu.draw(_window);
-    }
-    else
-    {
-        if(_boobaSong.getStatus()==sf::SoundSource::Stopped && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
-            _boobaLoop.play();
-        else if(_boobaSong.getStatus()!=sf::SoundSource::Playing && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
-            _boobaSong.play();
-        _BackgroundSprite.draw(_window);
-        _SlidingBackgroundSprite2.draw(_window);
-        _SlidingBackgroundSprite1.draw(_window);
-
-        if(_model->hasCollide())
-            Collision.play();
-
-        for(auto x : m_elemPos)
-        {
-            switch (x.first) {
-            case 22:
-                _coinSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
-                _coinSprite.draw(_window);
-                break;
-            case 11:
-                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
-                _elemSprite.draw(_window);
-                break;
-            case 12:
-                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
-                _elemSprite.draw(_window);
-                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second+50});
-                _elemSprite.draw(_window);
-                break;
-            case 13:
-                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
-                _elemSprite.draw(_window);
-                _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second+50});
-                _elemSprite.draw(_window);
-                _elemSprite.setPosition(sf::Vector2f{x.second.first+50, x.second.second});
-                _elemSprite.draw(_window);
-                _elemSprite.setPosition(sf::Vector2f{x.second.first+50, x.second.second+50});
-                _elemSprite.draw(_window);
-                break;
-            default:
-                _coinSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
-                _coinSprite.draw(_window);
-                break;
-            }
-        }
-
+        break;
+    case MAIN_MENU:
+        m_mainmenu.draw(_window);
+        break;
+    case OPTIONS:
+        m_optionmenu.draw(_window);
+        break;
+    case BEST_SCORES:
+        break;
+    case SHOP:
+        break;
+    case LANGAGE:
+        m_langagemenu.draw(_window);
+        break;
+    case GAME:
         _balleSprite.draw(_window);
+        drawObstacles();
+        break;
     }
-
     _window->display();
+}
+
+void View::drawObstacles() {
+    for(auto x : m_elemPos)
+    {
+        switch (x.first) {
+        case 22:
+            _coinSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _coinSprite.draw(_window);
+            break;
+        case 11:
+            _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _elemSprite.draw(_window);
+            break;
+        case 12:
+            _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _elemSprite.draw(_window);
+            _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second+50});
+            _elemSprite.draw(_window);
+            break;
+        case 13:
+            _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _elemSprite.draw(_window);
+            _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second+50});
+            _elemSprite.draw(_window);
+            _elemSprite.setPosition(sf::Vector2f{x.second.first+50, x.second.second});
+            _elemSprite.draw(_window);
+            _elemSprite.setPosition(sf::Vector2f{x.second.first+50, x.second.second+50});
+            _elemSprite.draw(_window);
+            break;
+        default:
+            _coinSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _coinSprite.draw(_window);
+            break;
+        }
+    }
 }
 
 //=======================================
@@ -230,65 +227,111 @@ bool View::treatEvents(){
 
     if(_window->isOpen()){
         result = true;
-
         sf::Event event;
         while (_window->pollEvent(event)) {
-            //cout << "Event detected" << endl;
-            sf::Vector2f mousePos = static_cast<sf::Vector2f>(sf::Mouse::getPosition());
-            m_mainmenu.hoverMenu(mousePos);
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-                left=true;
-            else
-                left=false;
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-                right=true;
-            else
-                right=false;
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && m_menu) {
-                m_mainmenu.MoveUp();
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)&& m_menu) {
-                m_mainmenu.MoveDown();
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)&& !m_splashscreen.getSplashTime()) {
-                if(m_menu) {
-                    switch(m_mainmenu.getSelectedItem()) {
-                    case 0:
-                        m_menu = false;
-                        _model->restart();
-                        break;
-                    case 1:
-                        //Traiter
-                        break;
-                    case 2:
-                        //Traiter
-                        break;
-                    case 3:
-                        _window->close();
-                        break;
+            switch(m_state) {
+            case SPLASHSCREEN:
+                m_splashscreen.event(m_state);
+                break;
+            case MAIN_MENU:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_mainmenu.MoveUp();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_mainmenu.MoveDown();
+                if(event.type == sf::Event::KeyReleased) {
+                    if(event.key.code == sf::Keyboard::Return) {
+                        switch(m_mainmenu.getSelectedItem()) {
+                        case 0:
+                            m_state = GAME;
+                            _model->restart();
+                            break;
+                        case 1:
+                            m_state = MULTIPLAYER;
+                            break;
+                        case 2:
+                            m_state = BEST_SCORES;
+                            break;
+                        case 3:
+                            m_state = SHOP;
+                            break;
+                        case 4:
+                            m_state = OPTIONS;
+                            break;
+                        case 5:
+                            break;
+                            _window->close();
+                            result = false;
+                        }
                     }
                 }
+                break;
+            case OPTIONS:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_optionmenu.MoveUp();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_optionmenu.MoveDown();
+                if(event.type == sf::Event::KeyReleased) {
+                    if(event.key.code == sf::Keyboard::Return) {
+                        switch(m_optionmenu.getSelectedItem()) {
+                        case 0:
+                            m_state = LANGAGE;
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            m_state = MAIN_MENU;
+                            break;
+                        }
+                    }
+                }
+                break;
+            case BEST_SCORES:
+                break;
+            case SHOP:
+                break;
+            case LANGAGE:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_langagemenu.MoveUp();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_langagemenu.MoveDown();
+                if(event.type == sf::Event::KeyReleased) {
+                    if(event.key.code == sf::Keyboard::Return) {
+                        switch(m_langagemenu.getSelectedItem()) {
+                        case 0:
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            m_state = MAIN_MENU;
+                            break;
+                        case 6:
+                            m_state = OPTIONS;
+                            break;
+                        }
+                    }
+                }
+                break;
+            case GAME:
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Left)?left=true:left=false;
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Right)?right=true:right=false;
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+                {
+                    _model->jumpBall();
+                    Jump.play();
+                }
+                if (event.type == sf::Event::KeyPressed && event.key.code==sf::Keyboard::R)
+                {
+                    _model->restart();
+                    m_elemPos.clear();
+                }
+
+                break;
             }
 
-            // JUMP KEY
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-            {
-                _model->jumpBall();
-                Jump.play();
-            }
-
-            if (event.type == sf::Event::KeyPressed && event.key.code==sf::Keyboard::R)
-            {
-                _model->restart();
-                m_elemPos.clear();
-            }
-
-            // SPLASH SCREEN SKEEPER //
-            if (m_splashscreen.getSplashTime())
-                m_splashscreen.event();
-            // END OF SPLASH SCREEN SKEEPER //
+            if(_boobaSong.getStatus()==sf::SoundSource::Stopped && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
+                _boobaLoop.play();
+            else if(_boobaSong.getStatus()!=sf::SoundSource::Playing && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
+                _boobaSong.play();
 
             if ((event.type == sf::Event::Closed) ||
                     ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))) {
@@ -296,30 +339,26 @@ bool View::treatEvents(){
                 result = false;
             }
         }
-
-
     }
-        _model->setCharDir(left,right);
-
+    _model->setCharDir(left,right);
     return result;
 }
 
 void View::synchronize()
 {
-    //SplashScreen
-    if(m_splashscreen.getSplashTime())
-        m_splashscreen.synchronize();
-    //Splashscreen
-    if(!m_menu){
-         _model->getElemsPos(m_elemPos);
+    if(m_state == GAME){
+        _model->getElemsPos(m_elemPos);
 
-         std::pair<float,float> a = _model->getBallPosition();
-         _balleSprite.setPosition(sf::Vector2f{a.first, a.second});
+        std::pair<float,float> a = _model->getBallPosition();
+        _balleSprite.setPosition(sf::Vector2f{a.first, a.second});
 
-         _SlidingBackgroundSprite1.setSpeed((float)-1*(_model->getAllSpeed()));
-         _SlidingBackgroundSprite2.setSpeed((float)-1*_model->getAllSpeed()-1);
+        _SlidingBackgroundSprite1.setSpeed((float)-1*(_model->getAllSpeed()));
+        _SlidingBackgroundSprite2.setSpeed((float)-1*_model->getAllSpeed()-1);
 
-         _model->moveBall();
+        if(_model->hasCollide())
+            Collision.play();
+
+        _model->moveBall();
 
     }
 }
