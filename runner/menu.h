@@ -43,9 +43,9 @@ private :
 public:
     Menu(float w, float h, const std::vector<std::string> &MenuItems);
     void draw(sf::RenderWindow *window);
-    void hoverMenu(sf::Vector2f mouse);
     void MoveUp();
     void MoveDown();
+    void changeString(std::string changed, int pos);
     int getSelectedItem() const;
 
 };

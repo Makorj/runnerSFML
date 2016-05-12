@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
+#include <fstream>>
 
 using namespace std;
 
@@ -42,7 +43,7 @@ View::View(int w, int h)
     : _w(w), _h(h),
       m_mainmenu{w,h,MAIN_MENU_ITEMS},
       m_optionmenu{w,h,OPTIONS_MENU_ITEMS},
-      m_langagemenu{w,h,LANGAGE_MENU_ITEMS},
+      m_languagemenu{w,h,LANGUAGE_MENU_ITEMS},
       m_state{MAIN_MENU}
 {
 
@@ -141,7 +142,7 @@ View::~View(){
 //=======================================
 void View::setModel(Model * model){
     _model = model;
-    _model->pause();
+    //_model->pause();
 }
 
 //=======================================
@@ -170,8 +171,8 @@ void View::draw(){
         break;
     case SHOP:
         break;
-    case LANGAGE:
-        m_langagemenu.draw(_window);
+    case LANGUAGE:
+        m_languagemenu.draw(_window);
         break;
     case GAME:
         _balleSprite.draw(_window);
@@ -257,8 +258,9 @@ bool View::treatEvents(){
                             break;
                         case 5:
                             break;
-                            _window->close();
                             result = false;
+                            _window->close();
+
                         }
                     }
                 }
@@ -270,7 +272,7 @@ bool View::treatEvents(){
                     if(event.key.code == sf::Keyboard::Return) {
                         switch(m_optionmenu.getSelectedItem()) {
                         case 0:
-                            m_state = LANGAGE;
+                            m_state = LANGUAGE;
                             break;
                         case 1:
                             break;
@@ -285,19 +287,27 @@ bool View::treatEvents(){
                 break;
             case SHOP:
                 break;
-            case LANGAGE:
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_langagemenu.MoveUp();
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_langagemenu.MoveDown();
+            case LANGUAGE:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_languagemenu.MoveUp();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_languagemenu.MoveDown();
                 if(event.type == sf::Event::KeyReleased) {
                     if(event.key.code == sf::Keyboard::Return) {
-                        switch(m_langagemenu.getSelectedItem()) {
+                        switch(m_languagemenu.getSelectedItem()) {
                         case 0:
+                            changeLanguage("en");
+                            m_state = OPTIONS;
                             break;
                         case 1:
+                            changeLanguage("fr");
+                            m_state = OPTIONS;
                             break;
                         case 2:
+                            changeLanguage("gr");
+                            m_state = OPTIONS;
                             break;
                         case 3:
+                            changeLanguage("es");
+                            m_state = OPTIONS;
                             break;
                         case 4:
                             break;
@@ -342,6 +352,45 @@ bool View::treatEvents(){
     }
     _model->setCharDir(left,right);
     return result;
+}
+
+void View::changeLanguage(string lang) {
+    fstream f;
+    int cpt = 0;
+    int cpt2 = -1;
+    string test;
+    f.open("../Languages/" + lang + ".ini", ios::in);
+    if(f.is_open()) {
+        while(!f.eof()) {
+            getline(f, test);
+            cpt2++;
+            if(test != "___") {
+                switch(cpt) {
+                case 0:
+                    m_mainmenu.changeString(test,cpt2);
+                    break;
+                case 1:
+                    m_optionmenu.changeString(test,cpt2);
+                    break;
+                case 2:
+                    m_languagemenu.changeString(test,cpt2);
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                }
+            }
+            else {
+                cpt++;
+                cpt2=-1;
+            }
+
+
+        }
+    }
 }
 
 void View::synchronize()

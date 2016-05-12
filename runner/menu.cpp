@@ -85,16 +85,11 @@ void Menu::MoveDown() {
     }
 }
 
-void Menu::hoverMenu(sf::Vector2f mouse) {
-    for( int i = 0; i <m_stringItems.size(); i++) {
-        if(m_items[i].second.getLocalBounds().contains(mouse))
-        {
-            std::cout << "TEST REUSSI A " + i << std::endl;
-            m_items[m_selectedItem].second.setTextureRect(sf::IntRect(0,0,300,50));
-        }
-    }
-
+void Menu::changeString(std::string changed, int pos) {
+    m_items[pos].first.setString(changed);
+    m_items[pos].first.setOrigin(m_items[pos].first.getLocalBounds().width/2, m_items[pos].first.getLocalBounds().height/2);
 }
+
 
 int Menu::getSelectedItem() const {
     return m_selectedItem;

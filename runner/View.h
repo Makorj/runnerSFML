@@ -50,9 +50,9 @@ const std::string SOUND_CARRE="../Audio/carre.ogg";
 const std::string ELEM_IMG = "../Images/iceblock.png";
 const std::string COIN_IMG = "../Images/flocon.png";
 
-const std::vector<std::string> MAIN_MENU_ITEMS = {"Play","Multiplayer","Best Scores","Shop","Options","Quit"};
-const std::vector<std::string> OPTIONS_MENU_ITEMS = {"Langage","Volume","Back"};
-const std::vector<std::string> LANGAGE_MENU_ITEMS = {"English","French","German","Spanish","Portugese","Main Menu","Back"};
+const std::vector<std::string> MAIN_MENU_ITEMS = {"BITE","Multiplayer","Best Scores","Shop","Options","Quit"};
+const std::vector<std::string> OPTIONS_MENU_ITEMS = {"Language","Volume","Back"};
+const std::vector<std::string> LANGUAGE_MENU_ITEMS = {"English","French","German","Spanish","Portugese","Main Menu","Back"};
 
 const sf::IntRect poposwag_run1_rect{0,0,100,134};
 const sf::IntRect poposwag_run2_rect{134,0,100,134};
@@ -113,7 +113,7 @@ private:
     State m_state;
     Menu m_mainmenu;
     Menu m_optionmenu;
-    Menu m_langagemenu;
+    Menu m_languagemenu;
 
 public:
 
@@ -123,6 +123,7 @@ public:
     void setModel(Model * model);
     void draw();
     void drawObstacles();
+    void changeLanguage(std::string lang);
     void synchronize();
     bool treatEvents();
 
