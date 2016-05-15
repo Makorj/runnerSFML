@@ -51,6 +51,7 @@ View::View(int w, int h)
     _window->setFramerateLimit(60);
     _window->setKeyRepeatEnabled(false);
 
+    changeLanguage("en");
     // IMAGE LOADER //
     if(!_Background.loadFromFile(BACKGROUND_IMAGE))
         std::cerr << "ERROR when loading image file: " << BACKGROUND_IMAGE << std::endl;
@@ -310,6 +311,7 @@ bool View::treatEvents(){
                             m_state = OPTIONS;
                             break;
                         case 4:
+                            changeLanguage("po");
                             break;
                         case 5:
                             m_state = MAIN_MENU;

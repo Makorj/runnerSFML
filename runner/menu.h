@@ -36,7 +36,7 @@ class Menu
 {
 private :
     sf::Texture m_menu_sprite;
-    int m_selectedItem;
+    unsigned int m_selectedItem;
     sf::Font m_font;
     std::vector<std::pair<sf::Text,sf::Sprite> >m_items;
     std::vector<std::string> m_stringItems;

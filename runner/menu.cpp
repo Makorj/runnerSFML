@@ -86,6 +86,7 @@ void Menu::MoveDown() {
 }
 
 void Menu::changeString(std::string changed, int pos) {
+    m_stringItems[pos] = changed;
     m_items[pos].first.setString(changed);
     m_items[pos].first.setOrigin(m_items[pos].first.getLocalBounds().width/2, m_items[pos].first.getLocalBounds().height/2);
 }

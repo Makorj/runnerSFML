@@ -50,7 +50,7 @@ const std::string SOUND_CARRE="../Audio/carre.ogg";
 const std::string ELEM_IMG = "../Images/iceblock.png";
 const std::string COIN_IMG = "../Images/flocon.png";
 
-const std::vector<std::string> MAIN_MENU_ITEMS = {"BITE","Multiplayer","Best Scores","Shop","Options","Quit"};
+const std::vector<std::string> MAIN_MENU_ITEMS = {"Play","Multiplayer","Best Scores","Shop","Options","Quit"};
 const std::vector<std::string> OPTIONS_MENU_ITEMS = {"Language","Volume","Back"};
 const std::vector<std::string> LANGUAGE_MENU_ITEMS = {"English","French","German","Spanish","Portugese","Main Menu","Back"};
 

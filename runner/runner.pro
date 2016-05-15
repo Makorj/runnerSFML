@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     coin.cpp \
     invicibility.cpp \
     doublejump.cpp \
-    scoremultiplier.cpp
+    scoremultiplier.cpp \
+    shop.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -48,7 +49,8 @@ HEADERS += \
     invicibility.h \
     doublejump.h \
     scoremultiplier.h \
-    State.h
+    State.h \
+    shop.h
 
 OTHER_FILES += \
     ../Images/flocon.png \
