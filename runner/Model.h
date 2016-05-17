@@ -84,9 +84,11 @@ class Model {
   unsigned int getMoney();
   int getScore();
   int getAllSpeed() const;
+  int getLife() const;
 
   void setBallVerticalSpeed(float &x);
   void setCharDir(bool& left, bool& right);
+
 
 };
 #endif

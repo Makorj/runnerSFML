@@ -249,6 +249,9 @@ int Model::getAllSpeed() const{
     return m_allSpeed;
 }
 
+int Model::getLife() const {
+    return m_char->getLife();
+}
 void Model::moveBall()
 {
     float left = -3.;
@@ -277,8 +280,6 @@ void Model::getElemsPos( std::vector<std::pair<int , std::pair<float, float> > >
 
     for(auto x : m_elements)
     {
-        std::cout << "x : " << x->getX() << " , y : " << x->getY() << endl;
-        std::cout << x->getType() << endl;
         elemPos.push_back(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
     }
 }

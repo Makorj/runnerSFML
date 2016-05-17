@@ -1,5 +1,7 @@
 #include "shop.h"
 
-Shop::Shop()
+using namespace std;
+Shop::Shop(int w, int h, const vector<string> MenuItems):
+    Menu(w,h,MenuItems)
 {
 }

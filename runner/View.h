@@ -34,6 +34,7 @@ THE SOFTWARE.
 #include "menu.h"
 #include "splashscreen.h"
 #include "State.h"
+#include "life.h"
 
 
 const std::string BALLE_IMAGE = "../Images/iceclimber.png";
@@ -109,6 +110,7 @@ private:
 
     sf::Vector2f m_mouse;
     SplashScreen m_splashscreen;
+    Life m_lifeUI;
 
     State m_state;
     Menu m_mainmenu;

@@ -44,7 +44,8 @@ View::View(int w, int h)
       m_mainmenu{w,h,MAIN_MENU_ITEMS},
       m_optionmenu{w,h,OPTIONS_MENU_ITEMS},
       m_languagemenu{w,h,LANGUAGE_MENU_ITEMS},
-      m_state{MAIN_MENU}
+      m_state{MAIN_MENU},
+      m_lifeUI{sf::Color::Green, sf::Color::Red, 100.0f}
 {
 
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
@@ -165,6 +166,8 @@ void View::draw(){
     case MAIN_MENU:
         m_mainmenu.draw(_window);
         break;
+    case MULTIPLAYER:
+        break;
     case OPTIONS:
         m_optionmenu.draw(_window);
         break;
@@ -177,6 +180,8 @@ void View::draw(){
         break;
     case GAME:
         _balleSprite.draw(_window);
+        m_lifeUI.draw(_window);
+
         drawObstacles();
         break;
     }
@@ -258,13 +263,14 @@ bool View::treatEvents(){
                             m_state = OPTIONS;
                             break;
                         case 5:
-                            break;
                             result = false;
                             _window->close();
-
+                            break;
                         }
                     }
                 }
+                break;
+            case MULTIPLAYER:
                 break;
             case OPTIONS:
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_optionmenu.MoveUp();
@@ -338,6 +344,8 @@ bool View::treatEvents(){
                 }
 
                 break;
+            case GAMEOVER:
+                break;
             }
 
             if(_boobaSong.getStatus()==sf::SoundSource::Stopped && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
@@ -402,6 +410,8 @@ void View::synchronize()
 
         std::pair<float,float> a = _model->getBallPosition();
         _balleSprite.setPosition(sf::Vector2f{a.first, a.second});
+        m_lifeUI.synchronize(_model->getLife(),a.first, a.second);
+        cout << _model->getLife() << endl;
 
         _SlidingBackgroundSprite1.setSpeed((float)-1*(_model->getAllSpeed()));
         _SlidingBackgroundSprite2.setSpeed((float)-1*_model->getAllSpeed()-1);
