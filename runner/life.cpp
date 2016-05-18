@@ -3,18 +3,31 @@
 
 using namespace std;
 
-Life::Life(sf::Color begin, sf::Color end, float maxLife)
+Life::Life(sf::Texture &image, const sf::Color &begin, const sf::Color &end, float maxLife)
     :m_startColor(begin),
       m_endColor(end),
       m_maxLife(maxLife),
       m_currentLife(maxLife),
-      m_life(sf::Vector2f(10,115))
+      m_height(115),
+      m_width(10),
+      m_life(sf::Vector2f(m_width,m_height))
+
 {
-    if(!m_texture.loadFromFile("../Images/lifeSlider.png")) {
-        //cerr << "ERROR when loading image file: ../Images/lifeSlider.png" << endl;
-    }
-    GraphicElement tmp(m_texture,0,0,30,120,false);
+    GraphicElement tmp(image,0,0,30,120,false);
     m_GUI = tmp;
+    m_life.setFillColor(interpolate());
+    m_life.setOrigin(m_life.getLocalBounds().left, m_life.getLocalBounds().height);
+}
+
+Life::Life(const Life &health)
+    :m_startColor(health.m_startColor),
+      m_endColor(health.m_endColor),
+      m_maxLife(health.m_maxLife),
+      m_height(health.m_height),
+      m_width(health.m_width),
+      m_GUI(health.m_GUI),
+      m_life(sf::Vector2f(m_width,m_height))
+{
     m_life.setFillColor(interpolate());
     m_life.setOrigin(m_life.getLocalBounds().left, m_life.getLocalBounds().height);
 }
@@ -36,8 +49,8 @@ sf::Color Life::interpolate() {
 void Life::synchronize(float currentLife, int x, int y) {
     m_currentLife = currentLife;
     m_GUI.setPosition(x-40,y-20);
-    m_life.setPosition(x-30, y-10+m_life.getLocalBounds().height);
+    m_life.setPosition(x-30, y-10+2*m_height);
     m_life.setFillColor(interpolate());
-    //m_life.setSize(sf::Vector2f(m_life.getLocalBounds().width,m_life.getLocalBounds().height-(m_life.getLocalBounds().height*(m_currentLife/m_maxLife))));
+    m_life.setSize(sf::Vector2f(m_life.getLocalBounds().width,-(m_height*(m_currentLife/m_maxLife))));
 }
 
