@@ -34,14 +34,16 @@ const std::string MENUITEM_PATH = "../Images/menuitems.png";
 
 class Menu
 {
+protected:
+    sf::Font m_font;
+    std::vector<std::pair<sf::Text,sf::Sprite> >m_items;
 private :
     sf::Texture m_menu_sprite;
     unsigned int m_selectedItem;
-    sf::Font m_font;
-    std::vector<std::pair<sf::Text,sf::Sprite> >m_items;
+
     std::vector<std::string> m_stringItems;
 public:
-    Menu(float w, float h, const std::vector<std::string> &MenuItems);
+    Menu(int w, int h, const std::vector<std::string> &MenuItems);
     void draw(sf::RenderWindow *window);
     void MoveUp();
     void MoveDown();

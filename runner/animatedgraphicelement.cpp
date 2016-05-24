@@ -55,9 +55,4 @@ void AnimatedGraphicElement::draw(sf::RenderWindow *window) {
 
 }
 
-//void resize(int w, int h) {
-////    sf::FloatRect dd =
-////    float width_factor = w / bb.width;
-////    float height_factor = h / bb.height;
-////    setScale(width_factor, height_factor);
-//}
+

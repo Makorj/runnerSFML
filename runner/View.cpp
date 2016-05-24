@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
-#include <fstream>>
+#include <fstream>
 
 using namespace std;
 
@@ -44,8 +44,8 @@ View::View(int w, int h)
       m_mainmenu{w,h,MAIN_MENU_ITEMS},
       m_optionmenu{w,h,OPTIONS_MENU_ITEMS},
       m_languagemenu{w,h,LANGUAGE_MENU_ITEMS},
-      m_state{MAIN_MENU},
-      m_lifeUI{sf::Color::Green, sf::Color::Red, 100.0f}
+      m_shopmenu{w,h,SHOP_MENU_ITEMS},
+      m_state{MAIN_MENU}
 {
 
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
@@ -54,66 +54,92 @@ View::View(int w, int h)
 
     changeLanguage("en");
     // IMAGE LOADER //
-    if(!_Background.loadFromFile(BACKGROUND_IMAGE))
-        std::cerr << "ERROR when loading image file: " << BACKGROUND_IMAGE << std::endl;
-    else {
+    if(_Background.loadFromFile(BACKGROUND_IMAGE)){
         _Background.setSmooth(true);
         GraphicElement tmp1{_Background,0,0,_w,_h};
         _BackgroundSprite = tmp1;
     }
-    if (!_SlidingBackground1.loadFromFile(SLIDING_BACKGROUND_IMAGE1))
-        std::cerr << "ERROR when loading image file: " << SLIDING_BACKGROUND_IMAGE1 << std::endl;
-    else {
+
+    if (_SlidingBackground1.loadFromFile(SLIDING_BACKGROUND_IMAGE1)) {
         _SlidingBackground1.setSmooth(true);
         SlidingBackground tmp{_SlidingBackground1,_w,_h,SPEED};
         _SlidingBackgroundSprite1 = tmp;
     }
 
-    if (!_SlidingBackground2.loadFromFile(SLIDING_BACKGROUND_IMAGE2))
-        std::cerr << "ERROR when loading image file: " << SLIDING_BACKGROUND_IMAGE2 << std::endl;
-    else {
+    if (_SlidingBackground2.loadFromFile(SLIDING_BACKGROUND_IMAGE2)){
         _SlidingBackground2.setSmooth(true);
         SlidingBackground tmp{_SlidingBackground2,_w,_h,SPEED1};
         _SlidingBackgroundSprite2 = tmp;
     }
-    if (!_coin.loadFromFile(COIN_IMG))
-        std::cerr << "ERROR when loading image file: " << COIN_IMG << std::endl;
-    else {
-        GraphicElement tmp{_coin, 0,0,50,50};
-        _coinSprite = tmp;
-    }
 
-    if (!_elem.loadFromFile(ELEM_IMG))
-        std::cerr << "ERROR when loading image file: " << ELEM_IMG << std::endl;
-    else {
+    if (_elem.loadFromFile(ELEM_IMG)) {
         GraphicElement tmp{_elem, 0,0,50,50};
         _elemSprite = tmp;
     }
 
-    if (!_boobaSong.openFromFile(SONG_BOOBA))
-        std::cerr << "ERROR when opening music stram with file: " << SONG_BOOBA << std::endl;
-    else
-    {
+    if(_GUI.loadFromFile(GUI_IMAGE)) {
+        Life tmp{_GUI,sf::Color::Green, sf::Color::Red, 100.0f};
+        m_lifeUI = tmp;
+    }
+
+    vector<sf::IntRect> readBonus;
+    readBonus.push_back(bonusRect1);
+    readBonus.push_back(bonusRect2);
+    readBonus.push_back(bonusRect3);
+    readBonus.push_back(bonusRect4);
+    readBonus.push_back(bonusRect5);
+    readBonus.push_back(bonusRect6);
+
+
+    if(_HealBonus.loadFromFile(HEAL_BONUS_IMAGE)) {
+        AnimatedGraphicElement tmp{readBonus, _HealBonus,0,0,50,50};
+        _HealBonusSprite = tmp;
+    }
+
+
+    if(_JumpBonus.loadFromFile(JUMP_BONUS_IMAGE)) {
+        AnimatedGraphicElement tmp{readBonus, _JumpBonus, 0,0,50,50};
+        _JumpBonusSprite = tmp;
+    }
+
+
+    if(_InvBonus.loadFromFile(INV_BONUS_IMAGE)) {
+        AnimatedGraphicElement tmp{readBonus, _InvBonus, 0,0,50,50};
+        _InvBonusSprite = tmp;
+    }
+
+
+    if(_2xBonus.loadFromFile(MULTIPLIER_BONUS_IMAGE)) {
+        AnimatedGraphicElement tmp{readBonus, _2xBonus, 0,0,50,50};
+        _2xBonusSprite = tmp;
+    }
+
+    if (_coin.loadFromFile(SPINNING_COIN)){
+        AnimatedGraphicElement tmp{readBonus, _coin, 0,0,50,50};
+        _coinSprite = tmp;
+    }
+
+    vector<AnimatedGraphicElement> Bonuses;
+    Bonuses.push_back(_HealBonusSprite);
+    Bonuses.push_back(_JumpBonusSprite);
+    Bonuses.push_back(_InvBonusSprite);
+    Bonuses.push_back(_2xBonusSprite);
+    m_shopmenu.setBonuses(Bonuses);
+
+    if (_boobaSong.openFromFile(SONG_BOOBA)) {
         _boobaSong.setLoop(false);
         _boobaSong.setVolume(30.);
     }
 
-    if (!_boobaLoop.openFromFile(SONG_BOOBA))
-        std::cerr << "ERROR when opening music stram with file: " << SONG_BOOBA_LOOP << std::endl;
-    else
-    {
+    if (_boobaLoop.openFromFile(SONG_BOOBA)) {
         _boobaLoop.setLoop(true);
         _boobaLoop.setVolume(30.);
     }
 
-    if (!izi.loadFromFile(SOUND_IZI))
-        std::cerr << "ERROR when opening sound stream with file: " << SOUND_IZI << std::endl;
-    else
+    if (izi.loadFromFile(SOUND_IZI))
         Jump.setBuffer(izi);
 
-    if (!carre.loadFromFile(SOUND_CARRE))
-        std::cerr << "ERROR when opening sound stream with file: " << SOUND_CARRE << std::endl;
-    else
+    if (carre.loadFromFile(SOUND_CARRE))
         Collision.setBuffer(carre);
 
     std::vector<sf::IntRect> clipRect_balle;
@@ -121,15 +147,14 @@ View::View(int w, int h)
     clipRect_balle.push_back(poposwag_run2_rect);
     clipRect_balle.push_back(poposwag_run3_rect);
 
-    if (!_balle.loadFromFile(BALLE_IMAGE))
-        std::cerr << "ERROR when loading image file: " << BALLE_IMAGE << std::endl;
-    else {
+    if (_balle.loadFromFile(BALLE_IMAGE)) {
         _balle.setSmooth(true);
         AnimatedGraphicElement tmp{clipRect_balle, _balle, 1,1,40,40};
         _balleSprite = tmp;
     }
-    // END OF IMAGE LOADER //
 }
+// END OF IMAGE LOADER //
+
 
 //=======================================
 // Destructeur
@@ -174,6 +199,7 @@ void View::draw(){
     case BEST_SCORES:
         break;
     case SHOP:
+        m_shopmenu.draw(_window);
         break;
     case LANGUAGE:
         m_languagemenu.draw(_window);
@@ -184,6 +210,8 @@ void View::draw(){
 
         drawObstacles();
         break;
+    case GAMEOVER:
+        break;
     }
     _window->display();
 }
@@ -191,10 +219,27 @@ void View::draw(){
 void View::drawObstacles() {
     for(auto x : m_elemPos)
     {
+        cout << x.first << endl;
         switch (x.first) {
+        case 21:
+            _HealBonusSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _HealBonusSprite.draw(_window);
+            break;
         case 22:
             _coinSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
             _coinSprite.draw(_window);
+            break;
+        case 23:
+            _InvBonusSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _InvBonusSprite.draw(_window);
+            break;
+        case 24:
+            _JumpBonusSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _JumpBonusSprite.draw(_window);
+            break;
+        case 25:
+            _2xBonusSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
+            _2xBonusSprite.draw(_window);
             break;
         case 11:
             _elemSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
@@ -215,10 +260,6 @@ void View::drawObstacles() {
             _elemSprite.draw(_window);
             _elemSprite.setPosition(sf::Vector2f{x.second.first+50, x.second.second+50});
             _elemSprite.draw(_window);
-            break;
-        default:
-            _coinSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
-            _coinSprite.draw(_window);
             break;
         }
     }

@@ -25,7 +25,7 @@ THE SOFTWARE.
 #include <iostream>
 #include <map>
 
-Menu::Menu(float w, float h, const std::vector<std::string> &MenuItems):
+Menu::Menu(int w, int h, const std::vector<std::string> &MenuItems):
     m_selectedItem(0),
     m_stringItems(MenuItems)
 {
@@ -44,7 +44,7 @@ Menu::Menu(float w, float h, const std::vector<std::string> &MenuItems):
 
     std::cout << sprite_tmp.getLocalBounds().width << "    " << sprite_tmp.getLocalBounds().height << std::endl;
 
-    for (int i = 0; i < m_stringItems.size(); i ++) {
+    for (unsigned int i = 0; i < m_stringItems.size(); i ++) {
         tmp.setFont(m_font);
         tmp.setColor(sf::Color::White);
         tmp.setString(MenuItems[i]);
@@ -62,7 +62,7 @@ Menu::Menu(float w, float h, const std::vector<std::string> &MenuItems):
 }
 
 void Menu::draw(sf::RenderWindow *window) {
-    for (int i = 0; i < m_stringItems.size(); i++ ){
+    for (unsigned int i = 0; i < m_stringItems.size(); i++ ){
         window->draw(m_items[i].second);
         window->draw(m_items[i].first);
 
@@ -70,7 +70,7 @@ void Menu::draw(sf::RenderWindow *window) {
 }
 
 void Menu::MoveUp() {
-    if(m_selectedItem - 1 >= 0) {
+    if(m_selectedItem > 0) {
         m_items[m_selectedItem].second.setTextureRect(sf::IntRect(0,0,300,50));
         m_selectedItem--;
         m_items[m_selectedItem].second.setTextureRect(sf::IntRect(0,50,300,50));

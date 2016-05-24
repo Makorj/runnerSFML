@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     doublejump.cpp \
     scoremultiplier.cpp \
     shop.cpp \
-    life.cpp
+    life.cpp \
+    mouse.cpp
 LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 
@@ -52,7 +53,8 @@ HEADERS += \
     scoremultiplier.h \
     State.h \
     shop.h \
-    life.h
+    life.h \
+    mouse.h
 
 OTHER_FILES += \
     ../Images/flocon.png \

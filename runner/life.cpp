@@ -23,6 +23,7 @@ Life::Life(const Life &health)
     :m_startColor(health.m_startColor),
       m_endColor(health.m_endColor),
       m_maxLife(health.m_maxLife),
+      m_currentLife(m_maxLife),
       m_height(health.m_height),
       m_width(health.m_width),
       m_GUI(health.m_GUI),
@@ -38,7 +39,10 @@ void Life::draw(sf::RenderWindow *window) {
 }
 
 sf::Color Life::interpolate() {
+    cout << "vie current " << m_currentLife << endl;
+    cout << "vie max " << m_maxLife << endl;
     cout << "ratio vie :" << (m_currentLife/m_maxLife) << endl;
+
     int r = m_endColor.r + (m_startColor.r - m_endColor.r) *(m_currentLife/m_maxLife);
     int g = m_endColor.g + (m_startColor.g - m_endColor.g) *(m_currentLife/m_maxLife);
     int b = m_endColor.b + (m_startColor.b - m_endColor.b) *(m_currentLife/m_maxLife);

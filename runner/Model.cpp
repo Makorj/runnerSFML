@@ -43,7 +43,7 @@ const string SAVE_FILE="pack1.rsvf";
 const float BALL_INIT_X = 10.;
 const float BALL_INIT_Y = 450.;
 const int BALL_INIT_H = 125;
-const int BALL_INIT_W = 90;
+const int BALL_INIT_W = 80;
 const float BALL_INIT_DX = 0.;
 const float BALL_INIT_DY = 0.;
 

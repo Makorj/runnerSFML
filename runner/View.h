@@ -35,29 +35,48 @@ THE SOFTWARE.
 #include "splashscreen.h"
 #include "State.h"
 #include "life.h"
+#include "shop.h"
 
+using path = const std::string;
 
-const std::string BALLE_IMAGE = "../Images/iceclimber.png";
-const std::string SLIDING_BACKGROUND_IMAGE1 = "../Images/sapin_background.png";
-const std::string SLIDING_BACKGROUND_IMAGE2 = "../Images/moutain_background.png";
-const std::string BACKGROUND_IMAGE = "../Images/sun.png";
+path BALLE_IMAGE = "../Images/iceclimber.png";
+path SLIDING_BACKGROUND_IMAGE1 = "../Images/sapin_background.png";
+path SLIDING_BACKGROUND_IMAGE2 = "../Images/moutain_background.png";
+path BACKGROUND_IMAGE = "../Images/sun.png";
+path GUI_IMAGE = "../Images/lifeSlider.png";
+path HEAL_BONUS_IMAGE = "../Images/cube_heal.png";
+path JUMP_BONUS_IMAGE = "../Images/cube_jump.png";
+path INV_BONUS_IMAGE = "../Images/cube_inv.png";
+path MULTIPLIER_BONUS_IMAGE = "../Images/cube_x2.png";
+path SPINNING_COIN = "../Images/spinning_coin.png";
+path COIN_STACK = "../Images/pile_coin.png";
 
-const std::string SONG_BOOBA= "../Audio/sonBooba.ogg";
-const std::string SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
+path SONG_BOOBA= "../Audio/sonBooba.ogg";
+path SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
 
-const std::string SOUND_IZI="../Audio/izi.ogg";
-const std::string SOUND_CARRE="../Audio/carre.ogg";
+path SOUND_IZI="../Audio/izi.ogg";
+path SOUND_CARRE="../Audio/carre.ogg";
 
-const std::string ELEM_IMG = "../Images/iceblock.png";
-const std::string COIN_IMG = "../Images/flocon.png";
+path ELEM_IMG = "../Images/iceblock.png";
+path COIN_IMG = "../Images/flocon.png";
 
 const std::vector<std::string> MAIN_MENU_ITEMS = {"Play","Multiplayer","Best Scores","Shop","Options","Quit"};
 const std::vector<std::string> OPTIONS_MENU_ITEMS = {"Language","Volume","Back"};
 const std::vector<std::string> LANGUAGE_MENU_ITEMS = {"English","French","German","Spanish","Portugese","Main Menu","Back"};
+const std::vector<std::string> SHOP_MENU_ITEMS = {"Buy", "Buy", "Buy", "Buy", "Cancel", "Validate"};
+const std::vector<std::string> SHOP_ITEMS = {"Heal","Jump","Invincibility","Multiplier"};
 
 const sf::IntRect poposwag_run1_rect{0,0,100,134};
 const sf::IntRect poposwag_run2_rect{134,0,100,134};
 const sf::IntRect poposwag_run3_rect{269,0,100,134};
+
+const sf::IntRect bonusRect1{0,0,47,54};
+const sf::IntRect bonusRect2{59,0,55,54};
+const sf::IntRect bonusRect3{128,0,57,54};
+const sf::IntRect bonusRect4{207,0,50,54};
+const sf::IntRect bonusRect5{273,0,58,54};
+const sf::IntRect bonusRect6{345,0,55,54};
+
 
 class Model;
 
@@ -65,8 +84,7 @@ class View {
 
 private:
 
-    int _w, _h, m_transparent;
-    bool m_reverse, m_splashtime, m_logo1, m_menu;
+    int _w, _h;
 
     sf::Clock time;
 
@@ -82,9 +100,6 @@ private:
     sf::Texture _balle;
     AnimatedGraphicElement _balleSprite;
 
-    sf::Texture _coin;
-    GraphicElement _coinSprite;
-
     sf::Texture _elem;
     GraphicElement _elemSprite;
 
@@ -96,6 +111,23 @@ private:
 
     sf::Texture _SlidingBackground2;
     SlidingBackground _SlidingBackgroundSprite2;
+
+    sf::Texture _HealBonus;
+    AnimatedGraphicElement _HealBonusSprite;
+
+    sf::Texture _InvBonus;
+    AnimatedGraphicElement _InvBonusSprite;
+
+    sf::Texture _JumpBonus;
+    AnimatedGraphicElement _JumpBonusSprite;
+
+    sf::Texture _2xBonus;
+    AnimatedGraphicElement _2xBonusSprite;
+
+    sf::Texture _coin;
+    AnimatedGraphicElement _coinSprite;
+
+    sf::Texture _GUI;
 
     sf::SoundBuffer izi;
     sf::Sound Jump;
@@ -116,6 +148,7 @@ private:
     Menu m_mainmenu;
     Menu m_optionmenu;
     Menu m_languagemenu;
+    Shop m_shopmenu;
 
 public:
 
