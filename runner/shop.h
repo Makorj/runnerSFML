@@ -12,7 +12,7 @@ const vector<string> bonusString = {"Heal","Jump","Invincibility","Multiplier"};
 class Shop : public Menu
 {
 private:
-    int m_w,m_h;
+    int m_w,m_h, m_gold;
     Mouse m_mouse;
     array<int,10> m_parametres;
     vector<AnimatedGraphicElement> m_bonuses;
@@ -24,7 +24,7 @@ public:
     Shop(int w, int h, std::vector<std::string> MenuItems);
     void setBonuses(vector<AnimatedGraphicElement> bonuses);
     void draw(sf::RenderWindow *window);
-    int BonusSelected(sf::Mouse mouse);
+    void setGold(int gold);
     array<int,10> getParam();
 };
 

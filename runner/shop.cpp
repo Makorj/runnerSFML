@@ -5,7 +5,8 @@ Shop::Shop(int w, int h, const vector<string> MenuItems):
     Menu(w,h,MenuItems),
     m_bonuses(),
     m_w(w),
-    m_h(h)
+    m_h(h),
+    m_gold(0)
 {
     for(unsigned int i = 0; i<m_items.size()-2;i++) {
         m_text.push_back(sf::Text());
@@ -34,3 +35,6 @@ void Shop::draw(sf::RenderWindow *window) {
 
 }
 
+void Shop::setGold(int gold) {
+    m_gold = gold;
+}

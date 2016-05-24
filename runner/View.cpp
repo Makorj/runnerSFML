@@ -119,6 +119,16 @@ View::View(int w, int h)
         _coinSprite = tmp;
     }
 
+    if(_coinStack.loadFromFile(COIN_STACK)) {
+        GraphicElement tmp{_coinStack, 0,0,50,50};
+        _coinStackSprite = tmp;
+    }
+    if(_coinDisplay.loadFromFile("../Font/givre.TTF")) {
+        _coinDisplayText.setFont(_coinDisplay);
+        _coinDisplayText.setCharacterSize(30);
+        _coinDisplayText.setPosition(_coinStackSprite.getGlobalBounds().width + 10, 5);
+    }
+
     vector<AnimatedGraphicElement> Bonuses;
     Bonuses.push_back(_HealBonusSprite);
     Bonuses.push_back(_JumpBonusSprite);
@@ -200,6 +210,8 @@ void View::draw(){
         break;
     case SHOP:
         m_shopmenu.draw(_window);
+        _coinStackSprite.draw(_window);
+        _window->draw(_coinDisplayText);
         break;
     case LANGUAGE:
         m_languagemenu.draw(_window);
@@ -207,6 +219,8 @@ void View::draw(){
     case GAME:
         _balleSprite.draw(_window);
         m_lifeUI.draw(_window);
+        _coinStackSprite.draw(_window);
+        _window->draw(_coinDisplayText);
 
         drawObstacles();
         break;
@@ -461,6 +475,7 @@ void View::synchronize()
             Collision.play();
 
         _model->moveBall();
+        _coinDisplayText.setString(std::to_string(_model->getMoney()));
 
     }
 }

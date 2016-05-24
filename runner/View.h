@@ -127,6 +127,12 @@ private:
     sf::Texture _coin;
     AnimatedGraphicElement _coinSprite;
 
+    sf::Texture _coinStack;
+    GraphicElement _coinStackSprite;
+
+    sf::Font _coinDisplay;
+    sf::Text _coinDisplayText;
+
     sf::Texture _GUI;
 
     sf::SoundBuffer izi;

@@ -39,9 +39,6 @@ void Life::draw(sf::RenderWindow *window) {
 }
 
 sf::Color Life::interpolate() {
-    cout << "vie current " << m_currentLife << endl;
-    cout << "vie max " << m_maxLife << endl;
-    cout << "ratio vie :" << (m_currentLife/m_maxLife) << endl;
 
     int r = m_endColor.r + (m_startColor.r - m_endColor.r) *(m_currentLife/m_maxLife);
     int g = m_endColor.g + (m_startColor.g - m_endColor.g) *(m_currentLife/m_maxLife);

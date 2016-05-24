@@ -97,6 +97,7 @@ Model::~Model(){
     for(auto x : m_elements)
         delete x;
 
+    m_savedParam[SAVED_PARAM_MONEY]=m_char->getGold();
     save();
 }
 
@@ -108,7 +109,6 @@ void Model::nextStep(){
 	if(!m_paused)
 	{
     MovableElement* tmp;
-	
 	//Move character
     m_char->move(_w);
     m_char->jump();
@@ -296,7 +296,7 @@ void Model::jumpBall()
 //!
 unsigned int Model::getMoney()
 {
-    return m_money;
+    return m_char->getGold();
 }
 
 //!
@@ -359,6 +359,7 @@ void Model::load() {
         {
             m_savedParam[i]=stoi(dataString.substr(lastPos,pos-lastPos));
             lastPos=pos+1;
+            cout << m_savedParam[i] << endl;
             pos=dataString.find(';', lastPos);
             i++;
         }

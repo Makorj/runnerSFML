@@ -41,9 +41,6 @@ Menu::Menu(int w, int h, const std::vector<std::string> &MenuItems):
     sprite_tmp.setTextureRect(rect);
     sprite_tmp.setOrigin(sprite_tmp.getLocalBounds().width/2,sprite_tmp.getLocalBounds().height/2);
 
-
-    std::cout << sprite_tmp.getLocalBounds().width << "    " << sprite_tmp.getLocalBounds().height << std::endl;
-
     for (unsigned int i = 0; i < m_stringItems.size(); i ++) {
         tmp.setFont(m_font);
         tmp.setColor(sf::Color::White);
