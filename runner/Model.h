@@ -26,6 +26,7 @@ THE SOFTWARE.
 #define _MODEL_
 
 #include <SFML/Graphics.hpp>
+#include <unordered_set>
 #include "character.h"
 #include "clock.h"
 
@@ -53,7 +54,7 @@ class Model {
 		m_rightdir,			///< True if the player is moving right
 		m_paused,			///< Trus if the game is paused
 		m_collide;			///< True if there is a collision between objects in the game 
-  std::vector<MovableElement * > m_elements; 	///< Collection of all elements in the game except Character objects
+  std::unordered_set<MovableElement * > m_elements; 	///< Collection of all elements in the game except Character objects
   Clock m_timeElapsed;	///< Game's clock
   std::array<int, 10> m_savedParam;	///< Player's saved data, attributs, etc... 
 

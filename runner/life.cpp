@@ -23,7 +23,7 @@ Life::Life(const Life &health)
     :m_startColor(health.m_startColor),
       m_endColor(health.m_endColor),
       m_maxLife(health.m_maxLife),
-      m_currentLife(m_maxLife),
+      m_currentLife(m_currentLife),
       m_height(health.m_height),
       m_width(health.m_width),
       m_GUI(health.m_GUI),
@@ -52,6 +52,6 @@ void Life::synchronize(float currentLife, int x, int y) {
     m_GUI.setPosition(x-40,y-20);
     m_life.setPosition(x-30, y-10+2*m_height);
     m_life.setFillColor(interpolate());
-    m_life.setSize(sf::Vector2f(m_life.getLocalBounds().width,-(m_height*(m_currentLife/m_maxLife))));
+    m_life.setSize(sf::Vector2f(m_life.getLocalBounds().width,-((float)m_height*((float)m_currentLife/m_maxLife))));
 }
 

@@ -28,14 +28,19 @@ THE SOFTWARE.
 const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 600;
 
+
+
 int main(){
   srand(time(NULL));
 
   Model model(SCREEN_WIDTH, SCREEN_HEIGHT);
   View view(SCREEN_WIDTH, SCREEN_HEIGHT);
+  Client client;
+
 
 
   view.setModel(&model);
+  view.setClient(&client);
 
   while(view.treatEvents()){
     model.nextStep();

@@ -3,7 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra
+QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -pthread
 
 SOURCES += main.cpp \
     Model.cpp \
@@ -24,8 +24,10 @@ SOURCES += main.cpp \
     doublejump.cpp \
     scoremultiplier.cpp \
     shop.cpp \
-    life.cpp
-LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
+    life.cpp \
+    client.cpp \
+    menumultiplayer.cpp
+LIBS += -lsfml-audio -lsfml-network -lsfml-graphics -lsfml-window -lsfml-system -lpthread
 
 
 include(deployment.pri)
@@ -52,7 +54,9 @@ HEADERS += \
     scoremultiplier.h \
     State.h \
     shop.h \
-    life.h
+    life.h \
+    client.h \
+    menumultiplayer.h
 
 OTHER_FILES += \
     ../Images/flocon.png \

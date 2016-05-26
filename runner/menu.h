@@ -38,13 +38,12 @@ protected:
     sf::Font m_font;
     std::vector<std::pair<sf::Text,sf::Sprite> >m_items;
     unsigned int m_selectedItem;
+    std::vector<std::string> m_stringItems;
 private :
     sf::Texture m_menu_sprite;
-
-
-    std::vector<std::string> m_stringItems;
 public:
     Menu(int w, int h, const std::vector<std::string> &MenuItems);
+    virtual ~Menu() = default;
     void draw(sf::RenderWindow *window);
     void MoveUp();
     void MoveDown();

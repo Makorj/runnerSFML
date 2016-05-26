@@ -66,6 +66,7 @@ private:
 
 	///Score Multiplayer Bonus Timer
     Clock m_ScoreMultiplierTimer;
+    int m_scoreMultiplierValue;
 
 public:
 
@@ -92,7 +93,8 @@ public:
 
 	//// Getter ////
 	
-    bool isInvicible();	
+    bool isInvicible();
+    bool canDoubleJump();
     int getGold() const;
     int getScore() const;
     int getMaxLife() const;

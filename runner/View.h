@@ -36,6 +36,8 @@ THE SOFTWARE.
 #include "State.h"
 #include "life.h"
 #include "shop.h"
+#include <thread>
+#include "menumultiplayer.h"
 
 using path = const std::string;
 
@@ -68,6 +70,8 @@ const std::vector<std::string> LANGUAGE_MENU_ITEMS = {"English","French","German
 const std::vector<std::string> SHOP_MENU_ITEMS = {"Buy","Buy", "Buy", "Buy", "Buy", "Back"};
 const std::vector<std::string> SHOP_ITEMS = {"Heal","Jump","Invincibility","Multiplier"};
 const std::vector<std::string> GAMEOVER_ITEMS = {"Restart","Main Menu","Quit"};
+const std::vector<std::string> MULTIPLAYER_ITEMS = {"Create a Game", "Join a Game", "Spectate", "Back"};
+const std::vector<std::string> HOSTSELEC_ITEMS = {"Join","Refresh","Back"};
 
 const sf::IntRect poposwag_run1_rect{0,0,100,134};
 const sf::IntRect poposwag_run2_rect{134,0,100,134};
@@ -166,6 +170,11 @@ private:
     Menu m_languagemenu;
     Shop m_shopmenu;
     Menu m_gameovermenu;
+    Menu m_multiplayermenu;
+    MenuMultiPlayer m_hostselecmenu;
+
+    Client* m_client;
+    std::thread m_thread;
 
     void loadBackgrounds();
     std::vector<AnimatedGraphicElement> loadBonuses();
@@ -181,6 +190,7 @@ public:
     void changeLanguage(std::string lang);
     void synchronize();
     bool treatEvents();
+    void setClient(Client* c);
 
 };
 #endif

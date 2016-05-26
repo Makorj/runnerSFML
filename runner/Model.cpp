@@ -43,7 +43,7 @@ const string SAVE_FILE="pack1.rsvf";
 const float BALL_INIT_X = 10.;
 const float BALL_INIT_Y = 450.;
 const int BALL_INIT_H = 100;
-const int BALL_INIT_W = 90;
+const int BALL_INIT_W = 80;
 const float BALL_INIT_DX = 0.;
 const float BALL_INIT_DY = 0.;
 
@@ -119,45 +119,47 @@ void Model::nextStep(){
 
 
         // Spawn bonus or obstacle
-        if(m_timeElapsed.asMilliseconds()-timeTestBonus>2000)
+        if(m_timeElapsed.asMilliseconds()-timeTestBonus>1500+(rand()%4000))
         {
 
-            switch(1+(rand()%4))
+            switch(1+(rand()%6))
             {
             case 1:
-                m_elements.push_back(new Coin{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0});
+                m_elements.insert(new Invicibility{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_INVICIBILITY_DURATION]});
                 break;
             case 2:
-                m_elements.push_back(new Heal{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_HEAL_POWER]});
+                m_elements.insert(new Heal{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_HEAL_POWER]});
                 break;
             case 3:
-                m_elements.push_back(new DoubleJump{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_DOUBLE_JUMP_DURATION]});
+                m_elements.insert(new DoubleJump{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_DOUBLE_JUMP_DURATION]});
                 break;
             case 4:
-                m_elements.push_back(new Invicibility{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_INVICIBILITY_DURATION]});
+            case 5:
+            case 0:
+                m_elements.insert(new Coin{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0});
             default:
                 break;
             }
             timeTestBonus=m_timeElapsed.asMilliseconds();
         }
-        if(m_timeElapsed.asMilliseconds()-timeTest>5000)
+        if(m_timeElapsed.asMilliseconds()-timeTest>2000+(rand()%5000))
         {
-            m_elements.push_back(new Obstacle{ELEM_X_INIT,OBS_Y_INIT,50,50,-2,0,(1+(rand()%3))});
+            m_elements.insert(new Obstacle{ELEM_X_INIT,OBS_Y_INIT,50,50,-2,0,(1+(rand()%3))});
             timeTest=m_timeElapsed.asMilliseconds();
         }
         m_collide=false;
+        //m_soin=false;
 
+        vector<MovableElement*> toErase;
         // Tests on games elements
-        for(auto elem=m_elements.begin();elem<m_elements.end();++elem)
+        for(auto elem=m_elements.begin();elem!=m_elements.end();++elem)
         {
             tmp=*elem;
 
             //test if the element is to delete because it's out of the screen
             if(tmp->outOfScreen())
             {
-                m_elements.erase(elem);
-                delete tmp;
-                tmp=nullptr;
+                toErase.push_back(*elem);
             }
             //test if it's collided with the ball
             else if(collide(m_char, tmp))
@@ -166,17 +168,13 @@ void Model::nextStep(){
 
                 //If the collision is with an obstacle
                 (x>=11 && x<20)?m_collide=true:false;
-                //                    (x==22)?m_blingbling=true:
-                //                    ;
+                //(x==21)?m_soin=true:false;
 
                 //Apply the effect of the collided effect on the character
                 tmp->apply(m_char);
 
                 //erase
-                m_elements.erase(elem);
-                //            cerr << "ntf" << endl;
-                delete tmp;
-                tmp=nullptr;
+                toErase.push_back(*elem);
             }
             //otherwise set his new speed and move it
             else
@@ -184,6 +182,11 @@ void Model::nextStep(){
                 tmp->setDX(m_allSpeed);
                 tmp->move();
             }
+        }
+        for(auto x : toErase)
+        {
+            m_elements.erase(x);
+            delete x;
         }
     }
 }
@@ -312,13 +315,14 @@ int Model::getScore()
 
 void Model::restart() {
     delete m_char;
-    for(auto elem=m_elements.begin();elem<m_elements.end();++elem)
+    for(auto elem=m_elements.begin();elem!=m_elements.end();++elem)
     {
         MovableElement* tmp=*elem;
         delete tmp;
         tmp=nullptr;
     }
     m_elements.clear();
+    m_paused=false;
 
     m_timeElapsed.restart();
     timeTest=0;

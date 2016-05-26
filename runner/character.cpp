@@ -127,7 +127,10 @@ void Character::addLife(const int &x)
 
 void Character::addScore(int& x)
 {
-    m_score+=x;
+    if(!m_ScoreMultiplierTimer.hasEnded())
+        m_score+=x*m_scoreMultiplierValue;
+    else
+        m_score+=x;
 }
 
 void Character::addCoin(int &x)
@@ -173,4 +176,9 @@ void Character::damage(const int &damage){
 
 bool Character::isInvicible() {
     return m_InvicibleTimer.hasEnded();
+}
+
+bool Character::canDoubleJump()
+{
+    return !m_DoubleJumpTimer.hasEnded();
 }

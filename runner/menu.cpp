@@ -62,7 +62,6 @@ void Menu::draw(sf::RenderWindow *window) {
     for (unsigned int i = 0; i < m_stringItems.size(); i++ ){
         window->draw(m_items[i].second);
         window->draw(m_items[i].first);
-
     }
 }
 
