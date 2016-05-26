@@ -36,24 +36,8 @@ using namespace std;
 
 const unsigned int SPEED = 2;
 const unsigned int SPEED1 = 1;
-//=======================================
-// Constructeur
-//=======================================
-View::View(int w, int h)
-    : _w(w), _h(h),
-      m_mainmenu{w,h,MAIN_MENU_ITEMS},
-      m_optionmenu{w,h,OPTIONS_MENU_ITEMS},
-      m_languagemenu{w,h,LANGUAGE_MENU_ITEMS},
-      m_shopmenu{w,h,SHOP_MENU_ITEMS},
-      m_state{MAIN_MENU}
-{
 
-    _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
-    _window->setFramerateLimit(60);
-    _window->setKeyRepeatEnabled(false);
-
-    changeLanguage("en");
-    // IMAGE LOADER //
+void View::loadBackgrounds() {
     if(_Background.loadFromFile(BACKGROUND_IMAGE)){
         _Background.setSmooth(true);
         GraphicElement tmp1{_Background,0,0,_w,_h};
@@ -71,17 +55,9 @@ View::View(int w, int h)
         SlidingBackground tmp{_SlidingBackground2,_w,_h,SPEED1};
         _SlidingBackgroundSprite2 = tmp;
     }
+}
 
-    if (_elem.loadFromFile(ELEM_IMG)) {
-        GraphicElement tmp{_elem, 0,0,50,50};
-        _elemSprite = tmp;
-    }
-
-    if(_GUI.loadFromFile(GUI_IMAGE)) {
-        Life tmp{_GUI,sf::Color::Green, sf::Color::Red, 100.0f};
-        m_lifeUI = tmp;
-    }
-
+vector<AnimatedGraphicElement> View::loadBonuses() {
     vector<sf::IntRect> readBonus;
     readBonus.push_back(bonusRect1);
     readBonus.push_back(bonusRect2);
@@ -89,7 +65,6 @@ View::View(int w, int h)
     readBonus.push_back(bonusRect4);
     readBonus.push_back(bonusRect5);
     readBonus.push_back(bonusRect6);
-
 
     if(_HealBonus.loadFromFile(HEAL_BONUS_IMAGE)) {
         AnimatedGraphicElement tmp{readBonus, _HealBonus,0,0,50,50};
@@ -119,31 +94,82 @@ View::View(int w, int h)
         _coinSprite = tmp;
     }
 
-    if(_coinStack.loadFromFile(COIN_STACK)) {
-        GraphicElement tmp{_coinStack, 0,0,50,50};
-        _coinStackSprite = tmp;
-    }
-    if(_coinDisplay.loadFromFile("../Font/givre.TTF")) {
-        _coinDisplayText.setFont(_coinDisplay);
-        _coinDisplayText.setCharacterSize(30);
-        _coinDisplayText.setPosition(_coinStackSprite.getGlobalBounds().width + 10, 5);
-    }
 
+    readBonus.clear();
+    readBonus.push_back(sf::IntRect(0,0,15,20));
+    if(_maxLife.loadFromFile(MAXLIFE_IMAGE)) {
+        AnimatedGraphicElement tmp{readBonus, _maxLife,0,0,50,50};
+        _maxLifeSprite = tmp;
+    }
     vector<AnimatedGraphicElement> Bonuses;
+    Bonuses.push_back(_maxLifeSprite);
     Bonuses.push_back(_HealBonusSprite);
     Bonuses.push_back(_JumpBonusSprite);
     Bonuses.push_back(_InvBonusSprite);
     Bonuses.push_back(_2xBonusSprite);
-    m_shopmenu.setBonuses(Bonuses);
 
-    if (_boobaSong.openFromFile(SONG_BOOBA)) {
-        _boobaSong.setLoop(false);
-        _boobaSong.setVolume(30.);
+    return Bonuses;
+}
+
+
+//!
+//! \brief View Constructor
+//! \param w Width of the game screen
+//! \param h Height of the game screen
+//!
+View::View(int w, int h)
+    : _w(w), _h(h),
+      m_mainmenu{w,h,MAIN_MENU_ITEMS},
+      m_optionmenu{w,h,OPTIONS_MENU_ITEMS},
+      m_languagemenu{w,h,LANGUAGE_MENU_ITEMS},
+      m_shopmenu{w,h,SHOP_MENU_ITEMS},
+      m_gameovermenu{w,h,GAMEOVER_ITEMS},
+      m_state{MAIN_MENU}
+{
+    _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
+    _window->setFramerateLimit(60);
+    _window->setKeyRepeatEnabled(false);
+
+    changeLanguage("en");
+    loadBackgrounds();
+
+    if (_elem.loadFromFile(ELEM_IMG)) {
+        GraphicElement tmp{_elem, 0,0,50,50};
+        _elemSprite = tmp;
+    }
+    if(_GUI.loadFromFile(GUI_IMAGE)) {
+        Life tmp{_GUI,sf::Color::Green, sf::Color::Red, 100.0f};
+        m_lifeUI = tmp;
     }
 
-    if (_boobaLoop.openFromFile(SONG_BOOBA)) {
-        _boobaLoop.setLoop(true);
-        _boobaLoop.setVolume(30.);
+    m_shopmenu.setBonuses(loadBonuses());
+
+    if(_coinStack.loadFromFile(COIN_STACK)) {
+        GraphicElement tmp{_coinStack, 0,0,50,50};
+        _coinStackSprite = tmp;
+    }
+
+    if(_fontDisplay.loadFromFile("../Font/givre.TTF")) {
+        _coinDisplayText.setFont(_fontDisplay);
+        _coinDisplayText.setCharacterSize(30);
+        _coinDisplayText.setPosition(_coinStackSprite.getGlobalBounds().width + 10, 5);
+        _scoreDisplayText.setFont(_fontDisplay);
+        _scoreDisplayText.setCharacterSize(30);
+        _scoreDisplayText.setPosition(_w/2, 5);
+    }
+    if(_gameOver.loadFromFile(GAME_OVER_IMAGE)) {
+        GraphicElement tmp{_gameOver, _w/2, _h-500, 500,500};
+        _gameOverSprite = tmp;
+
+    }
+
+    if (_GameMusic.openFromFile(SONG_GAME)) {
+        _GameMusic.setLoop(false);
+        _GameMusic.setVolume(40.);
+    }
+    if(_MenusMusic.openFromFile(SONG_MENUS)) {
+        _MenusMusic.setLoop(false);
+        _MenusMusic.setVolume(40.);
     }
 
     if (izi.loadFromFile(SOUND_IZI))
@@ -163,28 +189,16 @@ View::View(int w, int h)
         _balleSprite = tmp;
     }
 }
-// END OF IMAGE LOADER //
 
-
-//=======================================
-// Destructeur
-//=======================================
 View::~View(){
     if(_window!= NULL)
         delete _window;
 }
 
-//=======================================
-// Accesseurs en écriture
-//=======================================
 void View::setModel(Model * model){
     _model = model;
-    //_model->pause();
 }
 
-//=======================================
-// Fonction de dessin
-//=======================================
 void View::draw(){
     _window->clear();
 
@@ -192,6 +206,20 @@ void View::draw(){
         _BackgroundSprite.draw(_window);
         _SlidingBackgroundSprite2.draw(_window);
         _SlidingBackgroundSprite1.draw(_window);
+    }
+    if(m_state !=GAME) {
+        _GameMusic.stop();
+        if(_MenusMusic.getStatus()==sf::SoundSource::Stopped && _MenusMusic.getStatus()!=sf::SoundSource::Playing)
+            _MenusMusic.play();
+        else if(_MenusMusic.getStatus()!=sf::SoundSource::Playing && _MenusMusic.getStatus()!=sf::SoundSource::Playing)
+            _MenusMusic.play();
+    }
+    else {
+        _MenusMusic.stop();
+        if(_GameMusic.getStatus()==sf::SoundSource::Stopped && _GameMusic.getStatus()!=sf::SoundSource::Playing)
+            _GameMusic.play();
+        else if(_GameMusic.getStatus()!=sf::SoundSource::Playing && _GameMusic.getStatus()!=sf::SoundSource::Playing)
+            _GameMusic.play();
     }
 
     switch(m_state) {
@@ -209,9 +237,10 @@ void View::draw(){
     case BEST_SCORES:
         break;
     case SHOP:
-        m_shopmenu.draw(_window);
         _coinStackSprite.draw(_window);
         _window->draw(_coinDisplayText);
+        m_shopmenu.draw(_window);
+
         break;
     case LANGUAGE:
         m_languagemenu.draw(_window);
@@ -221,10 +250,13 @@ void View::draw(){
         m_lifeUI.draw(_window);
         _coinStackSprite.draw(_window);
         _window->draw(_coinDisplayText);
-
+        _window->draw(_scoreDisplayText);
         drawObstacles();
         break;
     case GAMEOVER:
+        m_gameovermenu.draw(_window);
+        _gameOverSprite.draw(_window);
+        _window->draw(_scoreDisplayText);
         break;
     }
     _window->display();
@@ -233,7 +265,6 @@ void View::draw(){
 void View::drawObstacles() {
     for(auto x : m_elemPos)
     {
-        cout << x.first << endl;
         switch (x.first) {
         case 21:
             _HealBonusSprite.setPosition(sf::Vector2f{x.second.first, x.second.second});
@@ -279,9 +310,7 @@ void View::drawObstacles() {
     }
 }
 
-//=======================================
-// Traitement des evenements
-//=======================================
+
 bool View::treatEvents(){
     bool result = false;
     bool left(false), right(false);
@@ -313,6 +342,7 @@ bool View::treatEvents(){
                             break;
                         case 3:
                             m_state = SHOP;
+
                             break;
                         case 4:
                             m_state = OPTIONS;
@@ -348,6 +378,19 @@ bool View::treatEvents(){
             case BEST_SCORES:
                 break;
             case SHOP:
+
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_shopmenu.MoveUp();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_shopmenu.MoveDown();
+                if(event.type == sf::Event::KeyReleased) {
+                    if(event.key.code == sf::Keyboard::Return) {
+                        if(m_shopmenu.getSelectedItem()!=5) {
+                            m_shopmenu.update(m_shopmenu.getSelectedItem());
+                            _model->shopUpdate(m_shopmenu.getSavedParam());
+                        }
+                        else
+                            m_state = MAIN_MENU;
+                    }
+                }
                 break;
             case LANGUAGE:
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_languagemenu.MoveUp();
@@ -400,14 +443,27 @@ bool View::treatEvents(){
 
                 break;
             case GAMEOVER:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_gameovermenu.MoveUp();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_gameovermenu.MoveDown();
+                if(event.type == sf::Event::KeyReleased) {
+                    if(event.key.code == sf::Keyboard::Return) {
+                        switch(m_gameovermenu.getSelectedItem()) {
+                        case 0:
+                            m_state = GAME;
+                            _model->restart();
+                            break;
+                        case 1:
+                            m_state = MAIN_MENU;
+                            break;
+                        case 2:;
+                            _window->close();
+                            result = true;
+                            break;
+                        }
+                    }
+                }
                 break;
             }
-
-            if(_boobaSong.getStatus()==sf::SoundSource::Stopped && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
-                _boobaLoop.play();
-            else if(_boobaSong.getStatus()!=sf::SoundSource::Playing && _boobaLoop.getStatus()!=sf::SoundSource::Playing)
-                _boobaSong.play();
-
             if ((event.type == sf::Event::Closed) ||
                     ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))) {
                 _window->close();
@@ -466,7 +522,6 @@ void View::synchronize()
         std::pair<float,float> a = _model->getBallPosition();
         _balleSprite.setPosition(sf::Vector2f{a.first, a.second});
         m_lifeUI.synchronize(_model->getLife(),a.first, a.second);
-        cout << _model->getLife() << endl;
 
         _SlidingBackgroundSprite1.setSpeed((float)-1*(_model->getAllSpeed()));
         _SlidingBackgroundSprite2.setSpeed((float)-1*_model->getAllSpeed()-1);
@@ -475,7 +530,24 @@ void View::synchronize()
             Collision.play();
 
         _model->moveBall();
-        _coinDisplayText.setString(std::to_string(_model->getMoney()));
 
+        if(_model->getLife() <= 0) {
+            m_state = GAMEOVER;
+            _scoreDisplayText.setString("SCORE :" + std::to_string(_model->getScore()));
+        }
+        else
+            _scoreDisplayText.setString(std::to_string(_model->getScore()));
     }
+    _coinDisplayText.setString(std::to_string(_model->getMoney()) + "g");
+    m_shopmenu.setGold(_model->getMoney());
+    m_shopmenu.setSavedParam(_model->getSavedParam());
+
+    cout << "=========PARAM=========" << endl;
+    for (int i = 0;i<10;i++) {
+        cout << "param[" + std::to_string(i) + "] " + std::to_string(m_shopmenu.getSavedParam()[i]) << endl;
+    }
+    cout << "=======================" << endl;
+
+
+
 }

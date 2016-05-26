@@ -78,6 +78,10 @@ void Character::setDX(float d)
     }
 }
 
+void Character::setCoin(int x) {
+    m_coin = x;
+}
+
 void Character::move(int screen_w)
 {
     if((m_x<=0 && m_dx<0) || (m_x>=screen_w-m_w && m_dx>0))
@@ -93,13 +97,14 @@ void Character::move(int screen_w)
 int Character::getType() const {
     return m_type;
 }
-Character::Character(float x, float y, int w, int h, float dx, float dy, int maxLife)
+Character::Character(float x, float y, int w, int h, float dx, float dy, int coin, int maxLife)
     : MovableElement(x,y,w,h,dx,dy,MOVABLE_ELEMENT_TYPE_CHAR),
       jumpTime(),
       m_jumping(false),
       m_speed(1),
       m_dir(1),
       m_maxLife(maxLife),
+      m_coin(coin),
       m_actualLife(m_maxLife),
       m_score(0),
       m_InvicibleTimer(),

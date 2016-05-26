@@ -30,10 +30,10 @@ Menu::Menu(int w, int h, const std::vector<std::string> &MenuItems):
     m_stringItems(MenuItems)
 {
     if(!m_menu_sprite.loadFromFile("../Images/menuitems.png")){
-        std::cout << "menu image not load"<< std::endl;
+        std::cerr << "menu image not load"<< std::endl;
     }
     if(!m_font.loadFromFile("../Font/givre.TTF")){
-        std::cout << "Font not load" << std::endl;
+        std::cerr << "Font not load" << std::endl;
     }
     sf::Text tmp;
     sf::IntRect rect{0,0,300,50};

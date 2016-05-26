@@ -30,7 +30,7 @@ SplashScreen::SplashScreen():
     m_transparent(0)
 {
     if (!m_splashTexture1.loadFromFile(SPLASH_IMG1))
-        std::cout << "ERROR when loading image file: " << SPLASH_IMG1 << std::endl;
+        std::cerr << "ERROR when loading image file: " << SPLASH_IMG1 << std::endl;
     else {
         m_splashTexture1.setSmooth(true);
         GraphicElement tmp{m_splashTexture1, 115,150,1000,298};
@@ -39,7 +39,7 @@ SplashScreen::SplashScreen():
     }
 
     if (!m_splashTexture2.loadFromFile(SPLASH_IMG2))
-        std::cout << "ERROR when loading image file: " << SPLASH_IMG2 << std::endl;
+        std::cerr << "ERROR when loading image file: " << SPLASH_IMG2 << std::endl;
     else {
         m_splashTexture2.setSmooth(true);
         GraphicElement tmp{m_splashTexture2, 0,65,1200,500};

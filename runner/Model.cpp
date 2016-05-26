@@ -42,8 +42,8 @@ const string SAVE_FILE="pack1.rsvf";
 
 const float BALL_INIT_X = 10.;
 const float BALL_INIT_Y = 450.;
-const int BALL_INIT_H = 125;
-const int BALL_INIT_W = 80;
+const int BALL_INIT_H = 100;
+const int BALL_INIT_W = 90;
 const float BALL_INIT_DX = 0.;
 const float BALL_INIT_DY = 0.;
 
@@ -56,8 +56,9 @@ const float GLOBAL_SPEED_MULTIPLIER = 0.01666666;
 
 const int DEFAULT_MAXLIFE=100;
 const int DEFAULT_HEAL_POWER=20;
-const int DEFAULT_DOUBLE_JUMP_DURATION=5;
-const int DEFAULT_INVICIBILITY_DURATION=5;
+const int DEFAULT_DOUBLE_JUMP_DURATION=2;
+const int DEFAULT_INVICIBILITY_DURATION=2;
+const int DEFAULT_MULTIPLIER_DURATION=2;
 
 int timeTest=0;
 int timeTestBonus=0;
@@ -76,13 +77,14 @@ Model::Model(int w, int h)
       m_collide(false)
 {
     load();
-	
+
     m_char = new Character((float)BALL_INIT_X,
                            (float)BALL_INIT_Y,
                            (int)BALL_INIT_W,
                            (int)BALL_INIT_H,
                            (float)BALL_INIT_DX,
                            (float)BALL_INIT_DY,
+                           m_savedParam[SAVED_PARAM_MONEY],
                            m_savedParam[SAVED_PARAM_ID_MAXLIFE]);
     m_timeElapsed.restart();
 }
@@ -96,8 +98,6 @@ Model::~Model(){
     //Deleting all MovableElement still here
     for(auto x : m_elements)
         delete x;
-
-    m_savedParam[SAVED_PARAM_MONEY]=m_char->getGold();
     save();
 }
 
@@ -106,87 +106,86 @@ Model::~Model(){
  * Unless m_paused is true, this stop the model from working/progressing.
 */
 void Model::nextStep(){
-	if(!m_paused)
-	{
-    MovableElement* tmp;
-	//Move character
-    m_char->move(_w);
-    m_char->jump();
 
-	//Update global speed
-    m_allSpeed=-2-(1.5*m_timeElapsed.asSeconds()*GLOBAL_SPEED_MULTIPLIER);
-
-	
-	// Spawn bonus or obstacle
-    if(m_timeElapsed.asMilliseconds()-timeTestBonus>2000)
+    if(!m_paused)
     {
+        MovableElement* tmp;
+        //Move character
+        m_char->move(_w);
+        m_char->jump();
 
-        switch(1+(rand()%4))
-        {
-        case 1:
-            m_elements.push_back(new Coin{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0});
-            break;
-        case 2:
-            m_elements.push_back(new Heal{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_HEAL_POWER]});
-            break;
-        case 3:
-            m_elements.push_back(new DoubleJump{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_DOUBLE_JUMP_DURATION]});
-            break;
-        case 4:
-            m_elements.push_back(new Invicibility{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_INVICIBILITY_DURATION]});
-        default:
-            break;
-        }
-        timeTestBonus=m_timeElapsed.asMilliseconds();
-        cerr << "ntm" << endl;
-    }
-    if(m_timeElapsed.asMilliseconds()-timeTest>5000)
-    {
-        m_elements.push_back(new Obstacle{ELEM_X_INIT,OBS_Y_INIT,50,50,-2,0,(1+(rand()%3))});
-        timeTest=m_timeElapsed.asMilliseconds();
-    }
-    m_collide=false;
+        //Update global speed
+        m_allSpeed=-2-(1.5*m_timeElapsed.asSeconds()*GLOBAL_SPEED_MULTIPLIER);
 
-	// Tests on games elements
-    for(auto elem=m_elements.begin();elem<m_elements.end();++elem)
-    {
-        tmp=*elem;
-		
-		//test if the element is to delete because it's out of the screen 
-        if(tmp->outOfScreen())
-        {
-            cerr << "nts" << endl;
-            m_elements.erase(elem);
-            delete tmp;
-            tmp=nullptr;
-        }
-		//test if it's collided with the ball
-        else if(collide(m_char, tmp))
-        {
-            int x = tmp->getType();
-			
-			//If the collision is with an obstacle
-            (x>=11 && x<20)?m_collide=true:false;
-            //                    (x==22)?m_blingbling=true:
-            //                    ;
 
-			//Apply the effect of the collided effect on the character
-            tmp->apply(m_char);
-			
-			//erase
-            m_elements.erase(elem);
-//            cerr << "ntf" << endl;
-            delete tmp;
-            tmp=nullptr;
-        }
-		//otherwise set his new speed and move it
-        else
+        // Spawn bonus or obstacle
+        if(m_timeElapsed.asMilliseconds()-timeTestBonus>2000)
         {
-            tmp->setDX(m_allSpeed);
-            tmp->move();
+
+            switch(1+(rand()%4))
+            {
+            case 1:
+                m_elements.push_back(new Coin{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0});
+                break;
+            case 2:
+                m_elements.push_back(new Heal{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_HEAL_POWER]});
+                break;
+            case 3:
+                m_elements.push_back(new DoubleJump{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_DOUBLE_JUMP_DURATION]});
+                break;
+            case 4:
+                m_elements.push_back(new Invicibility{ELEM_X_INIT,BONUS_Y_INIT,50,50,-2,0,m_savedParam[SAVED_PARAM_ID_INVICIBILITY_DURATION]});
+            default:
+                break;
+            }
+            timeTestBonus=m_timeElapsed.asMilliseconds();
+        }
+        if(m_timeElapsed.asMilliseconds()-timeTest>5000)
+        {
+            m_elements.push_back(new Obstacle{ELEM_X_INIT,OBS_Y_INIT,50,50,-2,0,(1+(rand()%3))});
+            timeTest=m_timeElapsed.asMilliseconds();
+        }
+        m_collide=false;
+
+        // Tests on games elements
+        for(auto elem=m_elements.begin();elem<m_elements.end();++elem)
+        {
+            tmp=*elem;
+
+            //test if the element is to delete because it's out of the screen
+            if(tmp->outOfScreen())
+            {
+                m_elements.erase(elem);
+                delete tmp;
+                tmp=nullptr;
+            }
+            //test if it's collided with the ball
+            else if(collide(m_char, tmp))
+            {
+                int x = tmp->getType();
+
+                //If the collision is with an obstacle
+                (x>=11 && x<20)?m_collide=true:false;
+                //                    (x==22)?m_blingbling=true:
+                //                    ;
+
+                //Apply the effect of the collided effect on the character
+                tmp->apply(m_char);
+
+                //erase
+                m_elements.erase(elem);
+                //            cerr << "ntf" << endl;
+                delete tmp;
+                tmp=nullptr;
+            }
+            //otherwise set his new speed and move it
+            else
+            {
+                tmp->setDX(m_allSpeed);
+                tmp->move();
+            }
         }
     }
-	}
 }
 
 /*!
@@ -284,6 +283,9 @@ void Model::getElemsPos( std::vector<std::pair<int , std::pair<float, float> > >
     }
 }
 
+std::array<int, 10> Model::getSavedParam() {
+    return m_savedParam;
+}
 
 void Model::jumpBall()
 {
@@ -305,7 +307,7 @@ unsigned int Model::getMoney()
 //!
 int Model::getScore()
 {
-    return m_char->getScore()+(m_timeElapsed.asMilliseconds()*0.5);
+    return m_char->getScore()+(m_timeElapsed.asMilliseconds()*0.1);
 }
 
 void Model::restart() {
@@ -328,7 +330,8 @@ void Model::restart() {
                            (int)BALL_INIT_W,
                            (float)BALL_INIT_DX,
                            (float)BALL_INIT_DY,
-						   m_savedParam[SAVED_PARAM_ID_MAXLIFE]);
+                           m_savedParam[SAVED_PARAM_MONEY],
+                           m_savedParam[SAVED_PARAM_ID_MAXLIFE]);
 }
 
 bool Model::hasEnded() {
@@ -339,11 +342,12 @@ void Model::pause() {
     m_paused?m_paused=false:m_paused=true;
 }
 
-void Model::shopUpdate(std::array<int, 10>& newParam) {
+void Model::shopUpdate(std::array<int, 10> newParam) {
     for(unsigned long i=0;i<newParam.size() && i<m_savedParam.size();i++)
     {
         m_savedParam[i]=newParam[i];
     }
+    m_char->setCoin(m_savedParam[SAVED_PARAM_MONEY]);
 }
 
 void Model::load() {
@@ -359,7 +363,7 @@ void Model::load() {
         {
             m_savedParam[i]=stoi(dataString.substr(lastPos,pos-lastPos));
             lastPos=pos+1;
-            cout << m_savedParam[i] << endl;
+            cout << "Param" << i << " " << m_savedParam[i] << endl;
             pos=dataString.find(';', lastPos);
             i++;
         }
@@ -370,9 +374,9 @@ void Model::load() {
         m_savedParam[SAVED_PARAM_ID_MAXLIFE]=DEFAULT_MAXLIFE;
         m_savedParam[SAVED_PARAM_ID_HEAL_POWER]=DEFAULT_HEAL_POWER;
         m_savedParam[SAVED_PARAM_ID_DOUBLE_JUMP_DURATION]=DEFAULT_DOUBLE_JUMP_DURATION;
+        m_savedParam[SAVED_PARAM_ID_MULTIPLIER_DURATION]=DEFAULT_MULTIPLIER_DURATION;
         m_savedParam[SAVED_PARAM_ID_INVICIBILITY_DURATION]=DEFAULT_INVICIBILITY_DURATION;
-        m_savedParam[4]=0;
-        m_savedParam[SAVED_PARAM_MONEY]=0;
+        m_savedParam[SAVED_PARAM_MONEY]=100;
         for(int i=6;i<10;i++)
             m_savedParam[i]=0;
     }
@@ -382,6 +386,7 @@ void Model::load() {
 void Model::save(){
 
     string savedData;
+    m_savedParam[SAVED_PARAM_MONEY] = m_char->getGold();
     savedData+=to_string(m_savedParam[0]);
     for(int i=1; i<m_savedParam.size();i++)
         savedData+= ";"+
@@ -448,7 +453,7 @@ void setNewData(string file, string& inData)
 /*!
  * \brief XOR Encrytpion/Decrytion Algorithm
  * \param Data Data string to encrypt/decrypt
- * \return An encrypted/decrypted string 
+ * \return An encrypted/decrypted string
 */
 string pomme(string Data)
 {
@@ -459,5 +464,5 @@ string pomme(string Data)
         outData+=x^(i+LRU[i%5])%256;
         i++;
     }
-    return outData;
+    return Data;
 }

@@ -33,7 +33,7 @@ const int SAVED_PARAM_ID_MAXLIFE=0;
 const int SAVED_PARAM_ID_HEAL_POWER=1;
 const int SAVED_PARAM_ID_DOUBLE_JUMP_DURATION=2;
 const int SAVED_PARAM_ID_INVICIBILITY_DURATION=3;
-
+const int SAVED_PARAM_ID_MULTIPLIER_DURATION=4;
 const int SAVED_PARAM_MONEY=5;
 
 std::string pomme(std::string Data);
@@ -63,7 +63,7 @@ class Model {
   ~Model();
 
   void restart();
-  void shopUpdate(std::array<int, 10>& newParam);
+  void shopUpdate(std::array<int, 10> newParam);
   void pause();
   void load();
   void save();
@@ -78,6 +78,7 @@ class Model {
 
   std::pair<float, float> getBallPosition();
   void getElemsPos(std::vector<std::pair<int, std::pair<float, float> > > &elemPos);
+  std::array<int,10> getSavedParam();
 
   void getBallDim(int&h, int &w);
   void getCharDir(bool &left, bool &right);

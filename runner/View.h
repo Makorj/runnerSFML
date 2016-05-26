@@ -50,12 +50,14 @@ path INV_BONUS_IMAGE = "../Images/cube_inv.png";
 path MULTIPLIER_BONUS_IMAGE = "../Images/cube_x2.png";
 path SPINNING_COIN = "../Images/spinning_coin.png";
 path COIN_STACK = "../Images/pile_coin.png";
+path GAME_OVER_IMAGE = "../Images/gameover.png";
+path MAXLIFE_IMAGE ="../Images/maxLife.png";
 
-path SONG_BOOBA= "../Audio/sonBooba.ogg";
-path SONG_BOOBA_LOOP= "../Audio/sonBoobaLoop.ogg";
+path SONG_GAME= "../Audio/Bonetrousle.ogg";
+path SONG_MENUS= "../Audio/OneTrueLove.ogg";
 
-path SOUND_IZI="../Audio/izi.ogg";
-path SOUND_CARRE="../Audio/carre.ogg";
+path SOUND_IZI="../Audio/jump_sound.wav";
+path SOUND_CARRE="../Audio/crash_sound.wav";
 
 path ELEM_IMG = "../Images/iceblock.png";
 path COIN_IMG = "../Images/flocon.png";
@@ -63,8 +65,9 @@ path COIN_IMG = "../Images/flocon.png";
 const std::vector<std::string> MAIN_MENU_ITEMS = {"Play","Multiplayer","Best Scores","Shop","Options","Quit"};
 const std::vector<std::string> OPTIONS_MENU_ITEMS = {"Language","Volume","Back"};
 const std::vector<std::string> LANGUAGE_MENU_ITEMS = {"English","French","German","Spanish","Portugese","Main Menu","Back"};
-const std::vector<std::string> SHOP_MENU_ITEMS = {"Buy", "Buy", "Buy", "Buy", "Cancel", "Validate"};
+const std::vector<std::string> SHOP_MENU_ITEMS = {"Buy","Buy", "Buy", "Buy", "Buy", "Back"};
 const std::vector<std::string> SHOP_ITEMS = {"Heal","Jump","Invincibility","Multiplier"};
+const std::vector<std::string> GAMEOVER_ITEMS = {"Restart","Main Menu","Quit"};
 
 const sf::IntRect poposwag_run1_rect{0,0,100,134};
 const sf::IntRect poposwag_run2_rect{134,0,100,134};
@@ -130,8 +133,15 @@ private:
     sf::Texture _coinStack;
     GraphicElement _coinStackSprite;
 
-    sf::Font _coinDisplay;
+    sf::Texture _maxLife;
+    AnimatedGraphicElement _maxLifeSprite;
+
+    sf::Texture _gameOver;
+    GraphicElement _gameOverSprite;
+
+    sf::Font _fontDisplay;
     sf::Text _coinDisplayText;
+    sf::Text _scoreDisplayText;
 
     sf::Texture _GUI;
 
@@ -141,8 +151,8 @@ private:
     sf::SoundBuffer carre;
     sf::Sound Collision;
 
-    sf::Music _boobaSong;
-    sf::Music _boobaLoop;
+    sf::Music _GameMusic;
+    sf::Music _MenusMusic;
 
     std::vector<std::pair<int , std::pair<float, float> > > m_elemPos;
 
@@ -155,6 +165,10 @@ private:
     Menu m_optionmenu;
     Menu m_languagemenu;
     Shop m_shopmenu;
+    Menu m_gameovermenu;
+
+    void loadBackgrounds();
+    std::vector<AnimatedGraphicElement> loadBonuses();
 
 public:
 

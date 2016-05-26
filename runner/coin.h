@@ -41,7 +41,7 @@ private:
     int m_scoreValue; ///< Score's value given by the coin
     static int COIN_MONEY_VALUE; ///< Money's value given by the coin.
 public:
-    Coin(float x, float y, int w, int h, float dx, float dy, int scoreValue=5);
+    Coin(float x, float y, int w, int h, float dx, float dy, int scoreValue=100);
     //~Coin() override;
     void apply(Character* charact) override;
 };

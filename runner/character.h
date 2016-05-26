@@ -70,7 +70,7 @@ private:
 public:
 
     //// CONSTRUCTORS /////
-    Character(float x, float y, int w, int h, float dx, float dy, int maxLife=100);
+    Character(float x, float y, int w, int h, float dx, float dy, int coin, int maxLife);
     ~Character() override;
 
 
@@ -88,6 +88,7 @@ public:
     int getType() const override;
 
     void setDX(float d);
+    void setCoin(int x);
 
 	//// Getter ////
 	

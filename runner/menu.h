@@ -37,9 +37,10 @@ class Menu
 protected:
     sf::Font m_font;
     std::vector<std::pair<sf::Text,sf::Sprite> >m_items;
+    unsigned int m_selectedItem;
 private :
     sf::Texture m_menu_sprite;
-    unsigned int m_selectedItem;
+
 
     std::vector<std::string> m_stringItems;
 public:
