@@ -25,7 +25,8 @@ THE SOFTWARE.
 #include <SFML/Graphics.hpp>
 
 AnimatedGraphicElement::AnimatedGraphicElement(const std::vector<sf::IntRect>& clipRects, sf::Texture &image, int x, int y, int w, int h)
-    :GraphicElement(image, x, y, w, h, false)
+    :GraphicElement(image, x, y, w, h, false),
+      m_pause(false)
 {
     m_clipRects = clipRects;
     m_currentClipRect = 0;
@@ -44,15 +45,22 @@ AnimatedGraphicElement::AnimatedGraphicElement(const AnimatedGraphicElement& cop
 }
 
 void AnimatedGraphicElement::draw(sf::RenderWindow *window) {
-    m_current_step++;
-    if(m_current_step>=m_nb_steps)
-    {
-        m_current_step=0;
-        m_currentClipRect = m_currentClipRect % m_clipRects.size()+1;
-        setTextureRect(m_clipRects[m_currentClipRect-1]);
+
+    if(!m_pause){
+        m_current_step++;
+        if(m_current_step>=m_nb_steps)
+        {
+            m_current_step=0;
+            m_currentClipRect = m_currentClipRect % m_clipRects.size()+1;
+            setTextureRect(m_clipRects[m_currentClipRect-1]);
+        }
     }
     window->draw(*this);
+}
 
+void AnimatedGraphicElement::pause()
+{
+    m_pause = m_pause?false:true;
 }
 
 

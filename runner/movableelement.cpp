@@ -43,8 +43,8 @@ MovableElement::MovableElement(float x, float y, int w, int h, float dx, float d
     : m_type(type),
       m_x(x),
       m_y(y),
-      m_w(w),
       m_h(h),
+      m_w(w),
       m_dx(dx),
       m_dy(dy)
 {}
@@ -116,10 +116,6 @@ int MovableElement::getW() const {
     return m_w;
 }
 
-void MovableElement::apply(Character *charact) {
-
-}
-
 //!
 //! \brief Check if the movableelement is out of the screen
 //!	\return bool True if the MovableElement is out of the screen, false otherwise
@@ -140,4 +136,9 @@ bool collide (MovableElement *elem1, MovableElement *elem2) {
             elem1->getX() + elem1->getW() > elem2->getX() &&
             elem1->getY() < elem2->getY() + elem2->getH() &&
             elem1->getY() + elem1->getH() > elem2->getY());
+}
+
+void MovableElement::apply(Character *charact)
+{
+
 }

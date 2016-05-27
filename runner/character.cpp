@@ -99,22 +99,19 @@ int Character::getType() const {
 }
 Character::Character(float x, float y, int w, int h, float dx, float dy, int coin, int maxLife)
     : MovableElement(x,y,w,h,dx,dy,MOVABLE_ELEMENT_TYPE_CHAR),
-      jumpTime(),
-      m_jumping(false),
       m_speed(1),
       m_dir(1),
       m_maxLife(maxLife),
-      m_coin(coin),
       m_actualLife(m_maxLife),
       m_score(0),
+      m_coin(coin),
+      jumpTime(),
+      m_jumping(false),
       m_InvicibleTimer(),
       m_DoubleJumpTimer(),
-      m_ScoreMultiplierTimer()
+      m_ScoreMultiplierTimer(),
+      m_scoreMultiplierValue(2)
 {
-}
-
-Character::~Character() {
-
 }
 
 void Character::addLife(const int &x)

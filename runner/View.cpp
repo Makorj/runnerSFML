@@ -24,30 +24,84 @@ THE SOFTWARE.
 #include "View.h"
 #include "Model.h"
 
+//!
+//
+
 #include <math.h>
 #include <mutex>
 
-volatile bool thread_client_r_has_to_end=true;
-std::mutex client_thread_mtx;
+volatile bool thread_client_r_has_to_end=true;      ///< Volatile bool that define if the thread thread_client_r has to end
+std::mutex client_thread_mtx;                       ///< Client's threads mutex
+volatile bool thread_host_send_has_to_end=true;     ///< Volatile bool that define if the thread thread_host_send has to end
+std::mutex host_thread_mtx;                         ///< Host's threads mutex
+volatile bool thread_host_re_has_to_end=true;       ///< Valitile bool that define if th thread thread_host_re has to end
+
 
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include "client.h"
 
 using namespace std;
 
+
+//!
+//! \brief Thread with Client network listening loop
+//! \param h Client pointer used in the thread
+//!
+//! Stop itself when boolean thread_client_r_has_to_end is true.
 void thread_client_r(Client* h)
 {
     Clock time;
     while(!thread_client_r_has_to_end)
     {
-        if(time.asMilliseconds()%2==0)
+        //Listen only every 5ms
+        if(time.asMilliseconds()%5==0)
         {
             client_thread_mtx.lock();
             h->receive();
             client_thread_mtx.unlock();
-            cout << "pomme" << endl;
+        }
+    }
+}
+
+//!
+//! \brief Thread with Host global network sending loop
+//! \param h Host pointer used in the thread
+//!
+//! Stop itself when boolean thread_host_send_has_to_end is true.
+void thread_host_send(Host* h)
+{
+   Clock tmp;
+   while(!thread_host_send_has_to_end)
+   {
+       //Send every 32ms only
+       if(tmp.asMilliseconds()%32==0)
+        {
+           host_thread_mtx.lock();
+           h->sendGlobal(h->FramePacket());
+           host_thread_mtx.unlock();
+       }
+   }
+}
+
+
+//!
+//! \brief Thread with Host network listening loop
+//! \param h Host pointer used in the thread
+//!
+//! Stop itself when boolean thread_host_send_has_to_end is true.
+void thread_host_re(Host *h)
+{
+    Clock tmp;
+    while(!thread_host_send_has_to_end)
+    {
+        if(tmp.asMilliseconds()%10==0)
+        {
+            host_thread_mtx.lock();
+            h->receive();
+            host_thread_mtx.unlock();
         }
     }
 }
@@ -55,6 +109,9 @@ void thread_client_r(Client* h)
 const unsigned int SPEED = 2;
 const unsigned int SPEED1 = 1;
 
+//!
+//! \brief Method that load all background ressources
+//!
 void View::loadBackgrounds() {
     if(_Background.loadFromFile(BACKGROUND_IMAGE)){
         _Background.setSmooth(true);
@@ -75,6 +132,10 @@ void View::loadBackgrounds() {
     }
 }
 
+//!
+//! \brief Method that load all ressources to draw bonuses
+//! \return vector<AnimatedGraphicElement> with all bonuses' AnimatedGraphicElement
+//!
 vector<AnimatedGraphicElement> View::loadBonuses() {
     vector<sf::IntRect> readBonus;
     readBonus.push_back(bonusRect1);
@@ -137,6 +198,7 @@ vector<AnimatedGraphicElement> View::loadBonuses() {
 //!
 View::View(int w, int h)
     : _w(w), _h(h),
+      m_state{SPLASHSCREEN},
       m_mainmenu{w,h,MAIN_MENU_ITEMS},
       m_optionmenu{w,h,OPTIONS_MENU_ITEMS},
       m_languagemenu{w,h,LANGUAGE_MENU_ITEMS},
@@ -144,7 +206,7 @@ View::View(int w, int h)
       m_gameovermenu{w,h,GAMEOVER_ITEMS},
       m_multiplayermenu{w,h,MULTIPLAYER_ITEMS},
       m_hostselecmenu{w,h,HOSTSELEC_ITEMS},
-      m_state{MAIN_MENU}
+      m_hostlobbymenu{w,h,HOSTLOBBY_ITEMS}
 {
     _window = new sf::RenderWindow(sf::VideoMode(w, h, 32), "Runner", sf::Style::Close);
     _window->setFramerateLimit(60);
@@ -192,7 +254,7 @@ View::View(int w, int h)
         _MenusMusic.setVolume(40.);
     }
 
-    if (izi.loadFromFile(SOUND_IZI))
+    if (izi.loadFromFile(SOUND_JUMP))
         Jump.setBuffer(izi);
     Jump.setVolume(40.);
 
@@ -211,21 +273,30 @@ View::View(int w, int h)
     }
 }
 
+//!
+//! \brief View destructor
+//!
 View::~View(){
     if(_window!= NULL)
         delete _window;
-
-    m_thread.join();
 }
 
+//!
+//! \brief Set the linked model to the view
+//! \param model Model pointer to link with the view
+//!
 void View::setModel(Model * model){
     _model = model;
     _model->pause();
 }
 
+//!
+//! \brief Method that draw things on the screen
+//!
 void View::draw(){
     _window->clear();
 
+    //for every state or most
     if(m_state !=SPLASHSCREEN) {
         _BackgroundSprite.draw(_window);
         _SlidingBackgroundSprite2.draw(_window);
@@ -246,25 +317,8 @@ void View::draw(){
             _GameMusic.play();
     }
 
-    if(m_state==HOST_SELEC)
-    {
 
-    }
-    else if (m_thread.joinable() && thread_client_r_has_to_end==false)
-    {
-        cout << "11" << endl;
-        m_thread.join();
-    }
-    else if (thread_client_r_has_to_end==false)
-    {
-        thread_client_r_has_to_end=true;
-
-        cout << "12" << endl;
-        m_thread.join();
-    }
-
-
-
+    //What to draw in which game state
     switch(m_state) {
     case SPLASHSCREEN:
         m_splashscreen.draw(_window);
@@ -278,10 +332,16 @@ void View::draw(){
     case HOST_SELEC:
         m_hostselecmenu.draw(_window);
         break;
+    case GAME_CREATION:
+        m_hostlobbymenu.draw(_window);
+        break;
     case OPTIONS:
         m_optionmenu.draw(_window);
         break;
     case BEST_SCORES:
+        break;
+    case SPECTATE_SELEC:
+        m_hostselecmenu.draw(_window);
         break;
     case SHOP:
         _coinStackSprite.draw(_window);
@@ -291,13 +351,25 @@ void View::draw(){
     case LANGUAGE:
         m_languagemenu.draw(_window);
         break;
-    case GAME:
-        _balleSprite.draw(_window);
+    case GAME_SPECTATOR:
+        drawObstacles();
+        for(auto x : _multiSprite)
+            x.draw(_window);
+        break;
+    case GAME_MULTIPLAYER:
+        drawObstacles();
+        for(auto x : _multiSprite)
+            x.draw(_window);
         m_lifeUI.draw(_window);
+        _balleSprite.draw(_window);
+        break;
+    case GAME:
+        drawObstacles();
+        m_lifeUI.draw(_window);
+        _balleSprite.draw(_window);
         _coinStackSprite.draw(_window);
         _window->draw(_coinDisplayText);
         _window->draw(_scoreDisplayText);
-        drawObstacles();
         break;
     case GAMEOVER:
         m_gameovermenu.draw(_window);
@@ -308,6 +380,9 @@ void View::draw(){
     _window->display();
 }
 
+//!
+//! \brief Obstacle drawing method
+//!
 void View::drawObstacles() {
     for(auto x : m_elemPos)
     {
@@ -356,7 +431,10 @@ void View::drawObstacles() {
     }
 }
 
-
+//!
+//! \brief Method that manage players inputs
+//! \return true if the programme has to end, false otherwise
+//!
 bool View::treatEvents(){
     bool result = false;
     bool left(false), right(false);
@@ -368,7 +446,9 @@ bool View::treatEvents(){
         while (_window->pollEvent(event)) {
             switch(m_state) {
             case SPLASHSCREEN:
-                m_splashscreen.event(m_state);
+                if(event.type == sf::Event::KeyReleased)
+                    if(event.key.code == sf::Keyboard::Return)
+                        m_splashscreen.event(m_state);
                 break;
             case MAIN_MENU:
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_mainmenu.MoveUp();
@@ -378,17 +458,18 @@ bool View::treatEvents(){
                         switch(m_mainmenu.getSelectedItem()) {
                         case 0:
                             m_state = GAME;
+                            m_lifeUI.setMaxLife(_model->getSavedParam()[SAVED_PARAM_ID_MAXLIFE]);
                             _model->restart();
                             break;
                         case 1:
                             m_state = MULTIPLAYER;
                             break;
                         case 2:
-                            m_state = BEST_SCORES;
+                            /*** NOT IMPLEMENTED ***/
+                            //m_state = BEST_SCORES;
                             break;
                         case 3:
                             m_state = SHOP;
-
                             break;
                         case 4:
                             m_state = OPTIONS;
@@ -408,20 +489,31 @@ bool View::treatEvents(){
                     if(event.key.code == sf::Keyboard::Return) {
                         switch(m_multiplayermenu.getSelectedItem()) {
                         case 0:
+                            /*** DO NOT WORK ***/
+                            /*
+                            thread_host_send_has_to_end=false;
+                            m_host->rebind(Host::DEFAULT_PORT);
+                            m_thread = std::thread(thread_host_send, m_host);
                             m_state = GAME_CREATION;
+                            */
                             break;
                         case 1:
                             thread_client_r_has_to_end=false;
-                            //m_thread = std::thread(thread_client_r, m_client);
+                            m_client->rebind(Client::DEFAULT_PORT);
+                            m_thread = std::thread(thread_client_r, m_client);
                             m_state = HOST_SELEC;
+                            m_hostselecmenu.setHostsList(m_client->getHosts());
                             break;
                         case 2:
                             thread_client_r_has_to_end=false;
+                            m_client->rebind(Client::DEFAULT_PORT);
                             m_thread = std::thread(thread_client_r, m_client);
                             m_state = SPECTATE_SELEC;
+                            m_hostselecmenu.setHostsList(m_client->getHosts());
                             break;
                         case 3:
                             m_state = MAIN_MENU;
+                            break;
                         }
                     }
                 }
@@ -435,13 +527,65 @@ bool View::treatEvents(){
                     if(event.key.code == sf::Keyboard::Return) {
                         switch(m_hostselecmenu.getSelectedItem()) {
                         case 0:
-                            m_state = GAME_CREATION;
+                            /*** DO NOT WORK ***/
+                            //m_client->connect(m_hostselecmenu.getSelectedHost());
+                            //m_state = GAME_MULTIPLAYER;
                             break;
                         case 1:
                             m_hostselecmenu.setHostsList(m_client->getHosts());
                             break;
                         case 2:
                             thread_client_r_has_to_end=true;
+                            m_thread.join();
+                            m_client->stop();
+                            m_state = MULTIPLAYER;
+                            break;
+                        }
+                    }
+                }
+                break;
+            case GAME_CREATION:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_hostlobbymenu.moveUp();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_hostlobbymenu.moveDown();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) m_hostlobbymenu.moveLeft();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) m_hostlobbymenu.moveRight();
+                if(event.type == sf::Event::KeyReleased) {
+                    if(event.key.code == sf::Keyboard::Return) {
+                        switch(m_hostlobbymenu.getSelectedItem()) {
+                        case 0:
+                            m_state = GAME_MULTIPLAYER;
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            thread_host_send_has_to_end=true;
+                            m_thread.join();
+                            m_host->stop();
+                            m_state=MULTIPLAYER;
+                            break;
+                        }
+                    }
+                }
+                break;
+            case SPECTATE_SELEC:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_hostselecmenu.moveUp();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_hostselecmenu.moveDown();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) m_hostselecmenu.moveLeft();
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) m_hostselecmenu.moveRight();
+                if(event.type == sf::Event::KeyReleased) {
+                    if(event.key.code == sf::Keyboard::Return) {
+                        switch(m_hostselecmenu.getSelectedItem()) {
+                        case 0:
+                            /*** WORK BUT NEED HOST ***/
+                            //m_state = GAME_SPECTATOR;
+                            break;
+                        case 1:
+                            m_hostselecmenu.setHostsList(m_client->getHosts());
+                            break;
+                        case 2:
+                            thread_client_r_has_to_end=true;
+                            m_thread.join();
+                            m_client->stop();
                             m_state = MULTIPLAYER;
                             break;
                         }
@@ -469,7 +613,6 @@ bool View::treatEvents(){
             case BEST_SCORES:
                 break;
             case SHOP:
-
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_shopmenu.MoveUp();
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) m_shopmenu.MoveDown();
                 if(event.type == sf::Event::KeyReleased) {
@@ -477,6 +620,7 @@ bool View::treatEvents(){
                         if(m_shopmenu.getSelectedItem()!=5) {
                             m_shopmenu.update(m_shopmenu.getSelectedItem());
                             _model->shopUpdate(m_shopmenu.getSavedParam());
+                            m_lifeUI.setMaxLife((m_shopmenu.getSavedParam())[SAVED_PARAM_ID_MAXLIFE]);
                         }
                         else
                             m_state = MAIN_MENU;
@@ -526,12 +670,31 @@ bool View::treatEvents(){
                     _model->jumpBall();
                     Jump.play();
                 }
-                if (event.type == sf::Event::KeyPressed && event.key.code==sf::Keyboard::R)
+                break;
+            case GAME_MULTIPLAYER:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) m_client->sendAction(rvb::Action::LEFT);
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) m_client->sendAction(rvb::Action::RIGHT);
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) m_client->sendAction(rvb::Action::UP);
+                if (event.type == sf::Event::KeyReleased
+                        && (event.key.code==sf::Keyboard::Left || event.key.code==sf::Keyboard::Right))
+                                m_client->sendAction(rvb::Action::K_RELEASED);
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
                 {
-                    _model->restart();
-                    m_elemPos.clear();
+                    m_client->disconnect();
+                    thread_client_r_has_to_end=true;
+                    m_thread.join();
+                    m_client->stop();
+                    m_state=MAIN_MENU;
                 }
-
+                break;
+            case GAME_SPECTATOR:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+                {
+                    thread_client_r_has_to_end=true;
+                    m_thread.join();
+                    m_client->stop();
+                    m_state=MAIN_MENU;
+                }
                 break;
             case GAMEOVER:
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) m_gameovermenu.MoveUp();
@@ -566,6 +729,11 @@ bool View::treatEvents(){
     return result;
 }
 
+
+//!
+//! \brief Method called when changing language
+//! \param lang Language to which you want to change
+//!
 void View::changeLanguage(string lang) {
     fstream f;
     int cpt = 0;
@@ -588,10 +756,9 @@ void View::changeLanguage(string lang) {
                     m_languagemenu.changeString(test,cpt2);
                     break;
                 case 3:
+                    m_shopmenu.changeString(test,cpt2);
                     break;
                 case 4:
-                    break;
-                case 5:
                     break;
                 }
             }
@@ -605,8 +772,17 @@ void View::changeLanguage(string lang) {
     }
 }
 
+//!
+//! \brief Method that update the view elements with model's data
+//!
 void View::synchronize()
 {
+    if(m_state == SPLASHSCREEN)
+        m_splashscreen.synchronize(m_state);
+    if(m_state == GAME_CREATION)
+    {
+        m_hostlobbymenu.setClientList(m_host->getPlayersInfo());
+    }
     if(m_state == GAME){
         _model->getElemsPos(m_elemPos);
 
@@ -629,20 +805,38 @@ void View::synchronize()
         else
             _scoreDisplayText.setString(std::to_string(_model->getScore()));
     }
+    else if(m_state == GAME_MULTIPLAYER || m_state == GAME_SPECTATOR)
+    {
+        float gs;
+        std::pair<int,int> paire;
+        std::set<std::pair<int, std::pair<int, int> > > chars;
+
+        m_elemPos.clear();
+        _multiSprite.clear();
+        m_client->getFrame(gs,m_elemPos,paire,chars);
+        _balleSprite.setPosition(sf::Vector2f{(float)paire.first,(float)paire.second});
+
+        for(std::pair<int, std::pair<int, int> > x : chars)
+        {
+            AnimatedGraphicElement tmp{_balleSprite};
+            tmp.setPosition((float)x.second.first, (float)x.second.second);
+            _multiSprite.push_back(tmp);
+        }
+
+        _SlidingBackgroundSprite2.setSpeed((float)-1*(gs));
+        _SlidingBackgroundSprite1.setSpeed((float)-1*(gs-1));
+
+    }
     _coinDisplayText.setString(std::to_string(_model->getMoney()) + "g");
     m_shopmenu.setGold(_model->getMoney());
     m_shopmenu.setSavedParam(_model->getSavedParam());
 
-    /*cout << "=========PARAM=========" << endl;
-    for (int i = 0;i<10;i++) {
-        cout << "param[" + std::to_string(i) + "] " + std::to_string(m_shopmenu.getSavedParam()[i]) << endl;
-    }
-    cout << "=======================" << endl;*/
-
-
-
 }
 
+//!
+//! \brief Method that set the actual Client linked to the view
+//! \param c Client pointer linked to the view
+//!
 void View::setClient(Client *c)
 {
     m_client=c;

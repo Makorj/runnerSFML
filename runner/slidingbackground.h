@@ -35,12 +35,14 @@ private :
     int m_w;
     int m_h;
     float m_speed;
+    bool m_paused;
 public :
     SlidingBackground() = default;
     SlidingBackground(sf::Texture &image, int w, int h, float speed);
     SlidingBackground(const SlidingBackground& copy);
     void draw(sf::RenderWindow *window);
     void setSpeed(float s);
+    void pause();
 };
 
 #endif // SLIDINGBACKGROUND_H

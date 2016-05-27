@@ -36,12 +36,14 @@ private:
     int m_currentClipRect;
     int m_nb_steps;
     int m_current_step;
+    bool m_pause;
 public:
     AnimatedGraphicElement(const std::vector<sf::IntRect>& clipRects, sf::Texture &image, int x, int y, int w, int h);
     AnimatedGraphicElement(const AnimatedGraphicElement& copy);
     AnimatedGraphicElement() = default;
     //void resize(int w, int h) override;
     void draw(sf::RenderWindow *window);
+    void pause();
 };
 
 #endif // ANIMATEDGRAPHICELEMENT_H

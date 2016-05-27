@@ -26,9 +26,18 @@ THE SOFTWARE.
 #include "graphicelement.h"
 #include "State.h"
 
-const std::string SPLASH_IMG2 = "../Images/logo_carambar.png";
-const std::string SPLASH_IMG1 = "../Images/logo_iut.png";
+/*!
+ * \file splashscreen.h
+ * \brief Header of the SplashScreen class
+ */
 
+const std::string SPLASH_IMG2 = "../Images/logo_carambar.png";  ///< Path to the second splashscreen image ressource
+const std::string SPLASH_IMG1 = "../Images/logo_iut.png";       ///< Path to the fiorst splashscreen image ressource
+
+//!
+//! \brief The SplashScreen class used to draw the splashscreen
+//! Is used only when the game is in  State SPLASHSCREEN
+//!
 class SplashScreen
 {
 private :
@@ -42,6 +51,7 @@ private :
 public:
     SplashScreen();
     void draw(sf::RenderWindow *window);
+    void synchronize(State &state);
     void event(State &state);
 };
 

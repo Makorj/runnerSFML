@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <set>
 #include <utility>
 using namespace std;
 
@@ -98,7 +99,6 @@ Model::~Model(){
     //Deleting all MovableElement still here
     for(auto x : m_elements)
         delete x;
-    save();
 }
 
 /*!
@@ -148,7 +148,6 @@ void Model::nextStep(){
             timeTest=m_timeElapsed.asMilliseconds();
         }
         m_collide=false;
-        //m_soin=false;
 
         vector<MovableElement*> toErase;
         // Tests on games elements
@@ -168,7 +167,6 @@ void Model::nextStep(){
 
                 //If the collision is with an obstacle
                 (x>=11 && x<20)?m_collide=true:false;
-                //(x==21)?m_soin=true:false;
 
                 //Apply the effect of the collided effect on the character
                 tmp->apply(m_char);
@@ -254,6 +252,14 @@ int Model::getAllSpeed() const{
 int Model::getLife() const {
     return m_char->getLife();
 }
+
+void Model::setHost(Host *h)
+{
+    m_host=h;
+}
+
+Host* Model::getHost() { return m_host; }
+
 void Model::moveBall()
 {
     float left = -3.;
@@ -265,6 +271,21 @@ void Model::moveBall()
         m_char->setDX(right);
     else
         m_char->setDX(stop);
+
+    //Multiplayer Char Movement
+    /*** WORK ONLY WITH MULTIPLAYER IMPLEMENTED ***/
+    /*
+    for(auto x : *m_host->getPlayersIds())
+    {
+        std::map<int, std::pair<bool, bool> >* p = m_host->getPlayersActions();
+        if (p->at(x).first)
+            m_multiplayerChar.at(x)->setDX(left);
+        else if (p->at(x).second)
+            m_multiplayerChar.at(x)->setDX(right);
+        else
+            m_multiplayerChar.at(x)->setDX(stop);
+    }
+    */
 }
 
 //!
@@ -275,19 +296,24 @@ void Model::moveBall()
 //! \param elemPos std::vector used to store Elements positions passed by reference
 //! \author TEAM Carambar de l'IUT
 //!
-void Model::getElemsPos( std::vector<std::pair<int , std::pair<float, float> > >& elemPos)
+void Model::getElemsPos( std::set<std::pair<int , std::pair<float, float> > >& elemPos)
 {
 
     elemPos.clear();
 
     for(auto x : m_elements)
     {
-        elemPos.push_back(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
+        elemPos.insert(std::make_pair(x->getType(), std::make_pair(x->getX(), x->getY())));
     }
 }
 
 std::array<int, 10> Model::getSavedParam() {
     return m_savedParam;
+}
+
+std::map<int, std::shared_ptr<Character > >* Model::getMultiCharData()
+{
+    return &m_multiplayerChar;
 }
 
 void Model::jumpBall()
@@ -314,6 +340,7 @@ int Model::getScore()
 }
 
 void Model::restart() {
+    m_savedParam[SAVED_PARAM_MONEY]=m_char->getGold();
     delete m_char;
     for(auto elem=m_elements.begin();elem!=m_elements.end();++elem)
     {
@@ -323,19 +350,18 @@ void Model::restart() {
     }
     m_elements.clear();
     m_paused=false;
-
     m_timeElapsed.restart();
     timeTest=0;
     timeTestBonus=0;
     m_allSpeed=2.;
-    m_char = new Character((float)BALL_INIT_X,
+    m_char = new Character{(float)BALL_INIT_X,
                            (float)BALL_INIT_Y,
                            (int)BALL_INIT_H,
                            (int)BALL_INIT_W,
                            (float)BALL_INIT_DX,
                            (float)BALL_INIT_DY,
                            m_savedParam[SAVED_PARAM_MONEY],
-                           m_savedParam[SAVED_PARAM_ID_MAXLIFE]);
+                           m_savedParam[SAVED_PARAM_ID_MAXLIFE]};
 }
 
 bool Model::hasEnded() {
@@ -343,7 +369,7 @@ bool Model::hasEnded() {
 }
 
 void Model::pause() {
-    m_paused?m_paused=false:m_paused=true;
+    m_paused = m_paused?false:true;
 }
 
 void Model::shopUpdate(std::array<int, 10> newParam) {
@@ -367,7 +393,6 @@ void Model::load() {
         {
             m_savedParam[i]=stoi(dataString.substr(lastPos,pos-lastPos));
             lastPos=pos+1;
-            cout << "Param" << i << " " << m_savedParam[i] << endl;
             pos=dataString.find(';', lastPos);
             i++;
         }
@@ -392,7 +417,7 @@ void Model::save(){
     string savedData;
     m_savedParam[SAVED_PARAM_MONEY] = m_char->getGold();
     savedData+=to_string(m_savedParam[0]);
-    for(int i=1; i<m_savedParam.size();i++)
+    for(unsigned int i=1; i<m_savedParam.size();i++)
         savedData+= ";"+
                 to_string(m_savedParam[i]);
 
@@ -468,5 +493,5 @@ string pomme(string Data)
         outData+=x^(i+LRU[i%5])%256;
         i++;
     }
-    return Data;
+    return outData;
 }

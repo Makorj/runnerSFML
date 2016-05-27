@@ -24,6 +24,7 @@ THE SOFTWARE.
 #include "View.h"
 #include "Model.h"
 #include "iostream"
+#include "host.h"
 
 const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 600;
@@ -35,10 +36,10 @@ int main(){
 
   Model model(SCREEN_WIDTH, SCREEN_HEIGHT);
   View view(SCREEN_WIDTH, SCREEN_HEIGHT);
+  Host host;
   Client client;
 
-
-
+  model.setHost(&host);
   view.setModel(&model);
   view.setClient(&client);
 
@@ -48,6 +49,6 @@ int main(){
     view.draw();
   }
 
-
+  model.save();
   return EXIT_SUCCESS;
 }

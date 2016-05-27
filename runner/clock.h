@@ -38,6 +38,8 @@ class Clock {
 private:
     sf::Clock m_time; ///< Time clock
     int m_delayAsSec;	///< Delai for the timer
+    int m_savedTime;
+    bool m_pause;
 public:
     Clock();
     int asMinutes();
@@ -46,6 +48,7 @@ public:
     void restart();
     void startCounter(int delay);
     bool hasEnded();
+    void pause();
 };
 
 #endif // CLOCK_H

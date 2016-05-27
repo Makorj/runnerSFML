@@ -72,7 +72,7 @@ public:
 
     //// CONSTRUCTORS /////
     Character(float x, float y, int w, int h, float dx, float dy, int coin, int maxLife);
-    ~Character() override;
+    ~Character() override = default;
 
 
     void addLife(int const& x);

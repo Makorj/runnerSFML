@@ -1,3 +1,26 @@
+/*
+Copyright (c) 2016 Florent VAIN, Thomas BLANC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
 #include "client.h"
 #include <iostream>
 #include <set>
@@ -21,10 +44,6 @@ Client::Client()
     m_info.adresse=sf::IpAddress::getLocalAddress().toString();
     m_info.port=DEFAULT_PORT;
     m_info.name="ClientNAme";
-    if(m_UdpReceveicer.bind(DEFAULT_PORT) != sf::Socket::Done)
-    {
-        cerr << "Client unable to bind udp receiver" << endl;
-    }
     m_UdpReceveicer.setBlocking(false);
 }
 
@@ -44,7 +63,7 @@ void Client::sendTicket()
     }
 }
 
-void Client::sendAction(Action act)
+void Client::sendAction(rvb::Action act)
 {
     string text = "310;" + m_info.to_string() +";"+ to_string(m_clientId) + ";dts **;" + to_string(act) + ";end **";
     sf::Packet data;
@@ -52,6 +71,14 @@ void Client::sendAction(Action act)
     if(m_UdpReceveicer.send(data,sf::IpAddress::Broadcast,DEFAULT_PORT)!=sf::Socket::Done)
     {
         cerr << "errrrr" << endl;
+    }
+}
+
+void Client::rebind(unsigned int port)
+{
+    if(m_UdpReceveicer.bind(port) != sf::Socket::Done)
+    {
+        cerr << "Client unable to bind udp receiver" << endl;
     }
 }
 
@@ -91,7 +118,7 @@ void Client::getFrame(float &gS, std::set<std::pair<int, std::pair<float, float>
             //otherwise
             else
             {
-                Chars.insert(make_pair(id,make_pair(x,y)));
+                Chars.insert(make_pair(life,make_pair(x,y)));
             }
         }
 
@@ -125,9 +152,10 @@ void Client::receive() {
             if((data.find("100;") == 0) && m_clientId==PLAYER_DEFAULT_ID)
             {
                 hostInfo host;
-                int actualPos(0);
+                int actualPos(data.find(';'));
 
                 host = extractHostInfo(data, actualPos);
+
 
                 if(data.substr(actualPos+1) == "end **" && host.name!=m_hostName)
                 {
@@ -137,15 +165,13 @@ void Client::receive() {
                             newHost=false;
                     if(newHost)
                         m_hosts.push_back(host);
-
-                    //connect(ip,host.port, host.name);
                 }
             }
             else if(data.find("201;")==0)
             {
 
                 hostInfo host;
-                int actualPos(0);
+                int actualPos(data.find(';'));
 
                 host = extractHostInfo(data, actualPos);
 
@@ -173,20 +199,18 @@ void Client::receive() {
             else if(data.find("251;")==0)
             {
                 hostInfo host;
-                int actualPos(0);
+                int actualPos(data.find(';'));
                 host = extractHostInfo(data, actualPos);
 
                 int id = extractIntegrer(data, actualPos);
 
                 if(id==m_clientId)
                 {
-                    cout << "pommmmemeee" << endl;
                     m_clientId=PLAYER_DEFAULT_ID;
                     m_hostPort=0;
                     m_ipHost=sf::IpAddress::None;
                     m_hostName.clear();
                     m_UdpReceveicer.bind(DEFAULT_PORT);
-                    m_UdpSender.bind(DEFAULT_PORT);
                     m_lastFrameCounter=0;
                     m_hosts.clear();
                 }
@@ -194,7 +218,7 @@ void Client::receive() {
             else if(data.find("530;")==0)
             {
                 hostInfo host;
-                int actualPos(0);
+                int actualPos(data.find(';'));
 
                 host = extractHostInfo(data, actualPos);
 
@@ -218,7 +242,7 @@ void Client::receive() {
             else if(data.find("420;")==0)
             {
                 hostInfo host;
-                int actualPos(0);
+                int actualPos(data.find(';'));
 
                 host = extractHostInfo(data, actualPos);
 
@@ -251,18 +275,29 @@ void Client::setHost(sf::IpAddress ip, unsigned short port, std::string name)
     }
 }
 
-void Client::connect(sf::IpAddress ip, unsigned short port, std::string name)
+void Client::connect(sf::IpAddress ip, unsigned short port)
 {
     sf::Packet data;
     m_ipHost=ip;
+    m_hostPort=port;
     data << pomme("200;" + m_info.to_string() +";end **");
 
     if(m_UdpReceveicer.send(data,sf::IpAddress::Broadcast,DEFAULT_PORT)!=sf::Socket::Done)
     {
         cerr << "errrrr" << endl;
     }
+}
 
+void Client::connect(const int x)
+{
+    sf::Packet data;
+    m_ipHost=sf::IpAddress{m_hosts[x].adresse};
+    data << pomme("200;"+ m_hosts[x].to_string() +";"+ m_info.to_string() +";end **");
 
+    if(m_UdpReceveicer.send(data,sf::IpAddress::Broadcast,DEFAULT_PORT)!=sf::Socket::Done)
+    {
+        cerr << "errrrr" << endl;
+    }
 }
 
 void Client::disconnect()
@@ -279,7 +314,7 @@ void Client::disconnect()
 hostInfo extractHostInfo(std::string data, int& position)
 {
     hostInfo host;
-    int actualPos=position+3;
+    int actualPos=position;
     int nextPos = data.find(';',actualPos+1);
     host.adresse = data.substr(actualPos+1,nextPos-actualPos-1);
     actualPos = nextPos;
@@ -299,8 +334,8 @@ hostInfo extractHostInfo(std::string data, int& position)
 clientInfo extractClientInfo(std::string data, int &position)
 {
     clientInfo client;
-
-    int actualPos = data.find(';',4+1);
+    int actualPos = position;
+    actualPos = data.find(';',actualPos+1);
     client.adresse = data.substr(4,actualPos-4);
     int nextPos = data.find(';',actualPos+1);
     client.port = stoi(data.substr(actualPos+1,nextPos-actualPos-1));
@@ -328,4 +363,9 @@ std::string extractString(std::string data, int& position)
     std::string value = data.substr(actualPos+1, nextPos-actualPos-1);
     position = nextPos;
     return value;
+}
+
+void Client::stop()
+{
+    m_UdpReceveicer.unbind();
 }

@@ -21,10 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#include "menumultiplayer.h"
-#include "iostream"
+#include "menuhost.h"
 
-MenuMultiPlayer::MenuMultiPlayer(int w, int h, const std::vector<std::string> &MenuItems)
+
+MenuHost::MenuHost(int w, int h, const std::vector<std::string> &MenuItems)
     : Menu(w,h,MenuItems),
       m_h(h),
       m_w(w),
@@ -36,7 +36,7 @@ MenuMultiPlayer::MenuMultiPlayer(int w, int h, const std::vector<std::string> &M
     m_backRec.setPosition(sf::Vector2f{500,30});
 }
 
-void MenuMultiPlayer::draw(sf::RenderWindow *window)
+void MenuHost::draw(sf::RenderWindow *window)
 {
     Menu::draw(window);
     window->draw(m_backRec);
@@ -47,7 +47,7 @@ void MenuMultiPlayer::draw(sf::RenderWindow *window)
     }
 }
 
-void MenuMultiPlayer::moveDown()
+void MenuHost::moveDown()
 {
     if(m_rightSelected)
     {
@@ -70,7 +70,7 @@ void MenuMultiPlayer::moveDown()
     }
 }
 
-void MenuMultiPlayer::moveUp()
+void MenuHost::moveUp()
 {
     if(m_rightSelected)
     {
@@ -93,7 +93,7 @@ void MenuMultiPlayer::moveUp()
     }
 }
 
-void MenuMultiPlayer::moveLeft()
+void MenuHost::moveLeft()
 {
     if(m_rightSelected && m_rightText.size()>1)
     {
@@ -104,7 +104,7 @@ void MenuMultiPlayer::moveLeft()
     }
 }
 
-void MenuMultiPlayer::moveRight()
+void MenuHost::moveRight()
 {
     if(!m_rightSelected && m_rightText.size()>1)
     {
@@ -115,20 +115,21 @@ void MenuMultiPlayer::moveRight()
     }
 }
 
-void MenuMultiPlayer::setHostsList(std::vector<hostInfo> hosts)
+void MenuHost::setClientList(std::map<int, clientInfo> *clients)
 {
-    m_rightList = hosts;
+    m_rightList.clear();
+    for(auto x : *clients)
+        m_rightList.push_back(x.second);
     m_rightText.clear();
     if(m_rightList.size()!=0)
     {
         int i=1;
-        m_rightText.push_back(sf::Text{"Nb\t\t\t\tName\t\t\t\tIP:PORT\t\t\t\t\tPlayers",m_font,30});
+        m_rightText.push_back(sf::Text{"Nb\t\t\t\t\t\tName\t\t\t\t\t\tIP:PORT",m_font,30});
         m_rightText[0].setPosition(sf::Vector2f{520.f, ((1.f)*((((m_h/2)/2)/2)/2))});
-        for(hostInfo x : m_rightList)
+        for(clientInfo x : m_rightList)
         {
             std::string data = std::to_string(i) +"\t\t\t"+ x.name;
             data += "\t\t\t" + x.adresse + ":" + std::to_string(x.port);
-            data += "\t\t" + std::to_string(x.playerNumber) + "/25";
             m_rightText.push_back(sf::Text{data, m_font, 30});
             m_rightText[i].setColor(sf::Color::White);
             m_rightText[i].setPosition(sf::Vector2f{520.f, ((i+1.f)*((((m_h/2)/2)/2)/2))});
@@ -140,9 +141,4 @@ void MenuMultiPlayer::setHostsList(std::vector<hostInfo> hosts)
         m_rightText.push_back(sf::Text{"Nb\t\t\t\tName\t\t\t\tIP:PORT\t\t\t\t\tPlayers",m_font,30});
         m_rightText[0].setPosition(sf::Vector2f{520.f, ((1.f)*((((m_h/2)/2)/2)/2))});
     }
-}
-
-int MenuMultiPlayer::getSelectedHost() const
-{
-    return m_selectedRight-1;
 }

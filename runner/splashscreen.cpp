@@ -60,18 +60,19 @@ void SplashScreen::draw(sf::RenderWindow *window) {
 }
 
 void SplashScreen::event(State &state) {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-        if(m_logo1)
-        {
-            m_logo1=false;
-            m_reverse=false;
-            m_transparent=0;
-        }
-        else {
-            state = MAIN_MENU;
-        }
+    if(m_logo1)
+    {
+        m_logo1=false;
+        m_reverse=false;
+        m_transparent=0;
     }
+    else {
+        state = MAIN_MENU;
+    }
+}
 
+void SplashScreen::synchronize(State &state)
+{
     if(m_logo1)
     {
         if(m_reverse)

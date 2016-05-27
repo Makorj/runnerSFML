@@ -21,34 +21,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#ifndef SHOP_H
-#define SHOP_H
+#ifndef MENUHOST_H
+#define MENUHOST_H
 
 #include "menu.h"
-#include "animatedgraphicelement.h"
-#include <array>
+#include "client.h"
 
-const std::vector<std::string> bonusString = {"Max Life","Heal","Jump","Invincibility","Multiplier"};
-
-class Shop : public Menu
+class MenuHost : public Menu
 {
 private:
-    int m_w,m_h, m_gold;
-    std::array<int,10> m_parametres;
-    std::vector<AnimatedGraphicElement> m_bonuses;
-    std::array<int,5>m_prix;
-    std::vector<std::string>m_string;
-    std::vector<sf::Text> m_text;
-    GraphicElement m_plus;
-
+    sf::RectangleShape m_backRec;
+    int m_h, m_w;
+    std::vector<clientInfo> m_rightList;
+    std::vector<sf::Text> m_rightText;
+    bool m_rightSelected;
+    unsigned int m_selectedRight;
 public:
-    Shop(int w, int h, std::vector<std::string> MenuItems);
-    void setBonuses(std::vector<AnimatedGraphicElement> bonuses);
+    MenuHost(int w, int h, const std::vector<std::string> &MenuItems);
+    ~MenuHost() = default;
     void draw(sf::RenderWindow *window);
-    void setGold(int gold);
-    std::array<int,10> getSavedParam();
-    void setSavedParam(std::array<int,10> param);
-    void update(int i);
+    void moveUp();
+    void moveDown();
+    void moveLeft();
+    void moveRight();
+    void setClientList(std::map<int, clientInfo>* clients);
 };
 
-#endif // SHOP_H
+#endif // MENUHOST_H

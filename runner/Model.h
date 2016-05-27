@@ -27,6 +27,9 @@ THE SOFTWARE.
 
 #include <SFML/Graphics.hpp>
 #include <unordered_set>
+#include <set>
+#include <memory>
+#include "host.h"
 #include "character.h"
 #include "clock.h"
 
@@ -45,18 +48,21 @@ std::string pomme(std::string Data);
 
 class Model {
  private:
+  Host * m_host;
   int 	_w,					///< Width of the game screen
 		_h;					///< Height of the game screen
   float m_allSpeed;			///< Global speed of all the objects in the game except Character objects
   unsigned int m_money;		///< Money of the player in the game
   Character* m_char;		///< Player's Character
+  std::map<int, std::shared_ptr<Character> > m_multiplayerChar; ///< Other players' characters
   bool 	m_leftdir,			///< True if the player is moving left
 		m_rightdir,			///< True if the player is moving right
 		m_paused,			///< Trus if the game is paused
-		m_collide;			///< True if there is a collision between objects in the game 
+        m_collide;			///< True if there is a collision between objects in the game
   std::unordered_set<MovableElement * > m_elements; 	///< Collection of all elements in the game except Character objects
   Clock m_timeElapsed;	///< Game's clock
   std::array<int, 10> m_savedParam;	///< Player's saved data, attributs, etc... 
+  std::map<int,std::array<int, 10> > m_multiplayerSavedParam; ///< Others saved data, attributs, etc...
 
  public:
 
@@ -74,12 +80,15 @@ class Model {
 
   bool hasCollide();
   bool hasEnded();
+  bool isHosting();
 
   void nextStep();
 
   std::pair<float, float> getBallPosition();
-  void getElemsPos(std::vector<std::pair<int, std::pair<float, float> > > &elemPos);
+  void getElemsPos(std::set<std::pair<int, std::pair<float, float> > > &elemPos);
   std::array<int,10> getSavedParam();
+
+  std::map<int, std::shared_ptr<Character> > *getMultiCharData();
 
   void getBallDim(int&h, int &w);
   void getCharDir(bool &left, bool &right);
@@ -87,9 +96,13 @@ class Model {
   int getScore();
   int getAllSpeed() const;
   int getLife() const;
+  Host* getHost();
 
   void setBallVerticalSpeed(float &x);
   void setCharDir(bool& left, bool& right);
+  void setHost(Host* h);
+  void hosting(bool x);
+
 
 
 };
